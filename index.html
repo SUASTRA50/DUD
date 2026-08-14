@@ -387,7 +387,7 @@
 <script>
 // Store Application State
 let state = {
-  apiUrl: 'https://script.google.com/macros/s/AKfycbxGxJcRBj_rvedIQUqWsiswkOHHKV-JUGIMylBL1B-m6iPwVX9G_GRvYVMH0Yl6SV_R/exec',
+  apiUrl: 'https://script.google.com/macros/s/AKfycbwBcDsqMcINHpMAOGhkiduwEBFeacJyrfHoIE9ZSv4Pat7ATdiTHADsb0HhI9imqSo/exec',
   tasks: [],
   currentTailorFilter: 'ALL'
 };
@@ -480,7 +480,7 @@ function renderDashboard() {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="py-3 px-4 font-mono font-bold text-indigo-600">${t.uniqueID || '-'}</td>
-      <td class="py-3 px-4 text-xs text-gray-500">${t.date || '-'}</td>
+      <td class="py-3 px-4 text-xs text-gray-500">${t.createdAt || '-'}</td>
       <td class="py-3 px-4 font-medium text-gray-700">${t.reportingStaff || t.inputBy || '-'}</td>
       <td class="py-3 px-4 text-xs">
         <div class="font-bold text-gray-800">${t.staffName || t.staff || '-'}</div>
