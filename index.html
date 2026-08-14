@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Uniform Defect Management</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- FontAwesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .badge-open { background-color: #fef3c7; color: #d97706; }
+  .badge-progress { background-color: #dbeafe; color: #2563eb; }
+  .badge-completed { background-color: #d1fae5; color: #059669; }
+</style>
+</head>
+<body class="text-gray-800">
+
+<!-- Top Navigation Header -->
+<header class="bg-indigo-900 text-white shadow-lg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center space-x-3">
+        <div class="bg-indigo-600 p-2 rounded-lg">
+          <i class="fa-solid font-bold text-xl fa-shirt"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight">Daily Uniform Defect</h1>
+          <p class="text-xs text-indigo-200">System Lifecycle & Task Queue</p>
+        </div>
+      </div>
+      <!-- Navigation Tabs -->
+      <nav class="hidden md:flex space-x-1">
+        <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition bg-indigo-800">
+          <i class="fa-solid fa-chart-pie mr-1.5"></i> Dashboard
+        </button>
+        <button onclick="switchTab('uniform')" id="tab-btn-uniform" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition">
+          <i class="fa-solid fa-file-pen mr-1.5"></i> Uniform Module
+        </button>
+        <button onclick="switchTab('tailor')" id="tab-btn-tailor" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition">
+          <i class="fa-solid fa-scissors mr-1.5"></i> Tailor Queue
+        </button>
+      </nav>
+      <!-- Status Indicator -->
+      <div class="flex items-center space-x-2 text-xs bg-indigo-950 px-3 py-1.5 rounded-full border border-indigo-700">
+        <span id="api-status-ping" class="h-2 w-2 rounded-full bg-yellow-400"></span>
+        <span id="api-status-text" class="text-gray-300">Local / Demo Mode</span>
+      </div>
+    </div>
+  </div>
+  <!-- Mobile Navigation -->
+  <div class="md:hidden bg-indigo-950 px-2 pt-2 pb-3 space-y-1 flex justify-around text-xs border-t border-indigo-800">
+    <button onclick="switchTab('dashboard')" class="text-center p-1">
+      <i class="fa-solid fa-chart-pie block text-base mb-0.5"></i> Dashboard
+    </button>
+    <button onclick="switchTab('uniform')" class="text-center p-1">
+      <i class="fa-solid fa-file-pen block text-base mb-0.5"></i> Uniform
+    </button>
+    <button onclick="switchTab('tailor')" class="text-center p-1">
+      <i class="fa-solid fa-scissors block text-base mb-0.5"></i> Tailor
+    </button>
+  </div>
+</header>
+
+<!-- Main Container -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+  <!-- ======================================================= -->
+  <!-- 1. DASHBOARD VIEW -->
+  <!-- ======================================================= -->
+  <section id="view-dashboard" class="tab-content active space-y-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-900">Operational Dashboard</h2>
+        <p class="text-sm text-gray-500">Ringkasan aktivitas dan status perbaikan seragam hari ini.</p>
+      </div>
+      <button onclick="refreshData()" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm transition active:scale-95">
+        <i class="fa-solid fa-rotate mr-2"></i> Refresh Data
+      </button>
+    </div>
+
+    <!-- Metric Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+        <div class="text-xs font-semibold uppercase text-gray-400">Today's Defects</div>
+        <div class="text-2xl font-bold text-gray-800 mt-1" id="stat-today">0</div>
+        <div class="text-xs text-gray-500 mt-2"><i class="fa-regular fa-clock mr-1"></i> Total Laporan Hari Ini</div>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-amber-500">
+        <div class="text-xs font-semibold uppercase text-amber-600">Open Tasks</div>
+        <div class="text-2xl font-bold text-amber-600 mt-1" id="stat-open">0</div>
+        <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-hourglass-start mr-1"></i> Menunggu Tailor</div>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-blue-500">
+        <div class="text-xs font-semibold uppercase text-blue-600">In Progress</div>
+        <div class="text-2xl font-bold text-blue-600 mt-1" id="stat-progress">0</div>
+        <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-spinner mr-1"></i> Dalam Pengerjaan</div>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-emerald-500">
+        <div class="text-xs font-semibold uppercase text-emerald-600">Completed</div>
+        <div class="text-2xl font-bold text-emerald-600 mt-1" id="stat-completed">0</div>
+        <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-check-double mr-1"></i> Selesai Diperbaiki</div>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-purple-500">
+        <div class="text-xs font-semibold uppercase text-purple-600">Total Credits</div>
+        <div class="text-2xl font-bold text-purple-600 mt-1" id="stat-credits">0</div>
+        <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-award mr-1"></i> Total Bobot Kredit Kerja</div>
+      </div>
+    </div>
+
+    <!-- Recent Submissions Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+        <h3 class="font-bold text-gray-800 text-base">Aktivitas Terkini (Recent Lifecycle)</h3>
+        <span class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full">Real-time Sheet Sync</span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-semibold border-b">
+            <tr>
+              <th class="py-3 px-4">Unique ID</th>
+              <th class="py-3 px-4">Tanggal / Waktu</th>
+              <th class="py-3 px-4">Penginput (Uniform)</th>
+              <th class="py-3 px-4">Pemilik & Dept</th>
+              <th class="py-3 px-4">Item / Defect</th>
+              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-4">Tailor</th>
+            </tr>
+          </thead>
+          <tbody id="dashboard-recent-table" class="divide-y divide-gray-100">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= -->
+  <!-- 2. UNIFORM MODULE VIEW (REPORT NEW DEFECT & SUBMISSIONS) -->
+  <!-- ======================================================= -->
+  <section id="view-uniform" class="tab-content space-y-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Left Column: Form Input -->
+      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-5">
+        <div class="border-b border-gray-100 pb-3">
+          <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+            <i class="fa-solid fa-pen-to-square text-indigo-600"></i> Report New Defect
+          </h3>
+          <p class="text-xs text-gray-500">Uniform staff entry form</p>
+        </div>
+        <form id="form-new-defect" onsubmit="handleCreateSubmission(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase text-indigo-900 mb-1">
+              Input By (Uniform Staff Name) <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                <i class="fa-solid fa-id-badge"></i>
+              </span>
+              <input type="text" id="inp-reporting-staff" required placeholder="Nama Petugas Uniform yang menginput"
+                class="w-full pl-9 pr-3 py-2 bg-indigo-50 border border-indigo-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">
+              Staff Name (Uniform Owner) <span class="text-red-500">*</span>
+            </label>
+            <input type="text" id="inp-staff-name" required placeholder="e.g. Budi Santoso"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">
+              Department (Uniform Owner) <span class="text-red-500">*</span>
+            </label>
+            <select id="inp-department" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+              <option value="">-- Pilih Departemen --</option>
+              <option value="Front Office">Front Office</option>
+              <option value="GSC">GSC</option>
+              <option value="Club">Club</option>
+              <option value="Concierge">Concierge</option>
+              <option value="Housekeeping">Housekeeping</option>
+              <option value="Laundry">Laundry</option>
+              <option value="Cinnamon">Cinnamon</option>
+              <option value="LiFeng">LiFeng</option>
+              <option value="IRD">IRD</option>
+              <option value="Banquet">Banquet</option>
+              <option value="Steward">Steward</option>
+              <option value="Kitchen / Culinary">Kitchen / Culinary</option>
+              <option value="IT">IT</option>
+              <option value="Purchasing">Purchasing</option>
+              <option value="Finance">Finance</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Security">Security</option>
+              <option value="Sales & Executive">Sales & Executive</option>
+              <option value="Other">Lain-lain</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">
+              Uniform Item <span class="text-red-500">*</span>
+            </label>
+            <select id="inp-item" required onchange="autoFillCredit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+              <option value="">-- Pilih Jenis Seragam --</option>
+              <option value="Kemeja / Shirt">Kemeja / Shirt</option>
+              <option value="Celana / Trousers">Celana / Trousers</option>
+              <option value="Jas / Blazer">Jas / Blazer</option>
+              <option value="Gaun / Dress">Gaun / Dress</option>
+              <option value="Apron / Celemek">Apron / Celemek</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">
+              Defect Type <span class="text-red-500">*</span>
+            </label>
+            <select id="inp-defect" required onchange="autoFillCredit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+              <option value="">-- Pilih Jenis Kerusakan --</option>
+              <option value="Kancing Lepas / Hilang">Kancing Lepas / Hilang</option>
+              <option value="Sobek Jahitan">Sobek Jahitan</option>
+              <option value="Resleting Rusak / Macet">Resleting Rusak / Macet</option>
+              <option value="Kain Sobek / Permakan">Kain Sobek / Permakan</option>
+              <option value="Potong / Alterasi Panjang">Potong / Alterasi Panjang</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Quantity</label>
+              <input type="number" id="inp-quantity" min="1" value="1" required oninput="autoFillCredit()"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Credit / Unit</label>
+              <input type="number" id="inp-credit" min="1" value="1" readonly
+                class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-sm font-bold text-indigo-700 outline-none">
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between bg-purple-50 border border-purple-100 rounded-lg px-3 py-2">
+            <span class="text-xs font-semibold uppercase text-purple-700">Total Credit (Unit &times; Qty)</span>
+            <span id="inp-total-credit-display" class="text-lg font-bold text-purple-700">1</span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Remark / Catatan</label>
+            <textarea id="inp-remarks" rows="2" placeholder="Detail posisi sobek, ukuran kancing, dll..."
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+          </div>
+
+          <button type="submit" id="btn-submit-defect" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow transition active:scale-95 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i> Submit & Generate ID
+          </button>
+        </form>
+      </div>
+
+      <!-- Right Column: My Submissions History -->
+      <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
+        <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+          <div>
+            <h3 class="text-lg font-bold text-gray-800">My Submissions Log</h3>
+            <p class="text-xs text-gray-500">Daftar laporan defect yang telah disubmit</p>
+          </div>
+          <input type="text" id="search-uniform-log" onkeyup="filterUniformTable()" placeholder="Cari ID / Nama / Dept..."
+            class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs outline-none focus:ring-1 focus:ring-indigo-500">
+        </div>
+        <div class="overflow-x-auto max-h-[500px]">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-semibold sticky top-0">
+              <tr>
+                <th class="py-2.5 px-3">Unique ID</th>
+                <th class="py-2.5 px-3">Penginput</th>
+                <th class="py-2.5 px-3">Pemilik & Dept</th>
+                <th class="py-2.5 px-3">Item & Defect</th>
+                <th class="py-2.5 px-3">Status</th>
+              </tr>
+            </thead>
+            <tbody id="uniform-submissions-table" class="divide-y divide-gray-100">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= -->
+  <!-- 3. TAILOR MODULE VIEW (TASK QUEUE & WORKFLOW) -->
+  <!-- ======================================================= -->
+  <section id="view-tailor" class="tab-content space-y-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+      <div>
+        <h2 class="text-xl font-bold text-gray-900">Tailor Workstation & Task Queue</h2>
+        <p class="text-xs text-gray-500">Kelola dan selesaikan tugas perbaikan pakaian seragam.</p>
+      </div>
+      <div class="flex flex-col items-start gap-1">
+        <div class="flex items-center gap-3">
+          <label class="text-xs font-semibold text-gray-600">Active Tailor Name:</label>
+          <input type="text" id="active-tailor-name" required placeholder="Wajib diisi sebelum memproses task"
+            oninput="validateActiveTailor()"
+            class="px-3 py-1.5 border border-indigo-300 rounded-lg text-sm font-semibold text-indigo-900 bg-indigo-50 focus:bg-white outline-none">
+        </div>
+        <span id="tailor-name-warning" class="text-xs text-red-500 hidden">
+          <i class="fa-solid fa-triangle-exclamation mr-1"></i> Isi nama tailor aktif terlebih dahulu.
+        </span>
+      </div>
+    </div>
+
+    <!-- Task Status Tabs Filter -->
+    <div class="flex space-x-2 border-b border-gray-200 pb-2">
+      <button onclick="filterTailorQueue('ALL')" id="tailor-filter-ALL" class="tailor-filter-btn px-4 py-2 rounded-lg text-xs font-bold bg-indigo-600 text-white">
+        All Tasks
+      </button>
+      <button onclick="filterTailorQueue('OPEN')" id="tailor-filter-OPEN" class="tailor-filter-btn px-4 py-2 rounded-lg text-xs font-bold bg-gray-100 text-gray-600 hover:bg-gray-200">
+        OPEN (Queue)
+      </button>
+      <button onclick="filterTailorQueue('IN_PROGRESS')" id="tailor-filter-IN_PROGRESS" class="tailor-filter-btn px-4 py-2 rounded-lg text-xs font-bold bg-gray-100 text-gray-600 hover:bg-gray-200">
+        IN PROGRESS
+      </button>
+      <button onclick="filterTailorQueue('COMPLETED')" id="tailor-filter-COMPLETED" class="tailor-filter-btn px-4 py-2 rounded-lg text-xs font-bold bg-gray-100 text-gray-600 hover:bg-gray-200">
+        COMPLETED
+      </button>
+    </div>
+
+    <!-- Task Cards Grid -->
+    <div id="tailor-task-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Task Cards generated dynamically -->
+    </div>
+  </section>
+
+</main>
+
+<!-- Tailor Task Action Modal -->
+<div id="task-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
+  <div class="bg-white rounded-xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+    <div class="flex justify-between items-center border-b pb-3">
+      <h3 class="font-bold text-gray-800 text-lg" id="modal-task-id">UD-140826-000001</h3>
+      <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+    </div>
+    <div class="space-y-2 text-sm bg-gray-50 p-3 rounded-lg border">
+      <p><strong>Penginput (Uniform):</strong> <span id="modal-reporting-staff">-</span></p>
+      <p><strong>Pemilik & Dept:</strong> <span id="modal-staff-dept">-</span></p>
+      <p><strong>Item / Defect:</strong> <span id="modal-item-defect">-</span></p>
+      <p><strong>Total Credit Weight:</strong> <span id="modal-credit" class="font-bold text-indigo-600">1</span></p>
+      <p><strong>Remark Masuk:</strong> <span id="modal-remarks" class="italic text-gray-600">-</span></p>
+    </div>
+    <form id="form-modal-action" onsubmit="handleModalSubmit(event)" class="space-y-3">
+      <input type="hidden" id="modal-hidden-id">
+      <input type="hidden" id="modal-hidden-target-status">
+      <div id="modal-completion-fields" class="space-y-3 hidden">
+        <div>
+          <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Hasil Perbaikan (Repair Result)</label>
+          <select id="modal-repair-result" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
+            <option value="Jahitan Rapih / Fixed">Jahitan Rapih / Fixed</option>
+            <option value="Kancing Diganti Baru">Kancing Diganti Baru</option>
+            <option value="Resleting Diganti Baru">Resleting Diganti Baru</option>
+            <option value="Potong / Alterasi Selesai">Potong / Alterasi Selesai</option>
+            <option value="Diberdayakan / Replaced">Diberdayakan / Replaced</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Catatan Tailor</label>
+          <textarea id="modal-tailor-remarks" rows="2" placeholder="Catatan opsional dari tailor..." class="w-full px-3 py-2 border rounded-lg text-sm"></textarea>
+        </div>
+      </div>
+      <div class="flex justify-end space-x-2 pt-2 border-t">
+        <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded-lg text-sm text-gray-600 hover:bg-gray-100">Batal</button>
+        <button type="submit" id="modal-submit-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 active:scale-95 transition">
+          Proses Task
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- JavaScript Logic -->
+<script>
+// Store Application State
+let state = {
+  apiUrl: 'https://script.google.com/macros/s/AKfycbyXx6TLNenGHevrv1W78qlKwNwosxUWeocRC6GKew8z7IMhwMtvueDyRZAbx8V2faPt/exec',
+  tasks: [],
+  currentTailorFilter: 'ALL'
+};
+
+// Initialize App
+document.addEventListener('DOMContentLoaded', () => {
+  if (state.apiUrl) {
+    updateStatusIndicator(true, "Connected to GAS");
+  } else {
+    updateStatusIndicator(false, "Demo Mode (Local)");
+  }
+  refreshData();
+});
+
+// Tab Navigation Router
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('bg-indigo-800'));
+  document.getElementById(`view-${tabName}`).classList.add('active');
+  const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+  if (activeBtn) activeBtn.classList.add('bg-indigo-800');
+}
+
+// Auto Weight Calculation based on Item & Defect, scaled by Quantity
+function autoFillCredit() {
+  const defect = document.getElementById('inp-defect').value;
+  const creditInput = document.getElementById('inp-credit');
+  const qtyInput = document.getElementById('inp-quantity');
+  const totalDisplay = document.getElementById('inp-total-credit-display');
+
+  let unitCredit = 1;
+  if (defect.includes("Resleting") || defect.includes("Potong / Alterasi")) {
+    unitCredit = 2;
+  } else if (defect.includes("Kain Sobek")) {
+    unitCredit = 3;
+  } else {
+    unitCredit = 1;
+  }
+  creditInput.value = unitCredit;
+
+  const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
+  const total = unitCredit * qty;
+  totalDisplay.innerText = total;
+}
+
+// Fetch Data from API
+async function refreshData() {
+  if (state.apiUrl) {
+    try {
+      const res = await fetch(`${state.apiUrl}?action=getTasks`);
+      const json = await res.json();
+      if (json.success) {
+        state.tasks = json.data;
+      }
+    } catch (e) {
+      console.error("API Fetch Error:", e);
+    }
+  }
+  renderAllViews();
+}
+
+function renderAllViews() {
+  renderDashboard();
+  renderUniformTable();
+  renderTailorQueue();
+}
+
+// Render Dashboard Metrics & Table
+function renderDashboard() {
+  const tasks = state.tasks;
+  const open = tasks.filter(t => t.status === 'OPEN').length;
+  const progress = tasks.filter(t => t.status === 'IN_PROGRESS').length;
+  const completed = tasks.filter(t => t.status === 'COMPLETED').length;
+  // Use totalCredit if present (unit credit x quantity), fall back to credit x quantity, then flat credit.
+  const credits = tasks.reduce((acc, curr) => {
+    const qty = Number(curr.quantity) || 1;
+    const totalCredit = curr.totalCredit != null ? Number(curr.totalCredit) : (Number(curr.credit) || 0) * qty;
+    return acc + totalCredit;
+  }, 0);
+
+  document.getElementById('stat-today').innerText = tasks.length;
+  document.getElementById('stat-open').innerText = open;
+  document.getElementById('stat-progress').innerText = progress;
+  document.getElementById('stat-completed').innerText = completed;
+  document.getElementById('stat-credits').innerText = credits;
+
+  const tbody = document.getElementById('dashboard-recent-table');
+  tbody.innerHTML = '';
+  tasks.slice(0, 10).forEach(t => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="py-3 px-4 font-mono font-bold text-indigo-600">${t.uniqueID || '-'}</td>
+      <td class="py-3 px-4 text-xs text-gray-500">${t.date || '-'}</td>
+      <td class="py-3 px-4 font-medium text-gray-700">${t.reportingStaff || t.inputBy || '-'}</td>
+      <td class="py-3 px-4 text-xs">
+        <div class="font-bold text-gray-800">${t.staffName || t.staff || '-'}</div>
+        <div class="text-gray-500">${t.department || '-'}</div>
+      </td>
+      <td class="py-3 px-4 text-xs">
+        <span class="font-medium">${t.item || '-'}</span> - <span class="text-rose-500 font-medium">${t.defect || '-'}</span>
+      </td>
+      <td class="py-3 px-4">${getBadgeHtml(t.status)}</td>
+      <td class="py-3 px-4 text-xs text-gray-600">${t.tailor || '-'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Render Uniform Submissions Log
+function renderUniformTable() {
+  const tbody = document.getElementById('uniform-submissions-table');
+  tbody.innerHTML = '';
+  state.tasks.forEach(t => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="py-2.5 px-3 font-mono font-bold text-indigo-600 text-xs">${t.uniqueID || '-'}</td>
+      <td class="py-2.5 px-3 text-xs font-medium text-gray-700">${t.reportingStaff || t.inputBy || '-'}</td>
+      <td class="py-2.5 px-3 text-xs">
+        <div class="font-bold text-gray-800">${t.staffName || t.staff || '-'}</div>
+        <div class="text-gray-500">${t.department || '-'}</div>
+      </td>
+      <td class="py-2.5 px-3 text-xs">${t.item || '-'} (${t.defect || '-'})</td>
+      <td class="py-2.5 px-3">${getBadgeHtml(t.status)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Handle Form Submit (Fixed CORS/JSON issue using text/plain)
+async function handleCreateSubmission(e) {
+  e.preventDefault();
+
+  const unitCredit = Number(document.getElementById('inp-credit').value) || 1;
+  const quantity = Math.max(1, parseInt(document.getElementById('inp-quantity').value, 10) || 1);
+  const totalCredit = unitCredit * quantity;
+
+  const payload = {
+    reportingStaff: document.getElementById('inp-reporting-staff').value,
+    staffName: document.getElementById('inp-staff-name').value,
+    department: document.getElementById('inp-department').value,
+    item: document.getElementById('inp-item').value,
+    defect: document.getElementById('inp-defect').value,
+    quantity: quantity,
+    credit: unitCredit,        // credit weight per unit
+    totalCredit: totalCredit,  // credit weight x quantity, used for EFTE / dashboard aggregation
+    remarks: document.getElementById('inp-remarks').value
+  };
+
+  const btn = document.getElementById('btn-submit-defect');
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Submitting...`;
+
+  if (state.apiUrl) {
+    try {
+      const res = await fetch(state.apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'createSubmission', data: payload })
+      });
+      const textResponse = await res.text();
+      if (textResponse.startsWith('<')) {
+        throw new Error("Server mengembalikan HTML. Periksa URL Deployment Apps Script Anda.");
+      }
+      const result = JSON.parse(textResponse);
+      if (result.success) {
+        alert("Report logged! ID: " + result.uniqueID);
+        document.getElementById('form-new-defect').reset();
+        document.getElementById('inp-total-credit-display').innerText = '1';
+        await refreshData();
+      } else {
+        alert("Gagal: " + (result.message || "Unknown error"));
+      }
+    } catch (err) {
+      alert("Error submitting: " + err.message);
+      console.error("Submission detail error:", err);
+    }
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = `<i class="fa-solid fa-paper-plane mr-1"></i> Submit & Generate ID`;
+}
+
+// Render Tailor Queue Grid Cards
+function renderTailorQueue() {
+  const grid = document.getElementById('tailor-task-grid');
+  grid.innerHTML = '';
+
+  const filtered = state.currentTailorFilter === 'ALL'
+    ? state.tasks
+    : state.tasks.filter(t => t.status === state.currentTailorFilter);
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400 text-sm bg-white rounded-xl border">Tidak ada tugas pada status ini.</div>`;
+    return;
+  }
+
+  filtered.forEach(t => {
+    const card = document.createElement('div');
+    card.className = "bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-3 flex flex-col justify-between hover:shadow-md transition";
+
+    let actionButton = '';
+    if (t.status === 'OPEN') {
+      actionButton = `<button onclick="openActionModal('${t.uniqueID}', 'IN_PROGRESS')" class="w-full py-2 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-lg text-xs transition active:scale-95 shadow-sm">
+        <i class="fa-solid fa-play mr-1"></i> Start Task
+      </button>`;
+    } else if (t.status === 'IN_PROGRESS') {
+      actionButton = `<button onclick="openActionModal('${t.uniqueID}', 'COMPLETED')" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg text-xs transition active:scale-95 shadow-sm">
+        <i class="fa-solid fa-check mr-1"></i> Submit Completion
+      </button>`;
+    } else {
+      actionButton = `<div class="text-center py-1.5 bg-emerald-50 text-emerald-700 text-xs rounded-lg font-bold border border-emerald-100"><i class="fa-solid fa-circle-check mr-1"></i> Completed</div>`;
+    }
+
+    const totalCredit = t.totalCredit != null ? t.totalCredit : (Number(t.credit) || 1) * (Number(t.quantity) || 1);
+
+    card.innerHTML = `
+      <div class="space-y-2">
+        <div class="flex justify-between items-start">
+          <span class="font-mono text-sm font-bold text-indigo-600">${t.uniqueID}</span>
+          ${getBadgeHtml(t.status)}
+        </div>
+        <div class="border-t border-b py-2 space-y-1">
+          <div class="text-xs text-gray-500">Penginput: <span class="font-semibold text-gray-700">${t.reportingStaff || t.inputBy || '-'}</span></div>
+          <div class="text-sm font-bold text-gray-800">${t.staffName || t.staff || '-'} <span class="text-xs font-normal text-gray-500">(${t.department || '-'})</span></div>
+          <div class="text-xs font-medium text-indigo-900">${t.item} - ${t.defect} (${t.quantity || 1} pcs)</div>
+          <div class="text-xs font-semibold text-purple-700">Total Credit: ${totalCredit}</div>
+          ${t.remarks ? `<div class="text-xs italic text-gray-500 mt-1 bg-gray-50 p-2 rounded border">"${t.remarks}"</div>` : ''}
+        </div>
+      </div>
+      <div class="pt-1">
+        ${actionButton}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function filterTailorQueue(status) {
+  state.currentTailorFilter = status;
+  document.querySelectorAll('.tailor-filter-btn').forEach(b => {
+    b.classList.remove('bg-indigo-600', 'text-white');
+    b.classList.add('bg-gray-100', 'text-gray-600');
+  });
+  const activeBtn = document.getElementById(`tailor-filter-${status}`);
+  if (activeBtn) {
+    activeBtn.classList.remove('bg-gray-100', 'text-gray-600');
+    activeBtn.classList.add('bg-indigo-600', 'text-white');
+  }
+  renderTailorQueue();
+}
+
+// Active Tailor validation
+function validateActiveTailor() {
+  const input = document.getElementById('active-tailor-name');
+  const warning = document.getElementById('tailor-name-warning');
+  const isValid = input.value.trim().length > 0;
+  if (isValid) {
+    warning.classList.add('hidden');
+    input.classList.remove('border-red-400');
+  }
+  return isValid;
+}
+
+// Modal Action Handlers
+function openActionModal(id, targetStatus) {
+  const tailorInput = document.getElementById('active-tailor-name');
+  const warning = document.getElementById('tailor-name-warning');
+
+  // Block opening the modal until Active Tailor Name is filled in
+  if (!validateActiveTailor()) {
+    warning.classList.remove('hidden');
+    tailorInput.classList.add('border-red-400');
+    tailorInput.focus();
+    return;
+  }
+
+  const task = state.tasks.find(t => t.uniqueID === id);
+  if (!task) return;
+
+  document.getElementById('modal-task-id').innerText = task.uniqueID;
+  document.getElementById('modal-hidden-id').value = task.uniqueID;
+  document.getElementById('modal-hidden-target-status').value = targetStatus;
+  document.getElementById('modal-reporting-staff').innerText = task.reportingStaff || task.inputBy || '-';
+  document.getElementById('modal-staff-dept').innerText = `${task.staffName || task.staff || '-'} (${task.department || '-'})`;
+  document.getElementById('modal-item-defect').innerText = `${task.item} - ${task.defect}`;
+  const totalCredit = task.totalCredit != null ? task.totalCredit : (Number(task.credit) || 1) * (Number(task.quantity) || 1);
+  document.getElementById('modal-credit').innerText = totalCredit;
+  document.getElementById('modal-remarks').innerText = task.remarks || 'Tidak ada';
+
+  const completionFields = document.getElementById('modal-completion-fields');
+  const submitBtn = document.getElementById('modal-submit-btn');
+
+  if (targetStatus === 'COMPLETED') {
+    completionFields.classList.remove('hidden');
+    submitBtn.innerText = "Submit Completion";
+    submitBtn.className = "px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 active:scale-95 transition";
+  } else {
+    completionFields.classList.add('hidden');
+    submitBtn.innerText = "Start Task";
+    submitBtn.className = "px-4 py-2 bg-amber-500 text-white rounded-lg text-sm font-medium hover:bg-amber-600 active:scale-95 transition";
+  }
+
+  document.getElementById('task-modal').classList.remove('hidden');
+  document.getElementById('task-modal').classList.add('flex');
+}
+
+function closeModal() {
+  document.getElementById('task-modal').classList.add('hidden');
+  document.getElementById('task-modal').classList.remove('flex');
+}
+
+// Optimistic UI Workflow Update
+async function handleModalSubmit(e) {
+  e.preventDefault();
+
+  const tailorInput = document.getElementById('active-tailor-name');
+  if (!validateActiveTailor()) {
+    document.getElementById('tailor-name-warning').classList.remove('hidden');
+    tailorInput.classList.add('border-red-400');
+    tailorInput.focus();
+    return;
+  }
+
+  const uniqueID = document.getElementById('modal-hidden-id').value;
+  const targetStatus = document.getElementById('modal-hidden-target-status').value;
+  const tailorName = tailorInput.value.trim();
+
+  // 1. Optimistic Update Lokal (0 ms delay)
+  const taskIndex = state.tasks.findIndex(t => t.uniqueID === uniqueID);
+  if (taskIndex !== -1) {
+    state.tasks[taskIndex].status = targetStatus;
+    state.tasks[taskIndex].tailor = tailorName;
+    renderAllViews();
+  }
+  closeModal();
+
+  // 2. Background Sync ke GAS
+  try {
+    let action = '';
+    let payloadData = {};
+
+    if (targetStatus === 'IN_PROGRESS') {
+      action = 'updateTaskStatus';
+      payloadData = { uniqueID: uniqueID, tailor: tailorName };
+    } else if (targetStatus === 'COMPLETED') {
+      action = 'submitCompletion';
+      const repairResult = document.getElementById('modal-repair-result').value;
+      const tailorRemarks = document.getElementById('modal-tailor-remarks').value;
+      payloadData = { uniqueID: uniqueID, tailor: tailorName, repairResult: repairResult, remarks: tailorRemarks };
+    }
+
+    if (state.apiUrl) {
+      const res = await fetch(state.apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: action, data: payloadData })
+      });
+      const textResponse = await res.text();
+      if (!textResponse.startsWith('<')) {
+        const result = JSON.parse(textResponse);
+        if (!result.success) {
+          console.error("Sync failed:", result.message);
+          refreshData();
+        }
+      } else {
+        refreshData();
+      }
+    }
+  } catch (err) {
+    console.error("Network Error on Sync:", err);
+    refreshData();
+  }
+}
+
+function updateStatusIndicator(isConnected, text) {
+  const ping = document.getElementById('api-status-ping');
+  const txt = document.getElementById('api-status-text');
+  txt.innerText = text;
+  if (isConnected) {
+    ping.className = "h-2 w-2 rounded-full bg-emerald-400 animate-pulse";
+  } else {
+    ping.className = "h-2 w-2 rounded-full bg-yellow-400";
+  }
+}
+
+// Utility: Status Badge Generator
+function getBadgeHtml(status) {
+  if (status === 'OPEN') return `<span class="badge-open px-2.5 py-1 text-xs font-bold rounded-full">OPEN</span>`;
+  if (status === 'IN_PROGRESS') return `<span class="badge-progress px-2.5 py-1 text-xs font-bold rounded-full">IN PROGRESS</span>`;
+  if (status === 'COMPLETED') return `<span class="badge-completed px-2.5 py-1 text-xs font-bold rounded-full">COMPLETED</span>`;
+  return `<span class="bg-gray-100 text-gray-600 px-2.5 py-1 text-xs font-bold rounded-full">${status}</span>`;
+}
+
+function filterUniformTable() {
+  const term = document.getElementById('search-uniform-log').value.toLowerCase();
+  const rows = document.querySelectorAll('#uniform-submissions-table tr');
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    row.style.display = text.includes(term) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
