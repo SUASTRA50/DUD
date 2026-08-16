@@ -77,7 +77,7 @@
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
         <h2 class="text-2xl font-bold text-gray-900">Operational Dashboard</h2>
-        <p class="text-sm text-gray-500">Activity Summary and Progress.</p>
+        <p class="text-sm text-gray-500">Activity Summary and Repair Progress.</p>
       </div>
       <button onclick="refreshData()" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm transition active:scale-95">
         <i class="fa-solid fa-rotate mr-2"></i> Refresh Data
@@ -89,7 +89,7 @@
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
         <div class="text-xs font-semibold uppercase text-gray-400">Defects</div>
         <div class="text-2xl font-bold text-gray-800 mt-1" id="stat-today">0</div>
-        <div class="text-xs text-gray-500 mt-2"><i class="fa-regular fa-clock mr-1"></i> Total Defect Report</div>
+        <div class="text-xs text-gray-500 mt-2"><i class="fa-regular fa-clock mr-1"></i> Total Report</div>
       </div>
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-amber-500">
         <div class="text-xs font-semibold uppercase text-amber-600">Open Tasks</div>
@@ -99,12 +99,12 @@
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-blue-500">
         <div class="text-xs font-semibold uppercase text-blue-600">In Progress</div>
         <div class="text-2xl font-bold text-blue-600 mt-1" id="stat-progress">0</div>
-        <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-spinner mr-1"></i> In Progress</div>
+        <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-spinner mr-1"></i> In </div>
       </div>
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-emerald-500">
         <div class="text-xs font-semibold uppercase text-emerald-600">Completed</div>
         <div class="text-2xl font-bold text-emerald-600 mt-1" id="stat-completed">0</div>
-        <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-check-double mr-1"></i> Completely Done</div>
+        <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-check-double mr-1"></i> Selesai Diperbaiki</div>
       </div>
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-purple-500">
         <div class="text-xs font-semibold uppercase text-purple-600">Total Credits</div>
@@ -116,7 +116,7 @@
     <!-- Recent Submissions Table -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-        <h3 class="font-bold text-gray-800 text-base">Updated Activity (Recent Lifecycle)</h3>
+        <h3 class="font-bold text-gray-800 text-base">Recent Activity)</h3>
         <span class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full">Real-time Sheet Sync</span>
       </div>
       <div class="overflow-x-auto">
@@ -125,9 +125,9 @@
             <tr>
               <th class="py-3 px-4">Unique ID</th>
               <th class="py-3 px-4">Date / Time</th>
-              <th class="py-3 px-4">Attendant (Uniform)</th>
+              <th class="py-3 px-4">Penginput (Uniform)</th>
               <th class="py-3 px-4">Owner & Dept</th>
-              <th class="py-3 px-4">Item / Defect</th>
+              <th class="py-3 px-4">Items / Defect</th>
               <th class="py-3 px-4">Status</th>
               <th class="py-3 px-4">Tailor</th>
             </tr>
@@ -163,8 +163,16 @@
               <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                 <i class="fa-solid fa-id-badge"></i>
               </span>
-              <input type="text" id="inp-reporting-staff" required placeholder="Nama Petugas Uniform yang menginput"
-                class="w-full pl-9 pr-3 py-2 bg-indigo-50 border border-indigo-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none">
+              <select id="inp-reporting-staff" required
+                class="w-full pl-9 pr-3 py-2 bg-indigo-50 border border-indigo-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none appearance-none">
+                <option value="">-- Uniform Colleague --</option>
+                <option value="Prima">Prima</option>
+                <option value="Mukhlis">Mukhlis</option>
+                <option value="Kodriyah">Kodriyah</option>
+                <option value="Made">Made</option>
+                <option value="Arik">Arik</option>
+                <option value="Arif">Arif</option>
+              </select>
             </div>
           </div>
 
@@ -181,7 +189,7 @@
               Department (Uniform Owner) <span class="text-red-500">*</span>
             </label>
             <select id="inp-department" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
-              <option value="">-- Pilih Departemen --</option>
+              <option value="">-- Choose Departement --</option>
               <option value="Front Office">Front Office</option>
               <option value="GRE">GRE</option>
               <option value="GSC">GSC</option>
@@ -201,7 +209,7 @@
               <option value="Engineering">Engineering</option>
               <option value="Security">Security</option>
               <option value="P&C">P&C</option>
-              <option value="Fitwel">Fitwell</option>
+              <option value="Wellness">Wellness</option>
               <option value="Sales & Executive">Sales & Executive</option>
               <option value="Other">Lain-lain</option>
             </select>
@@ -212,14 +220,15 @@
               Uniform Item <span class="text-red-500">*</span>
             </label>
             <select id="inp-item" required onchange="autoFillCredit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
-              <option value="">-- Pilih Jenis Seragam --</option>
+              <option value="">-- Choose Uniform Type --</option>
               <option value="Kemeja / Shirt">Kemeja / Shirt</option>
-              <option value="Rok / Skirt">Rok / Skirt</option>
               <option value="Celana / Trousers">Celana / Trousers</option>
+              <option value="Skirt">Skirt</option>
               <option value="Jas / Blazer">Jas / Blazer</option>
               <option value="Gaun / Dress">Gaun / Dress</option>
+               <option value="Cook Jacket">Cook Jacket</option>
               <option value="Apron / Celemek">Apron / Celemek</option>
-              <option value="Lainnya">Lainnya</option>
+              <option value="Lainnya">Others</option>
             </select>
           </div>
 
@@ -228,11 +237,12 @@
               Defect Type <span class="text-red-500">*</span>
             </label>
             <select id="inp-defect" required onchange="autoFillCredit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
-              <option value="">-- Pilih Jenis Kerusakan --</option>
-              <option value="Kancing Lepas / Hilang">Kancing Lepas / Hilang</option>
+              <option value="">-- Choose Defect Type --</option>
+              <option value="Missing/Loose/Broken Button">Missing/Loose/Broken Button</option>
               <option value="Sobek Jahitan">Sobek Jahitan</option>
               <option value="Resleting Rusak / Macet">Resleting Rusak / Macet</option>
-              <option value="Kain Sobek / Permakan">Kain Sobek / Permakan</option>
+              <option value="Kain Sobek">Kain Sobek</option>
+              <option value="Vermak">Vermak/option>
               <option value="Potong / Alterasi Panjang">Potong / Alterasi Panjang</option>
               <option value="Lainnya">Lainnya</option>
             </select>
@@ -273,7 +283,7 @@
         <div class="flex justify-between items-center border-b border-gray-100 pb-3">
           <div>
             <h3 class="text-lg font-bold text-gray-800">My Submissions Log</h3>
-            <p class="text-xs text-gray-500">Daftar laporan defect yang telah disubmit</p>
+            <p class="text-xs text-gray-500">List of submitted defect report</p>
           </div>
           <input type="text" id="search-uniform-log" onkeyup="filterUniformTable()" placeholder="Cari ID / Nama / Dept..."
             class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs outline-none focus:ring-1 focus:ring-indigo-500">
@@ -284,8 +294,8 @@
               <tr>
                 <th class="py-2.5 px-3">Unique ID</th>
                 <th class="py-2.5 px-3">Penginput</th>
-                <th class="py-2.5 px-3">Pemilik & Dept</th>
-                <th class="py-2.5 px-3">Item & Defect</th>
+                <th class="py-2.5 px-3">Owner & Dept</th>
+                <th class="py-2.5 px-3">Items & Defect</th>
                 <th class="py-2.5 px-3">Status</th>
               </tr>
             </thead>
@@ -305,7 +315,7 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
       <div>
         <h2 class="text-xl font-bold text-gray-900">Tailor Workstation & Task Queue</h2>
-        <p class="text-xs text-gray-500">Kelola dan selesaikan tugas perbaikan pakaian seragam.</p>
+        <p class="text-xs text-gray-500">Organize and progress of uniform repair.</p>
       </div>
       <div class="flex flex-col items-start gap-1">
         <div class="flex items-center gap-3">
@@ -315,7 +325,7 @@
             class="px-3 py-1.5 border border-indigo-300 rounded-lg text-sm font-semibold text-indigo-900 bg-indigo-50 focus:bg-white outline-none">
         </div>
         <span id="tailor-name-warning" class="text-xs text-red-500 hidden">
-          <i class="fa-solid fa-triangle-exclamation mr-1"></i> Isi nama tailor aktif terlebih dahulu.
+          <i class="fa-solid fa-triangle-exclamation mr-1"></i> Input tailor name.
         </span>
       </div>
     </div>
@@ -353,8 +363,8 @@
     </div>
     <div class="space-y-2 text-sm bg-gray-50 p-3 rounded-lg border">
       <p><strong>Penginput (Uniform):</strong> <span id="modal-reporting-staff">-</span></p>
-      <p><strong>Pemilik & Dept:</strong> <span id="modal-staff-dept">-</span></p>
-      <p><strong>Item / Defect:</strong> <span id="modal-item-defect">-</span></p>
+      <p><strong>Owner & Dept:</strong> <span id="modal-staff-dept">-</span></p>
+      <p><strong>Items / Defect:</strong> <span id="modal-item-defect">-</span></p>
       <p><strong>Total Credit Weight:</strong> <span id="modal-credit" class="font-bold text-indigo-600">1</span></p>
       <p><strong>Remark Masuk:</strong> <span id="modal-remarks" class="italic text-gray-600">-</span></p>
     </div>
@@ -391,7 +401,7 @@
 <script>
 // Store Application State
 let state = {
-  apiUrl: '',
+  apiUrl: 'https://script.google.com/macros/s/AKfycbwNJhEyj2SYSP6XRdAGtxLSDWqqoCgXh5f0_BF9QJsyAexeLYOhBvTJN89Th0_6VsIp/exec',
   tasks: [],
   currentTailorFilter: 'ALL'
 };
