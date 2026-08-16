@@ -11,18 +11,43 @@
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
-  .badge-open { background-color: #fef3c7; color: #d97706; }
-  .badge-progress { background-color: #dbeafe; color: #2563eb; }
-  .badge-completed { background-color: #d1fae5; color: #059669; }
+  :root { --ud-navy:#172554; --ud-blue:#2563eb; --ud-bg:#f8fafc; --ud-border:#e2e8f0; }
+  body { font-family:'Inter',sans-serif; background:var(--ud-bg); -webkit-tap-highlight-color:transparent; }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+  .badge-open { background:#fef3c7; color:#b45309; }
+  .badge-progress { background:#dbeafe; color:#1d4ed8; }
+  .badge-completed { background:#d1fae5; color:#047857; }
+  button,select,input,textarea { min-height:44px; }
+  button { touch-action:manipulation; }
+  .ud-header { background:linear-gradient(135deg,#172554 0%,#1e3a8a 100%); }
+  .ud-logo { width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.18);box-shadow:0 8px 20px rgba(15,23,42,.18); }
+  .ud-app-label { letter-spacing:.02em; }
+  .ud-section-card { border-radius:16px !important;border-color:var(--ud-border) !important;box-shadow:0 4px 18px rgba(15,23,42,.045) !important; }
+  .ud-metric { position:relative;overflow:hidden;min-height:112px; }
+  .ud-metric-icon { position:absolute;right:14px;top:14px;width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#f8fafc; }
+  .ud-table-wrap { scrollbar-width:thin; }
+  @media (max-width:767px) {
+    body { padding-bottom:70px; }
+    .ud-mobile-nav { position:fixed;left:0;right:0;bottom:0;z-index:60;padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:rgba(23,37,84,.97);backdrop-filter:blur(10px);box-shadow:0 -6px 20px rgba(15,23,42,.14); }
+    .ud-mobile-nav button { flex:1;min-height:50px;border-radius:12px;color:#cbd5e1; }
+    main { padding-top:16px !important;padding-left:12px !important;padding-right:12px !important; }
+    #view-dashboard > div:first-child h2 { font-size:1.35rem; }
+    .ud-section-card,#view-uniform .bg-white,#view-tailor .bg-white { border-radius:14px !important; }
+    #view-uniform .bg-white,#view-tailor .bg-white { padding:16px !important; }
+    .ud-table-wrap table { min-width:760px; }
+    #search-uniform-log { width:100%;min-height:44px; }
+    #view-tailor > div:nth-child(2) { overflow-x:auto;padding-bottom:2px;border-bottom:0; }
+    #view-tailor > div:nth-child(2) button { white-space:nowrap;min-width:max-content; }
+    #task-modal { align-items:flex-end; }
+    #task-modal > div { max-height:92vh;overflow-y:auto;border-radius:18px 18px 0 0;padding:18px; }
+  }
 </style>
 </head>
 <body class="text-gray-800">
 
 <!-- Top Navigation Header -->
-<header class="bg-indigo-900 text-white shadow-lg sticky top-0 z-50">
+<header class="ud-header text-white shadow-lg sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
       <div class="flex items-center space-x-3">
@@ -54,7 +79,7 @@
     </div>
   </div>
   <!-- Mobile Navigation -->
-  <div class="md:hidden bg-indigo-950 px-2 pt-2 pb-3 space-y-1 flex justify-around text-xs border-t border-indigo-800">
+  <div class="md:hidden ud-mobile-nav px-2 pt-2 pb-3 space-y-1 flex justify-around text-xs border-t border-indigo-800">
     <button onclick="switchTab('dashboard')" class="text-center p-1">
       <i class="fa-solid fa-chart-pie block text-base mb-0.5"></i> Dashboard
     </button>
@@ -86,28 +111,33 @@
 
     <!-- Metric Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-        <div class="text-xs font-semibold uppercase text-gray-400">Defects</div>
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm ud-section-card ud-metric">
+        <div class="ud-metric-icon text-indigo-600"><i class="fa-solid fa-triangle-exclamation"></i></div>
+         <div class="text-xs font-semibold uppercase text-gray-400">Defects</div>
         <div class="text-2xl font-bold text-gray-800 mt-1" id="stat-today">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-regular fa-clock mr-1"></i> Total Report</div>
       </div>
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-amber-500">
-        <div class="text-xs font-semibold uppercase text-amber-600">Open Tasks</div>
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-amber-500 ud-section-card ud-metric">
+        <div class="ud-metric-icon text-amber-600"><i class="fa-solid fa-hourglass-start"></i></div>
+         <div class="text-xs font-semibold uppercase text-amber-600">Open Tasks</div>
         <div class="text-2xl font-bold text-amber-600 mt-1" id="stat-open">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-hourglass-start mr-1"></i> Waiting for Tailor</div>
       </div>
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-blue-500">
-        <div class="text-xs font-semibold uppercase text-blue-600">In Progress</div>
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-blue-500 ud-section-card ud-metric">
+        <div class="ud-metric-icon text-blue-600"><i class="fa-solid fa-spinner"></i></div>
+         <div class="text-xs font-semibold uppercase text-blue-600">In Progress</div>
         <div class="text-2xl font-bold text-blue-600 mt-1" id="stat-progress">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-spinner mr-1"></i> In </div>
       </div>
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-emerald-500">
-        <div class="text-xs font-semibold uppercase text-emerald-600">Completed</div>
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-emerald-500 ud-section-card ud-metric">
+        <div class="ud-metric-icon text-emerald-600"><i class="fa-solid fa-check-double"></i></div>
+         <div class="text-xs font-semibold uppercase text-emerald-600">Completed</div>
         <div class="text-2xl font-bold text-emerald-600 mt-1" id="stat-completed">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-check-double mr-1"></i> Selesai Diperbaiki</div>
       </div>
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-purple-500">
-        <div class="text-xs font-semibold uppercase text-purple-600">Total Credits</div>
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-purple-500 ud-section-card ud-metric">
+        <div class="ud-metric-icon text-purple-600"><i class="fa-solid fa-award"></i></div>
+         <div class="text-xs font-semibold uppercase text-purple-600">Total Credits</div>
         <div class="text-2xl font-bold text-purple-600 mt-1" id="stat-credits">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-award mr-1"></i> Total Workload</div>
       </div>
@@ -116,10 +146,10 @@
     <!-- Recent Submissions Table -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-        <h3 class="font-bold text-gray-800 text-base">Recent Activity)</h3>
+        <h3 class="font-bold text-gray-800 text-base">Recent Activity</h3>
         <span class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full">Real-time Sheet Sync</span>
       </div>
-      <div class="overflow-x-auto">
+      <div class="overflow-x-auto ud-table-wrap">
         <table class="w-full text-left border-collapse text-sm">
           <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-semibold border-b">
             <tr>
@@ -242,7 +272,7 @@
               <option value="Sobek Jahitan">Sobek Jahitan</option>
               <option value="Resleting Rusak / Macet">Resleting Rusak / Macet</option>
               <option value="Kain Sobek">Kain Sobek</option>
-              <option value="Vermak">Vermak/option>
+              <option value="Vermak">Vermak</option>
               <option value="Potong / Alterasi Panjang">Potong / Alterasi Panjang</option>
               <option value="Lainnya">Lainnya</option>
             </select>
@@ -352,6 +382,9 @@
     </div>
   </section>
 
+  <div class="mt-5 text-center text-[10px] text-slate-400 tracking-wide">
+    DAILY UNIFORM DEFECT • Simple • Fast • Paperless
+  </div>
 </main>
 
 <!-- Tailor Task Action Modal -->
@@ -423,6 +456,11 @@ function switchTab(tabName) {
   document.getElementById(`view-${tabName}`).classList.add('active');
   const activeBtn = document.getElementById(`tab-btn-${tabName}`);
   if (activeBtn) activeBtn.classList.add('bg-indigo-800');
+
+  const mobileButtons = document.querySelectorAll('.ud-mobile-nav button');
+  mobileButtons.forEach(btn => btn.classList.remove('bg-white/10', 'text-white'));
+  const tabIndex = {dashboard:0, uniform:1, tailor:2}[tabName];
+  if (mobileButtons[tabIndex]) mobileButtons[tabIndex].classList.add('bg-white/10', 'text-white');
 }
 
 // Auto Weight Calculation based on Item & Defect, scaled by Quantity
