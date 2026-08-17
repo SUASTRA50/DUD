@@ -369,7 +369,16 @@
       <div class="uniform-form-note mb-4"><i class="fa-solid fa-circle-info mr-1"></i> Satu PO boleh memiliki banyak transaksi karena supplier dapat melakukan partial delivery.</div>
       <form id="uniform-received-form" onsubmit="submitUniformReceived(event)">
         <div class="uniform-form-grid">
-          <div class="uniform-field"><label>Input By</label><input name="inputBy" required placeholder="Nama penginput"></div>
+         <select id="inp-reporting-staff" required
+                class="w-full pl-9 pr-3 py-2 bg-indigo-50 border border-indigo-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none appearance-none">
+                <option value="">-- Uniform Colleague --</option>
+                <option value="Prima">Prima</option>
+                <option value="Mukhlis">Mukhlis</option>
+                <option value="Kodriyah">Kodriyah</option>
+                <option value="Made">Made</option>
+                <option value="Arik">Arik</option>
+                <option value="Arif">Arif</option>
+              </select>
           <div class="uniform-field"><label>What Received</label><input name="whatReceived" required placeholder="Contoh: New Uniform"></div>
           <div class="uniform-field"><label>Uniform Owner</label><input name="uniformOwner" required placeholder="Staff / New Joiner / Stock"></div>
           <div class="uniform-field"><label>Uniform Type</label><input name="uniformType" required placeholder="Contoh: Shirt"></div>
