@@ -46,6 +46,20 @@
     #task-modal { align-items:flex-end; }
     #task-modal > div { max-height:92vh;overflow-y:auto;border-radius:18px 18px 0 0;padding:18px; }
   }
+
+  /* Uniform binder tabs */
+  .uniform-binder{display:flex;gap:6px;overflow-x:auto;padding:4px 4px 0;scrollbar-width:none}
+  .uniform-binder::-webkit-scrollbar{display:none}
+  .uniform-binder-tab{flex:1 0 auto;min-width:112px;min-height:48px;padding:9px 12px;border:1px solid #dbe3ef;border-bottom:0;border-radius:12px 12px 0 0;background:#e8eef7;color:#475569;font-size:12px;font-weight:700;line-height:1.1}
+  .uniform-binder-tab.active{background:#fff;color:#172554;box-shadow:0 -2px 0 #2563eb,0 2px 0 #fff}
+  .uniform-binder-panel{display:none;background:#fff;border:1px solid #dbe3ef;border-radius:0 14px 14px 14px;box-shadow:0 4px 18px rgba(15,23,42,.045)}
+  .uniform-binder-panel.active{display:block}
+  .uniform-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .uniform-field label{display:block;margin-bottom:6px;font-size:11px;font-weight:700;color:#475569}
+  .uniform-field input,.uniform-field select{width:100%;min-height:44px;border:1px solid #cbd5e1;border-radius:10px;padding:9px 11px;background:#fff;color:#0f172a;outline:none}
+  .uniform-field input:focus,.uniform-field select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.10)}
+  .uniform-form-note{padding:10px 12px;border-radius:10px;background:#eff6ff;color:#1e40af;font-size:11px;line-height:1.45}
+  @media(max-width:767px){.uniform-form-grid{grid-template-columns:1fr;gap:12px}.uniform-binder-tab{min-width:108px;padding:9px 9px}.uniform-binder-panel{border-radius:0 12px 12px 12px}}
 </style>
 </head>
 <body class="text-gray-800">
@@ -175,16 +189,25 @@
   </section>
 
   <!-- ======================================================= -->
-  <!-- 2. UNIFORM MODULE VIEW (REPORT NEW DEFECT & SUBMISSIONS) -->
-  <!-- ======================================================= -->
+  <!-- 2. UNIFORM MODULE VIEW -->
   <section id="view-uniform" class="tab-content space-y-6">
+    <div>
+      <h2 class="text-xl font-bold text-slate-800">Uniform Management</h2>
+      <p class="text-xs text-slate-500 mt-1">Defect, received delivery, and production tracking</p>
+    </div>
+    <div class="uniform-binder" role="tablist">
+      <button type="button" class="uniform-binder-tab active" data-ut="defect" onclick="switchUniformTab('defect')"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Report Defects</button>
+      <button type="button" class="uniform-binder-tab" data-ut="received" onclick="switchUniformTab('received')"><i class="fa-solid fa-box-open mr-1"></i> Uniform Received</button>
+      <button type="button" class="uniform-binder-tab" data-ut="production" onclick="switchUniformTab('production')"><i class="fa-solid fa-shirt mr-1"></i> Uniform Production</button>
+    </div>
+    <section id="uniform-panel-defect" class="uniform-binder-panel active p-0">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
       <!-- Left Column: Form Input -->
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-5">
         <div class="border-b border-gray-100 pb-3">
           <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-            <i class="fa-solid fa-pen-to-square text-indigo-600"></i> Report New Defect
+            <i class="fa-solid fa-pen-to-square text-indigo-600"></i> Report Defects
           </h3>
           <p class="text-xs text-gray-500">Uniform staff entry form</p>
         </div>
@@ -341,8 +364,36 @@
       </div>
     </div>
   </section>
-
-  <!-- ======================================================= -->
+    <section id="uniform-panel-received" class="uniform-binder-panel p-4 md:p-5">
+      <div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 grid place-items-center"><i class="fa-solid fa-box-open"></i></div><div><h3 class="text-lg font-bold text-slate-800">Uniform Received</h3><p class="text-xs text-slate-500">Record every supplier delivery, including partial PO delivery.</p></div></div>
+      <div class="uniform-form-note mb-4"><i class="fa-solid fa-circle-info mr-1"></i> Satu PO boleh memiliki banyak transaksi karena supplier dapat melakukan partial delivery.</div>
+      <form id="uniform-received-form" onsubmit="submitUniformReceived(event)">
+        <div class="uniform-form-grid">
+          <div class="uniform-field"><label>Input By</label><input name="inputBy" required placeholder="Nama penginput"></div>
+          <div class="uniform-field"><label>What Received</label><input name="whatReceived" required placeholder="Contoh: New Uniform"></div>
+          <div class="uniform-field"><label>Uniform Owner</label><input name="uniformOwner" required placeholder="Staff / New Joiner / Stock"></div>
+          <div class="uniform-field"><label>Uniform Type</label><input name="uniformType" required placeholder="Contoh: Shirt"></div>
+          <div class="uniform-field"><label>Quantity</label><input name="quantity" type="number" min="1" required placeholder="0"></div>
+          <div class="uniform-field"><label>Department</label><input name="department" required placeholder="Department"></div>
+          <div class="uniform-field"><label>No. PO</label><input name="poNumber" required placeholder="PO Number"></div>
+          <div class="uniform-field"><label>Supplier Name</label><input name="supplierName" required placeholder="Supplier"></div>
+        </div>
+        <div class="mt-5 flex justify-end"><button type="submit" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm"><i class="fa-solid fa-floppy-disk mr-2"></i> Save Received</button></div>
+      </form>
+    </section>
+    <section id="uniform-panel-production" class="uniform-binder-panel p-4 md:p-5">
+      <div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 grid place-items-center"><i class="fa-solid fa-shirt"></i></div><div><h3 class="text-lg font-bold text-slate-800">Uniform Production</h3><p class="text-xs text-slate-500">Record uniform production by department.</p></div></div>
+      <form id="uniform-production-form" onsubmit="submitUniformProduction(event)">
+        <div class="uniform-form-grid">
+          <div class="uniform-field"><label>Input By</label><input name="inputBy" required placeholder="Nama penginput"></div>
+          <div class="uniform-field"><label>Uniform Type</label><input name="uniformType" required placeholder="Contoh: Shirt"></div>
+          <div class="uniform-field"><label>Quantity</label><input name="quantity" type="number" min="1" required placeholder="0"></div>
+          <div class="uniform-field"><label>Department</label><input name="department" required placeholder="Department"></div>
+        </div>
+        <div class="mt-5 flex justify-end"><button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm"><i class="fa-solid fa-floppy-disk mr-2"></i> Save Production</button></div>
+      </form>
+    </section>
+  </section>
   <!-- 3. TAILOR MODULE VIEW (TASK QUEUE & WORKFLOW) -->
   <!-- ======================================================= -->
   <section id="view-tailor" class="tab-content space-y-6">
@@ -845,6 +896,26 @@ function filterUniformTable() {
     row.style.display = text.includes(term) ? '' : 'none';
   });
 }
+</script>
+<script>
+function switchUniformTab(tabName){
+  document.querySelectorAll('.uniform-binder-tab').forEach(b=>b.classList.toggle('active',b.dataset.ut===tabName));
+  document.querySelectorAll('.uniform-binder-panel').forEach(p=>p.classList.toggle('active',p.id==='uniform-panel-'+tabName));
+}
+function uniformFormData(id){const f=document.getElementById(id),o={};new FormData(f).forEach((v,k)=>o[k]=v);return o;}
+async function postUniformTransaction(action,data,formId){
+  const payload={action,...data,clientTimestamp:new Date().toISOString()};
+  try{
+    if(typeof API_URL==='undefined')throw new Error('API_URL not found');
+    const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const result=await r.json().catch(()=>({}));
+    if(result.success===false)throw new Error(result.message||'Server rejected transaction');
+    document.getElementById(formId).reset(); alert('Saved successfully.');
+  }catch(e){console.error(e);alert('Form sudah siap, tetapi Apps Script perlu action "'+action+'" dan sheet terkait. Data belum dianggap tersimpan.');}
+}
+function submitUniformReceived(e){e.preventDefault();postUniformTransaction('createUniformReceived',uniformFormData('uniform-received-form'),'uniform-received-form');}
+function submitUniformProduction(e){e.preventDefault();postUniformTransaction('createUniformProduction',uniformFormData('uniform-production-form'),'uniform-production-form');}
 </script>
 </body>
 </html>
