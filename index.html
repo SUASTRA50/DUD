@@ -369,12 +369,48 @@
       <div class="uniform-form-note mb-4"><i class="fa-solid fa-circle-info mr-1"></i> Satu PO boleh memiliki banyak transaksi karena supplier dapat melakukan partial delivery.</div>
       <form id="uniform-received-form" onsubmit="submitUniformReceived(event)">
         <div class="uniform-form-grid">
-          <div class="uniform-field"><label>Input By</label><input name="inputBy" required placeholder="Nama penginput"></div>
+          <div class="uniform-field"><label>Input By</label><select name="inputBy" required><option value="">-- Uniform Colleague --</option>
+                <option value="Prima">Prima</option>
+                <option value="Mukhlis">Mukhlis</option>
+                <option value="Kodriyah">Kodriyah</option>
+                <option value="Made">Made</option>
+                <option value="Arik">Arik</option>
+                <option value="Arif">Arif</option></select></div>
           <div class="uniform-field"><label>What Received</label><input name="whatReceived" required placeholder="Contoh: New Uniform"></div>
           <div class="uniform-field"><label>Uniform Owner</label><input name="uniformOwner" required placeholder="Staff / New Joiner / Stock"></div>
-          <div class="uniform-field"><label>Uniform Type</label><input name="uniformType" required placeholder="Contoh: Shirt"></div>
+          <div class="uniform-field"><label>Uniform Type</label><select name="uniformType" required><option value="">-- Choose Uniform Type --</option>
+              <option value="Kemeja / Shirt">Kemeja / Shirt</option>
+              <option value="Celana / Trousers">Celana / Trousers</option>
+              <option value="Skirt">Skirt</option>
+              <option value="Jas / Blazer">Jas / Blazer</option>
+              <option value="Gaun / Dress">Gaun / Dress</option>
+               <option value="Cook Jacket">Cook Jacket</option>
+              <option value="Apron / Celemek">Apron / Celemek</option>
+              <option value="Lainnya">Others</option></select></div>
           <div class="uniform-field"><label>Quantity</label><input name="quantity" type="number" min="1" required placeholder="0"></div>
-          <div class="uniform-field"><label>Department</label><input name="department" required placeholder="Department"></div>
+          <div class="uniform-field"><label>Department</label><select name="department" required><option value="">-- Choose Departement --</option>
+              <option value="Front Office">Front Office</option>
+              <option value="GRE">GRE</option>
+              <option value="GSC">GSC</option>
+              <option value="Club">Club</option>
+              <option value="Concierge">Concierge</option>
+              <option value="Housekeeping">Housekeeping</option>
+              <option value="Laundry">Laundry</option>
+              <option value="Cinnamon">Cinnamon</option>
+              <option value="LiFeng">LiFeng</option>
+              <option value="IRD">IRD</option>
+              <option value="Banquet">Banquet</option>
+              <option value="Steward">Steward</option>
+              <option value="Kitchen / Culinary">Kitchen / Culinary</option>
+              <option value="IT">IT</option>
+              <option value="Purchasing">Purchasing</option>
+              <option value="Finance">Finance</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Security">Security</option>
+              <option value="P&C">P&C</option>
+              <option value="Wellness">Wellness</option>
+              <option value="Sales & Executive">Sales & Executive</option>
+              <option value="Other">Lain-lain</option></select></div>
           <div class="uniform-field"><label>No. PO</label><input name="poNumber" required placeholder="PO Number"></div>
           <div class="uniform-field"><label>Supplier Name</label><input name="supplierName" required placeholder="Supplier"></div>
         </div>
@@ -385,10 +421,46 @@
       <div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 grid place-items-center"><i class="fa-solid fa-shirt"></i></div><div><h3 class="text-lg font-bold text-slate-800">Uniform Production</h3><p class="text-xs text-slate-500">Record uniform production by department.</p></div></div>
       <form id="uniform-production-form" onsubmit="submitUniformProduction(event)">
         <div class="uniform-form-grid">
-          <div class="uniform-field"><label>Input By</label><input name="inputBy" required placeholder="Nama penginput"></div>
-          <div class="uniform-field"><label>Uniform Type</label><input name="uniformType" required placeholder="Contoh: Shirt"></div>
+          <div class="uniform-field"><label>Input By</label><select name="inputBy" required><option value="">-- Uniform Colleague --</option>
+                <option value="Prima">Prima</option>
+                <option value="Mukhlis">Mukhlis</option>
+                <option value="Kodriyah">Kodriyah</option>
+                <option value="Made">Made</option>
+                <option value="Arik">Arik</option>
+                <option value="Arif">Arif</option></select></div>
+          <div class="uniform-field"><label>Uniform Type</label><select name="uniformType" required><option value="">-- Choose Uniform Type --</option>
+              <option value="Kemeja / Shirt">Kemeja / Shirt</option>
+              <option value="Celana / Trousers">Celana / Trousers</option>
+              <option value="Skirt">Skirt</option>
+              <option value="Jas / Blazer">Jas / Blazer</option>
+              <option value="Gaun / Dress">Gaun / Dress</option>
+               <option value="Cook Jacket">Cook Jacket</option>
+              <option value="Apron / Celemek">Apron / Celemek</option>
+              <option value="Lainnya">Others</option></select></div>
           <div class="uniform-field"><label>Quantity</label><input name="quantity" type="number" min="1" required placeholder="0"></div>
-          <div class="uniform-field"><label>Department</label><input name="department" required placeholder="Department"></div>
+          <div class="uniform-field"><label>Department</label><select name="department" required><option value="">-- Choose Departement --</option>
+              <option value="Front Office">Front Office</option>
+              <option value="GRE">GRE</option>
+              <option value="GSC">GSC</option>
+              <option value="Club">Club</option>
+              <option value="Concierge">Concierge</option>
+              <option value="Housekeeping">Housekeeping</option>
+              <option value="Laundry">Laundry</option>
+              <option value="Cinnamon">Cinnamon</option>
+              <option value="LiFeng">LiFeng</option>
+              <option value="IRD">IRD</option>
+              <option value="Banquet">Banquet</option>
+              <option value="Steward">Steward</option>
+              <option value="Kitchen / Culinary">Kitchen / Culinary</option>
+              <option value="IT">IT</option>
+              <option value="Purchasing">Purchasing</option>
+              <option value="Finance">Finance</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Security">Security</option>
+              <option value="P&C">P&C</option>
+              <option value="Wellness">Wellness</option>
+              <option value="Sales & Executive">Sales & Executive</option>
+              <option value="Other">Lain-lain</option></select></div>
         </div>
         <div class="mt-5 flex justify-end"><button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm"><i class="fa-solid fa-floppy-disk mr-2"></i> Save Production</button></div>
       </form>
