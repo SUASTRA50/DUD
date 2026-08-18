@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Daily Uniform Defect Management</title>
+<title>Uniform Management</title>
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- FontAwesome Icons -->
@@ -32,9 +32,26 @@
   .ud-metric-icon { position:absolute;right:14px;top:14px;width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#f8fafc; }
   .ud-table-wrap { scrollbar-width:thin; }
   @media (max-width:767px) {
-    body { padding-bottom:70px; }
-    .ud-mobile-nav { position:fixed;left:0;right:0;bottom:0;z-index:60;padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:rgba(23,37,84,.97);backdrop-filter:blur(10px);box-shadow:0 -6px 20px rgba(15,23,42,.14); }
-    .ud-mobile-nav button { flex:1;min-height:50px;border-radius:12px;color:#cbd5e1; }
+    body { padding-bottom:92px; }
+    .ud-mobile-nav {
+      position:fixed; left:50%; bottom:calc(14px + env(safe-area-inset-bottom));
+      transform:translateX(-50%); z-index:60;
+      display:flex; align-items:center; gap:2px;
+      padding:5px; border-radius:9999px;
+      background:rgba(23,37,84,.92);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      box-shadow:0 12px 28px rgba(15,23,42,.35), 0 0 0 1px rgba(15,23,42,.15);
+    }
+    .ud-mobile-nav button {
+      display:flex; align-items:center; gap:6px;
+      padding:10px 14px; border-radius:9999px;
+      font-size:12px; font-weight:600; color:#94a3b8;
+      min-height:auto; white-space:nowrap; border:0; background:transparent;
+      transition:background .15s ease, color .15s ease;
+    }
+    .ud-mobile-nav button i { font-size:13px; }
+    .ud-mobile-nav button.active { background:#4f46e5; color:#fff; box-shadow:0 4px 12px rgba(79,70,229,.45); }
     main { padding-top:16px !important;padding-left:12px !important;padding-right:12px !important; }
     #view-dashboard > div:first-child h2 { font-size:1.35rem; }
     .ud-section-card,#view-uniform .bg-white,#view-tailor .bg-white { border-radius:14px !important; }
@@ -73,7 +90,7 @@
           <i class="fa-solid font-bold text-xl fa-shirt"></i>
         </div>
         <div>
-          <h1 class="font-bold text-lg leading-tight">Daily Uniform Defect</h1>
+          <h1 class="font-bold text-lg leading-tight">Uniform Management</h1>
           <p class="text-xs text-indigo-200">System Lifecycle & Task Queue</p>
         </div>
       </div>
@@ -89,23 +106,18 @@
           <i class="fa-solid fa-scissors mr-1.5"></i> Tailor Queue
         </button>
       </nav>
-      <!-- Status Indicator -->
-      <div class="flex items-center space-x-2 text-xs bg-indigo-950 px-3 py-1.5 rounded-full border border-indigo-700">
-        <span id="api-status-ping" class="h-2 w-2 rounded-full bg-yellow-400"></span>
-        <span id="api-status-text" class="text-gray-300">Local / Demo Mode</span>
-      </div>
     </div>
   </div>
-  <!-- Mobile Navigation -->
-  <div class="md:hidden ud-mobile-nav px-2 pt-2 pb-3 space-y-1 flex justify-around text-xs border-t border-indigo-800">
-    <button onclick="switchTab('dashboard')" class="text-center p-1">
-      <i class="fa-solid fa-chart-pie block text-base mb-0.5"></i> Dashboard
+  <!-- Mobile Navigation — floating dock -->
+  <div class="md:hidden ud-mobile-nav">
+    <button onclick="switchTab('dashboard')" class="active">
+      <i class="fa-solid fa-chart-pie"></i> Dashboard
     </button>
-    <button onclick="switchTab('uniform')" class="text-center p-1">
-      <i class="fa-solid fa-file-pen block text-base mb-0.5"></i> Uniform
+    <button onclick="switchTab('uniform')">
+      <i class="fa-solid fa-file-pen"></i> Uniform
     </button>
-    <button onclick="switchTab('tailor')" class="text-center p-1">
-      <i class="fa-solid fa-scissors block text-base mb-0.5"></i> Tailor
+    <button onclick="switchTab('tailor')">
+      <i class="fa-solid fa-scissors"></i> Tailor
     </button>
   </div>
 </header>
@@ -151,7 +163,7 @@
         <div class="ud-metric-icon text-emerald-600"><i class="fa-solid fa-check-double"></i></div>
          <div class="text-xs font-semibold uppercase text-emerald-600">Completed</div>
         <div class="text-2xl font-bold text-emerald-600 mt-1" id="stat-completed">0</div>
-        <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-check-double mr-1"></i> Selesai Diperbaiki</div>
+        <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-check-double mr-1"></i> Repaired / Completed</div>
       </div>
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-purple-500 ud-section-card ud-metric">
         <div class="ud-metric-icon text-purple-600"><i class="fa-solid fa-award"></i></div>
@@ -173,7 +185,7 @@
             <tr>
               <th class="py-3 px-4">Unique ID</th>
               <th class="py-3 px-4">Date / Time</th>
-              <th class="py-3 px-4">Penginput (Uniform)</th>
+              <th class="py-3 px-4">Input By (Uniform)</th>
               <th class="py-3 px-4">Owner & Dept</th>
               <th class="py-3 px-4">Items / Defect</th>
               <th class="py-3 px-4">Status</th>
@@ -268,7 +280,7 @@
               <option value="P&C">P&C</option>
               <option value="Wellness">Wellness</option>
               <option value="Sales & Executive">Sales & Executive</option>
-              <option value="Other">Lain-lain</option>
+              <option value="Other">Other</option>
             </select>
           </div>
 
@@ -278,14 +290,14 @@
             </label>
             <select id="inp-item" required onchange="autoFillCredit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
               <option value="">-- Choose Uniform Type --</option>
-              <option value="Kemeja / Shirt">Kemeja / Shirt</option>
-              <option value="Celana / Trousers">Celana / Trousers</option>
+              <option value="Shirt">Shirt</option>
+              <option value="Trousers">Trousers</option>
               <option value="Skirt">Skirt</option>
-              <option value="Jas / Blazer">Jas / Blazer</option>
-              <option value="Gaun / Dress">Gaun / Dress</option>
+              <option value="Blazer">Blazer</option>
+              <option value="Dress">Dress</option>
                <option value="Cook Jacket">Cook Jacket</option>
-              <option value="Apron / Celemek">Apron / Celemek</option>
-              <option value="Lainnya">Others</option>
+              <option value="Apron">Apron</option>
+              <option value="Others">Others</option>
             </select>
           </div>
 
@@ -296,12 +308,12 @@
             <select id="inp-defect" required onchange="autoFillCredit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
               <option value="">-- Choose Defect Type --</option>
               <option value="Missing/Loose/Broken Button">Missing/Loose/Broken Button</option>
-              <option value="Sobek Jahitan">Sobek Jahitan</option>
-              <option value="Resleting Rusak / Macet">Resleting Rusak / Macet</option>
-              <option value="Kain Sobek">Kain Sobek</option>
-              <option value="Vermak">Vermak</option>
-              <option value="Potong / Alterasi Panjang">Potong / Alterasi Panjang</option>
-              <option value="Lainnya">Lainnya</option>
+              <option value="Torn Stitching">Torn Stitching</option>
+              <option value="Zipper Broken / Stuck">Zipper Broken / Stuck</option>
+              <option value="Torn Fabric">Torn Fabric</option>
+              <option value="Alteration">Alteration</option>
+              <option value="Cut / Length Alteration">Cut / Length Alteration</option>
+              <option value="Others">Others</option>
             </select>
           </div>
 
@@ -324,8 +336,8 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Remark / Catatan</label>
-            <textarea id="inp-remarks" rows="2" placeholder="Detail posisi sobek, ukuran kancing, dll..."
+            <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Remark / Notes</label>
+            <textarea id="inp-remarks" rows="2" placeholder="Detail of tear location, button size, etc..."
               class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
           </div>
 
@@ -342,7 +354,7 @@
             <h3 class="text-lg font-bold text-gray-800">My Submissions Log</h3>
             <p class="text-xs text-gray-500">List of submitted defect report</p>
           </div>
-          <input type="text" id="search-uniform-log" onkeyup="filterUniformTable()" placeholder="Cari ID / Nama / Dept..."
+          <input type="text" id="search-uniform-log" onkeyup="filterUniformTable()" placeholder="Search ID / Name / Dept..."
             class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs outline-none focus:ring-1 focus:ring-indigo-500">
         </div>
         <div class="overflow-x-auto max-h-[500px]">
@@ -350,7 +362,7 @@
             <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-semibold sticky top-0">
               <tr>
                 <th class="py-2.5 px-3">Unique ID</th>
-                <th class="py-2.5 px-3">Penginput</th>
+                <th class="py-2.5 px-3">Input By</th>
                 <th class="py-2.5 px-3">Owner & Dept</th>
                 <th class="py-2.5 px-3">Items & Defect</th>
                 <th class="py-2.5 px-3">Status</th>
@@ -376,17 +388,17 @@
                 <option value="Made">Made</option>
                 <option value="Arik">Arik</option>
                 <option value="Arif">Arif</option></select></div>
-          <div class="uniform-field"><label>What Received</label><input name="whatReceived" required placeholder="Contoh: New Uniform"></div>
+          <div class="uniform-field"><label>What Received</label><input name="whatReceived" required placeholder="e.g. New Uniform"></div>
           <div class="uniform-field"><label>Uniform Owner</label><input name="uniformOwner" required placeholder="Staff / New Joiner / Stock"></div>
           <div class="uniform-field"><label>Uniform Type</label><select name="uniformType" required><option value="">-- Choose Uniform Type --</option>
-              <option value="Kemeja / Shirt">Kemeja / Shirt</option>
-              <option value="Celana / Trousers">Celana / Trousers</option>
+              <option value="Shirt">Shirt</option>
+              <option value="Trousers">Trousers</option>
               <option value="Skirt">Skirt</option>
-              <option value="Jas / Blazer">Jas / Blazer</option>
-              <option value="Gaun / Dress">Gaun / Dress</option>
+              <option value="Blazer">Blazer</option>
+              <option value="Dress">Dress</option>
                <option value="Cook Jacket">Cook Jacket</option>
-              <option value="Apron / Celemek">Apron / Celemek</option>
-              <option value="Lainnya">Others</option></select></div>
+              <option value="Apron">Apron</option>
+              <option value="Others">Others</option></select></div>
           <div class="uniform-field"><label>Quantity</label><input name="quantity" type="number" min="1" required placeholder="0"></div>
           <div class="uniform-field"><label>Department</label><select name="department" required><option value="">-- Choose Departement --</option>
               <option value="Front Office">Front Office</option>
@@ -410,8 +422,8 @@
               <option value="P&C">P&C</option>
               <option value="Wellness">Wellness</option>
               <option value="Sales & Executive">Sales & Executive</option>
-              <option value="Other">Lain-lain</option></select></div>
-          <div class="uniform-field"><label>No. PO</label><input name="poNumber" required placeholder="PO Number"></div>
+              <option value="Other">Other</option></select></div>
+          <div class="uniform-field"><label>PO Number</label><input name="poNumber" required placeholder="PO Number"></div>
           <div class="uniform-field"><label>Supplier Name</label><input name="supplierName" required placeholder="Supplier"></div>
         </div>
         <div class="mt-5 flex justify-end"><button type="submit" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm"><i class="fa-solid fa-floppy-disk mr-2"></i> Save Received</button></div>
@@ -429,14 +441,14 @@
                 <option value="Arik">Arik</option>
                 <option value="Arif">Arif</option></select></div>
           <div class="uniform-field"><label>Uniform Type</label><select name="uniformType" required><option value="">-- Choose Uniform Type --</option>
-              <option value="Kemeja / Shirt">Kemeja / Shirt</option>
-              <option value="Celana / Trousers">Celana / Trousers</option>
+              <option value="Shirt">Shirt</option>
+              <option value="Trousers">Trousers</option>
               <option value="Skirt">Skirt</option>
-              <option value="Jas / Blazer">Jas / Blazer</option>
-              <option value="Gaun / Dress">Gaun / Dress</option>
+              <option value="Blazer">Blazer</option>
+              <option value="Dress">Dress</option>
                <option value="Cook Jacket">Cook Jacket</option>
-              <option value="Apron / Celemek">Apron / Celemek</option>
-              <option value="Lainnya">Others</option></select></div>
+              <option value="Apron">Apron</option>
+              <option value="Others">Others</option></select></div>
           <div class="uniform-field"><label>Quantity</label><input name="quantity" type="number" min="1" required placeholder="0"></div>
           <div class="uniform-field"><label>Department</label><select name="department" required><option value="">-- Choose Departement --</option>
               <option value="Front Office">Front Office</option>
@@ -460,7 +472,7 @@
               <option value="P&C">P&C</option>
               <option value="Wellness">Wellness</option>
               <option value="Sales & Executive">Sales & Executive</option>
-              <option value="Other">Lain-lain</option></select></div>
+              <option value="Other">Other</option></select></div>
         </div>
         <div class="mt-5 flex justify-end"><button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm"><i class="fa-solid fa-floppy-disk mr-2"></i> Save Production</button></div>
       </form>
@@ -472,12 +484,12 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
       <div>
         <h2 class="text-xl font-bold text-gray-900">Tailor Workstation & Task Queue</h2>
-        <p class="text-xs text-gray-500">Organize and progress of uniform repair.</p>
+        <p class="text-xs text-gray-500">Manage and track uniform repair progress.</p>
       </div>
       <div class="flex flex-col items-start gap-1">
         <div class="flex items-center gap-3">
           <label class="text-xs font-semibold text-gray-600">Active Tailor Name:</label>
-          <input type="text" id="active-tailor-name" required placeholder="Wajib diisi sebelum memproses task"
+          <input type="text" id="active-tailor-name" required placeholder="Required before processing a task"
             oninput="validateActiveTailor()"
             class="px-3 py-1.5 border border-indigo-300 rounded-lg text-sm font-semibold text-indigo-900 bg-indigo-50 focus:bg-white outline-none">
         </div>
@@ -510,7 +522,7 @@
   </section>
 
   <div class="mt-5 text-center text-[10px] text-slate-400 tracking-wide">
-    DAILY UNIFORM DEFECT • Simple • Fast • Paperless
+    UNIFORM MANAGEMENT • Simple • Fast • Paperless
   </div>
 </main>
 
@@ -522,35 +534,35 @@
       <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
     </div>
     <div class="space-y-2 text-sm bg-gray-50 p-3 rounded-lg border">
-      <p><strong>Penginput (Uniform):</strong> <span id="modal-reporting-staff">-</span></p>
+      <p><strong>Input By (Uniform):</strong> <span id="modal-reporting-staff">-</span></p>
       <p><strong>Owner & Dept:</strong> <span id="modal-staff-dept">-</span></p>
       <p><strong>Items / Defect:</strong> <span id="modal-item-defect">-</span></p>
       <p><strong>Total Credit Weight:</strong> <span id="modal-credit" class="font-bold text-indigo-600">1</span></p>
-      <p><strong>Remark Masuk:</strong> <span id="modal-remarks" class="italic text-gray-600">-</span></p>
+      <p><strong>Incoming Remark:</strong> <span id="modal-remarks" class="italic text-gray-600">-</span></p>
     </div>
     <form id="form-modal-action" onsubmit="handleModalSubmit(event)" class="space-y-3">
       <input type="hidden" id="modal-hidden-id">
       <input type="hidden" id="modal-hidden-target-status">
       <div id="modal-completion-fields" class="space-y-3 hidden">
         <div>
-          <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Hasil Perbaikan (Repair Result)</label>
+          <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Repair Result</label>
           <select id="modal-repair-result" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
-            <option value="Jahitan Rapih / Fixed">Jahitan Rapih / Fixed</option>
-            <option value="Kancing Diganti Baru">Kancing Diganti Baru</option>
-            <option value="Resleting Diganti Baru">Resleting Diganti Baru</option>
-            <option value="Potong / Alterasi Selesai">Potong / Alterasi Selesai</option>
-            <option value="Diberdayakan / Replaced">Diberdayakan / Replaced</option>
+            <option value="Stitching Fixed">Stitching Fixed</option>
+            <option value="Button Replaced">Button Replaced</option>
+            <option value="Zipper Replaced">Zipper Replaced</option>
+            <option value="Alteration Completed">Alteration Completed</option>
+            <option value="Replaced / Discarded">Replaced / Discarded</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Catatan Tailor</label>
-          <textarea id="modal-tailor-remarks" rows="2" placeholder="Catatan opsional dari tailor..." class="w-full px-3 py-2 border rounded-lg text-sm"></textarea>
+          <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Tailor Notes</label>
+          <textarea id="modal-tailor-remarks" rows="2" placeholder="Optional notes from the tailor..." class="w-full px-3 py-2 border rounded-lg text-sm"></textarea>
         </div>
       </div>
       <div class="flex justify-end space-x-2 pt-2 border-t">
-        <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded-lg text-sm text-gray-600 hover:bg-gray-100">Batal</button>
+        <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded-lg text-sm text-gray-600 hover:bg-gray-100">Cancel</button>
         <button type="submit" id="modal-submit-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 active:scale-95 transition">
-          Proses Task
+          Process Task
         </button>
       </div>
     </form>
@@ -568,11 +580,6 @@ let state = {
 
 // Initialize App
 document.addEventListener('DOMContentLoaded', () => {
-  if (state.apiUrl) {
-    updateStatusIndicator(true, "Connected to GAS");
-  } else {
-    updateStatusIndicator(false, "Demo Mode (Local)");
-  }
   refreshData();
 });
 
@@ -585,9 +592,9 @@ function switchTab(tabName) {
   if (activeBtn) activeBtn.classList.add('bg-indigo-800');
 
   const mobileButtons = document.querySelectorAll('.ud-mobile-nav button');
-  mobileButtons.forEach(btn => btn.classList.remove('bg-white/10', 'text-white'));
+  mobileButtons.forEach(btn => btn.classList.remove('active'));
   const tabIndex = {dashboard:0, uniform:1, tailor:2}[tabName];
-  if (mobileButtons[tabIndex]) mobileButtons[tabIndex].classList.add('bg-white/10', 'text-white');
+  if (mobileButtons[tabIndex]) mobileButtons[tabIndex].classList.add('active');
 }
 
 // Auto Weight Calculation based on Item & Defect, scaled by Quantity
@@ -598,10 +605,10 @@ function autoFillCredit() {
   const totalDisplay = document.getElementById('inp-total-credit-display');
 
   let unitCredit = 1;
-  if (defect.includes("Resleting") || defect.includes("Potong / Alterasi")) {
-    unitCredit = 2;
-  } else if (defect.includes("Kain Sobek")) {
+  if (defect.includes("Torn Fabric")) {
     unitCredit = 3;
+  } else if (defect.includes("Zipper") || defect.includes("Cut / Length Alteration")) {
+    unitCredit = 2;
   } else {
     unitCredit = 1;
   }
@@ -728,7 +735,7 @@ async function handleCreateSubmission(e) {
       });
       const textResponse = await res.text();
       if (textResponse.startsWith('<')) {
-        throw new Error("Server mengembalikan HTML. Periksa URL Deployment Apps Script Anda.");
+        throw new Error("Server returned HTML. Please check your Apps Script deployment URL.");
       }
       const result = JSON.parse(textResponse);
       if (result.success) {
@@ -737,7 +744,7 @@ async function handleCreateSubmission(e) {
         document.getElementById('inp-total-credit-display').innerText = '1';
         await refreshData();
       } else {
-        alert("Gagal: " + (result.message || "Unknown error"));
+        alert("Failed: " + (result.message || "Unknown error"));
       }
     } catch (err) {
       alert("Error submitting: " + err.message);
@@ -759,7 +766,7 @@ function renderTailorQueue() {
     : state.tasks.filter(t => t.status === state.currentTailorFilter);
 
   if (filtered.length === 0) {
-    grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400 text-sm bg-white rounded-xl border">Tidak ada tugas pada status ini.</div>`;
+    grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400 text-sm bg-white rounded-xl border">No tasks in this status.</div>`;
     return;
   }
 
@@ -789,7 +796,7 @@ function renderTailorQueue() {
           ${getBadgeHtml(t.status)}
         </div>
         <div class="border-t border-b py-2 space-y-1">
-          <div class="text-xs text-gray-500">Penginput: <span class="font-semibold text-gray-700">${t.reportingStaff || t.inputBy || '-'}</span></div>
+          <div class="text-xs text-gray-500">Input By: <span class="font-semibold text-gray-700">${t.reportingStaff || t.inputBy || '-'}</span></div>
           <div class="text-sm font-bold text-gray-800">${t.staffName || t.staff || '-'} <span class="text-xs font-normal text-gray-500">(${t.department || '-'})</span></div>
           <div class="text-xs font-medium text-indigo-900">${t.item} - ${t.defect} (${t.quantity || 1} pcs)</div>
           <div class="text-xs font-semibold text-purple-700">Total Credit: ${totalCredit}</div>
@@ -854,7 +861,7 @@ function openActionModal(id, targetStatus) {
   document.getElementById('modal-item-defect').innerText = `${task.item} - ${task.defect}`;
   const totalCredit = task.totalCredit != null ? task.totalCredit : (Number(task.credit) || 1) * (Number(task.quantity) || 1);
   document.getElementById('modal-credit').innerText = totalCredit;
-  document.getElementById('modal-remarks').innerText = task.remarks || 'Tidak ada';
+  document.getElementById('modal-remarks').innerText = task.remarks || 'None';
 
   const completionFields = document.getElementById('modal-completion-fields');
   const submitBtn = document.getElementById('modal-submit-btn');
@@ -941,17 +948,6 @@ async function handleModalSubmit(e) {
   }
 }
 
-function updateStatusIndicator(isConnected, text) {
-  const ping = document.getElementById('api-status-ping');
-  const txt = document.getElementById('api-status-text');
-  txt.innerText = text;
-  if (isConnected) {
-    ping.className = "h-2 w-2 rounded-full bg-emerald-400 animate-pulse";
-  } else {
-    ping.className = "h-2 w-2 rounded-full bg-yellow-400";
-  }
-}
-
 // Utility: Status Badge Generator
 function getBadgeHtml(status) {
   if (status === 'OPEN') return `<span class="badge-open px-2.5 py-1 text-xs font-bold rounded-full">OPEN</span>`;
@@ -984,7 +980,7 @@ async function postUniformTransaction(action,data,formId){
     const result=await r.json().catch(()=>({}));
     if(result.success===false)throw new Error(result.message||'Server rejected transaction');
     document.getElementById(formId).reset(); alert('Saved successfully.');
-  }catch(e){console.error(e);alert('Form sudah siap, tetapi Apps Script perlu action "'+action+'" dan sheet terkait. Data belum dianggap tersimpan.');}
+  }catch(e){console.error(e);alert('Form is ready, but Apps Script needs the action "'+action+'" and its related sheet. Data has not been saved yet.');}
 }
 function submitUniformReceived(e){e.preventDefault();postUniformTransaction('createUniformReceived',uniformFormData('uniform-received-form'),'uniform-received-form');}
 function submitUniformProduction(e){e.preventDefault();postUniformTransaction('createUniformProduction',uniformFormData('uniform-production-form'),'uniform-production-form');}
