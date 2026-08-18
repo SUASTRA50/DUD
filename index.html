@@ -4,9 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#172554">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
 <title>Uniform Management</title>
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -25,8 +22,6 @@
   button,select,input,textarea { min-height:44px; }
   button { touch-action:manipulation; }
   .ud-header { background:linear-gradient(135deg,#172554 0%,#1e3a8a 100%); }
-  .ud-logo { width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.18);box-shadow:0 8px 20px rgba(15,23,42,.18); }
-  .ud-app-label { letter-spacing:.02em; }
   .ud-section-card { border-radius:16px !important;border-color:var(--ud-border) !important;box-shadow:0 4px 18px rgba(15,23,42,.045) !important; }
   .ud-metric { position:relative;overflow:hidden;min-height:112px; }
   .ud-metric-icon { position:absolute;right:14px;top:14px;width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#f8fafc; }
@@ -53,18 +48,11 @@
     .ud-mobile-nav button i { font-size:13px; }
     .ud-mobile-nav button.active { background:#4f46e5; color:#fff; box-shadow:0 4px 12px rgba(79,70,229,.45); }
     main { padding-top:16px !important;padding-left:12px !important;padding-right:12px !important; }
-    #view-dashboard > div:first-child h2 { font-size:1.35rem; }
-    .ud-section-card,#view-uniform .bg-white,#view-tailor .bg-white { border-radius:14px !important; }
-    #view-uniform .bg-white,#view-tailor .bg-white { padding:16px !important; }
     .ud-table-wrap table { min-width:760px; }
-    #search-uniform-log { width:100%;min-height:44px; }
-    #view-tailor > div:nth-child(2) { overflow-x:auto;padding-bottom:2px;border-bottom:0; }
-    #view-tailor > div:nth-child(2) button { white-space:nowrap;min-width:max-content; }
     #task-modal { align-items:flex-end; }
     #task-modal > div { max-height:92vh;overflow-y:auto;border-radius:18px 18px 0 0;padding:18px; }
   }
 
-  /* Uniform binder tabs */
   .uniform-binder{display:flex;gap:6px;overflow-x:auto;padding:4px 4px 0;scrollbar-width:none}
   .uniform-binder::-webkit-scrollbar{display:none}
   .uniform-binder-tab{flex:1 0 auto;min-width:112px;min-height:48px;padding:9px 12px;border:1px solid #dbe3ef;border-bottom:0;border-radius:12px 12px 0 0;background:#e8eef7;color:#475569;font-size:12px;font-weight:700;line-height:1.1}
@@ -76,7 +64,7 @@
   .uniform-field input,.uniform-field select{width:100%;min-height:44px;border:1px solid #cbd5e1;border-radius:10px;padding:9px 11px;background:#fff;color:#0f172a;outline:none}
   .uniform-field input:focus,.uniform-field select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.10)}
   .uniform-form-note{padding:10px 12px;border-radius:10px;background:#eff6ff;color:#1e40af;font-size:11px;line-height:1.45}
-  @media(max-width:767px){.uniform-form-grid{grid-template-columns:1fr;gap:12px}.uniform-binder-tab{min-width:108px;padding:9px 9px}.uniform-binder-panel{border-radius:0 12px 12px 12px}}
+  @media(max-width:767px){.uniform-form-grid{grid-template-columns:1fr;gap:12px}.uniform-binder-panel{border-radius:0 12px 12px 12px}}
 </style>
 </head>
 <body class="text-gray-800">
@@ -108,7 +96,7 @@
       </nav>
     </div>
   </div>
-  <!-- Mobile Navigation — floating dock -->
+  <!-- Mobile Navigation -->
   <div class="md:hidden ud-mobile-nav">
     <button onclick="switchTab('dashboard')" class="active">
       <i class="fa-solid fa-chart-pie"></i> Dashboard
@@ -125,9 +113,7 @@
 <!-- Main Container -->
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-  <!-- ======================================================= -->
   <!-- 1. DASHBOARD VIEW -->
-  <!-- ======================================================= -->
   <section id="view-dashboard" class="tab-content active space-y-6">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
@@ -143,31 +129,31 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm ud-section-card ud-metric">
         <div class="ud-metric-icon text-indigo-600"><i class="fa-solid fa-triangle-exclamation"></i></div>
-         <div class="text-xs font-semibold uppercase text-gray-400">Defects</div>
+        <div class="text-xs font-semibold uppercase text-gray-400">Defects</div>
         <div class="text-2xl font-bold text-gray-800 mt-1" id="stat-today">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-regular fa-clock mr-1"></i> Total Report</div>
       </div>
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-amber-500 ud-section-card ud-metric">
         <div class="ud-metric-icon text-amber-600"><i class="fa-solid fa-hourglass-start"></i></div>
-         <div class="text-xs font-semibold uppercase text-amber-600">Open Tasks</div>
+        <div class="text-xs font-semibold uppercase text-amber-600">Open Tasks</div>
         <div class="text-2xl font-bold text-amber-600 mt-1" id="stat-open">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-hourglass-start mr-1"></i> Waiting for Tailor</div>
       </div>
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-blue-500 ud-section-card ud-metric">
         <div class="ud-metric-icon text-blue-600"><i class="fa-solid fa-spinner"></i></div>
-         <div class="text-xs font-semibold uppercase text-blue-600">In Progress</div>
+        <div class="text-xs font-semibold uppercase text-blue-600">In Progress</div>
         <div class="text-2xl font-bold text-blue-600 mt-1" id="stat-progress">0</div>
-        <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-spinner mr-1"></i> In </div>
+        <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-spinner mr-1"></i> In Process</div>
       </div>
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-emerald-500 ud-section-card ud-metric">
         <div class="ud-metric-icon text-emerald-600"><i class="fa-solid fa-check-double"></i></div>
-         <div class="text-xs font-semibold uppercase text-emerald-600">Completed</div>
+        <div class="text-xs font-semibold uppercase text-emerald-600">Completed</div>
         <div class="text-2xl font-bold text-emerald-600 mt-1" id="stat-completed">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-check-double mr-1"></i> Repaired / Completed</div>
       </div>
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-purple-500 ud-section-card ud-metric">
         <div class="ud-metric-icon text-purple-600"><i class="fa-solid fa-award"></i></div>
-         <div class="text-xs font-semibold uppercase text-purple-600">Total Credits</div>
+        <div class="text-xs font-semibold uppercase text-purple-600">Total Credits</div>
         <div class="text-2xl font-bold text-purple-600 mt-1" id="stat-credits">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-award mr-1"></i> Total Workload</div>
       </div>
@@ -200,7 +186,6 @@
     </div>
   </section>
 
-  <!-- ======================================================= -->
   <!-- 2. UNIFORM MODULE VIEW -->
   <section id="view-uniform" class="tab-content space-y-6">
     <div>
@@ -212,170 +197,171 @@
       <button type="button" class="uniform-binder-tab" data-ut="received" onclick="switchUniformTab('received')"><i class="fa-solid fa-box-open mr-1"></i> Uniform Received</button>
       <button type="button" class="uniform-binder-tab" data-ut="production" onclick="switchUniformTab('production')"><i class="fa-solid fa-shirt mr-1"></i> Uniform Production</button>
     </div>
+
+    <!-- PANEL 1: DEFECT REPORT -->
     <section id="uniform-panel-defect" class="uniform-binder-panel active p-0">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-      <!-- Left Column: Form Input -->
-      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-5">
-        <div class="border-b border-gray-100 pb-3">
-          <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-            <i class="fa-solid fa-pen-to-square text-indigo-600"></i> Report Defects
-          </h3>
-          <p class="text-xs text-gray-500">Uniform staff entry form</p>
-        </div>
-        <form id="form-new-defect" onsubmit="handleCreateSubmission(event)" class="space-y-4">
-          <div>
-            <label class="block text-xs font-bold uppercase text-indigo-900 mb-1">
-              Input By (Uniform Staff Name) <span class="text-red-500">*</span>
-            </label>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-                <i class="fa-solid fa-id-badge"></i>
-              </span>
-              <select id="inp-reporting-staff" required
-                class="w-full pl-9 pr-3 py-2 bg-indigo-50 border border-indigo-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none appearance-none">
-                <option value="">-- Uniform Colleague --</option>
-                <option value="Prima">Prima</option>
-                <option value="Mukhlis">Mukhlis</option>
-                <option value="Kodriyah">Kodriyah</option>
-                <option value="Made">Made</option>
-                <option value="Arik">Arik</option>
-                <option value="Arif">Arif</option>
-              </select>
-            </div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4 md:p-5">
+        <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-5">
+          <div class="border-b border-gray-100 pb-3">
+            <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+              <i class="fa-solid fa-pen-to-square text-indigo-600"></i> Report Defects
+            </h3>
+            <p class="text-xs text-gray-500">Uniform staff entry form</p>
           </div>
-
-          <div>
-            <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">
-              Staff Name (Uniform Owner) <span class="text-red-500">*</span>
-            </label>
-            <input type="text" id="inp-staff-name" required placeholder="e.g. Budi Santoso"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">
-              Department (Uniform Owner) <span class="text-red-500">*</span>
-            </label>
-            <select id="inp-department" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
-              <option value="">-- Choose Departement --</option>
-              <option value="Front Office">Front Office</option>
-              <option value="GRE">GRE</option>
-              <option value="GSC">GSC</option>
-              <option value="Club">Club</option>
-              <option value="Concierge">Concierge</option>
-              <option value="Housekeeping">Housekeeping</option>
-              <option value="Laundry">Laundry</option>
-              <option value="Cinnamon">Cinnamon</option>
-              <option value="LiFeng">LiFeng</option>
-              <option value="IRD">IRD</option>
-              <option value="Banquet">Banquet</option>
-              <option value="Steward">Steward</option>
-              <option value="Kitchen / Culinary">Kitchen / Culinary</option>
-              <option value="IT">IT</option>
-              <option value="Purchasing">Purchasing</option>
-              <option value="Finance">Finance</option>
-              <option value="Engineering">Engineering</option>
-              <option value="Security">Security</option>
-              <option value="P&C">P&C</option>
-              <option value="Wellness">Wellness</option>
-              <option value="Sales & Executive">Sales & Executive</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">
-              Uniform Item <span class="text-red-500">*</span>
-            </label>
-            <select id="inp-item" required onchange="autoFillCredit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
-              <option value="">-- Choose Uniform Type --</option>
-              <option value="Shirt">Shirt</option>
-              <option value="Trousers">Trousers</option>
-              <option value="Skirt">Skirt</option>
-              <option value="Blazer">Blazer</option>
-              <option value="Dress">Dress</option>
-               <option value="Cook Jacket">Cook Jacket</option>
-              <option value="Apron">Apron</option>
-              <option value="Others">Others</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">
-              Defect Type <span class="text-red-500">*</span>
-            </label>
-            <select id="inp-defect" required onchange="autoFillCredit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
-              <option value="">-- Choose Defect Type --</option>
-              <option value="Missing/Loose/Broken Button">Missing/Loose/Broken Button</option>
-              <option value="Torn Stitching">Torn Stitching</option>
-              <option value="Zipper Broken / Stuck">Zipper Broken / Stuck</option>
-              <option value="Torn Fabric">Torn Fabric</option>
-              <option value="Alteration">Alteration</option>
-              <option value="Cut / Length Alteration">Cut / Length Alteration</option>
-              <option value="Others">Others</option>
-            </select>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
+          <form id="form-new-defect" onsubmit="handleCreateSubmission(event)" class="space-y-4">
             <div>
-              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Quantity</label>
-              <input type="number" id="inp-quantity" min="1" value="1" required oninput="autoFillCredit()"
+              <label class="block text-xs font-bold uppercase text-indigo-900 mb-1">
+                Input By (Uniform Staff Name) <span class="text-red-500">*</span>
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                  <i class="fa-solid fa-id-badge"></i>
+                </span>
+                <select id="inp-reporting-staff" required
+                  class="w-full pl-9 pr-3 py-2 bg-indigo-50 border border-indigo-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none appearance-none">
+                  <option value="">-- Uniform Colleague --</option>
+                  <option value="Prima">Prima</option>
+                  <option value="Mukhlis">Mukhlis</option>
+                  <option value="Kodriyah">Kodriyah</option>
+                  <option value="Made">Made</option>
+                  <option value="Arik">Arik</option>
+                  <option value="Arif">Arif</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">
+                Staff Name (Uniform Owner) <span class="text-red-500">*</span>
+              </label>
+              <input type="text" id="inp-staff-name" required placeholder="e.g. Budi Santoso"
                 class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
             </div>
+
             <div>
-              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Credit / Unit</label>
-              <input type="number" id="inp-credit" min="1" value="1" readonly
-                class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-sm font-bold text-indigo-700 outline-none">
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">
+                Department (Uniform Owner) <span class="text-red-500">*</span>
+              </label>
+              <select id="inp-department" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                <option value="">-- Choose Department --</option>
+                <option value="Front Office">Front Office</option>
+                <option value="GRE">GRE</option>
+                <option value="GSC">GSC</option>
+                <option value="Club">Club</option>
+                <option value="Concierge">Concierge</option>
+                <option value="Housekeeping">Housekeeping</option>
+                <option value="Laundry">Laundry</option>
+                <option value="Cinnamon">Cinnamon</option>
+                <option value="LiFeng">LiFeng</option>
+                <option value="IRD">IRD</option>
+                <option value="Banquet">Banquet</option>
+                <option value="Steward">Steward</option>
+                <option value="Kitchen / Culinary">Kitchen / Culinary</option>
+                <option value="IT">IT</option>
+                <option value="Purchasing">Purchasing</option>
+                <option value="Finance">Finance</option>
+                <option value="Engineering">Engineering</option>
+                <option value="Security">Security</option>
+                <option value="P&C">P&C</option>
+                <option value="Wellness">Wellness</option>
+                <option value="Sales & Executive">Sales & Executive</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
-          </div>
 
-          <div class="flex items-center justify-between bg-purple-50 border border-purple-100 rounded-lg px-3 py-2">
-            <span class="text-xs font-semibold uppercase text-purple-700">Total Credit (Unit &times; Qty)</span>
-            <span id="inp-total-credit-display" class="text-lg font-bold text-purple-700">1</span>
-          </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">
+                Uniform Item <span class="text-red-500">*</span>
+              </label>
+              <select id="inp-item" required onchange="autoFillCredit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                <option value="">-- Choose Uniform Type --</option>
+                <option value="Shirt">Shirt</option>
+                <option value="Trousers">Trousers</option>
+                <option value="Skirt">Skirt</option>
+                <option value="Blazer">Blazer</option>
+                <option value="Dress">Dress</option>
+                <option value="Cook Jacket">Cook Jacket</option>
+                <option value="Apron">Apron</option>
+                <option value="Others">Others</option>
+              </select>
+            </div>
 
-          <div>
-            <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Remark / Notes</label>
-            <textarea id="inp-remarks" rows="2" placeholder="Detail of tear location, button size, etc..."
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
-          </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">
+                Defect Type <span class="text-red-500">*</span>
+              </label>
+              <select id="inp-defect" required onchange="autoFillCredit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                <option value="">-- Choose Defect Type --</option>
+                <option value="Missing/Loose/Broken Button">Missing/Loose/Broken Button</option>
+                <option value="Torn Stitching">Torn Stitching</option>
+                <option value="Zipper Broken / Stuck">Zipper Broken / Stuck</option>
+                <option value="Torn Fabric">Torn Fabric</option>
+                <option value="Alteration">Alteration</option>
+                <option value="Cut / Length Alteration">Cut / Length Alteration</option>
+                <option value="Others">Others</option>
+              </select>
+            </div>
 
-          <button type="submit" id="btn-submit-defect" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow transition active:scale-95 flex items-center justify-center gap-2">
-            <i class="fa-solid fa-paper-plane"></i> Submit & Generate ID
-          </button>
-        </form>
-      </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Quantity</label>
+                <input type="number" id="inp-quantity" min="1" value="1" required oninput="autoFillCredit()"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Credit / Unit</label>
+                <input type="number" id="inp-credit" min="1" value="1" readonly
+                  class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-sm font-bold text-indigo-700 outline-none">
+              </div>
+            </div>
 
-      <!-- Right Column: My Submissions History -->
-      <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
-        <div class="flex justify-between items-center border-b border-gray-100 pb-3">
-          <div>
-            <h3 class="text-lg font-bold text-gray-800">My Submissions Log</h3>
-            <p class="text-xs text-gray-500">List of submitted defect report</p>
-          </div>
-          <input type="text" id="search-uniform-log" onkeyup="filterUniformTable()" placeholder="Search ID / Name / Dept..."
-            class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs outline-none focus:ring-1 focus:ring-indigo-500">
+            <div class="flex items-center justify-between bg-purple-50 border border-purple-100 rounded-lg px-3 py-2">
+              <span class="text-xs font-semibold uppercase text-purple-700">Total Credit (Unit &times; Qty)</span>
+              <span id="inp-total-credit-display" class="text-lg font-bold text-purple-700">1</span>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Remark / Notes</label>
+              <textarea id="inp-remarks" rows="2" placeholder="Detail of tear location, button size, etc..."
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+            </div>
+
+            <button type="submit" id="btn-submit-defect" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow transition active:scale-95 flex items-center justify-center gap-2">
+              <i class="fa-solid fa-paper-plane"></i> Submit & Generate ID
+            </button>
+          </form>
         </div>
-        <div class="overflow-x-auto max-h-[500px]">
-          <table class="w-full text-left border-collapse text-sm">
-            <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-semibold sticky top-0">
-              <tr>
-                <th class="py-2.5 px-3">Unique ID</th>
-                <th class="py-2.5 px-3">Input By</th>
-                <th class="py-2.5 px-3">Owner & Dept</th>
-                <th class="py-2.5 px-3">Items & Defect</th>
-                <th class="py-2.5 px-3">Status</th>
-              </tr>
-            </thead>
-            <tbody id="uniform-submissions-table" class="divide-y divide-gray-100">
-              <!-- Populated via JS -->
-            </tbody>
-          </table>
+
+        <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
+          <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+            <div>
+              <h3 class="text-lg font-bold text-gray-800">My Submissions Log</h3>
+              <p class="text-xs text-gray-500">List of submitted defect report</p>
+            </div>
+            <input type="text" id="search-uniform-log" onkeyup="filterUniformTable()" placeholder="Search ID / Name / Dept..."
+              class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs outline-none focus:ring-1 focus:ring-indigo-500">
+          </div>
+          <div class="overflow-x-auto max-h-[500px]">
+            <table class="w-full text-left border-collapse text-sm">
+              <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-semibold sticky top-0">
+                <tr>
+                  <th class="py-2.5 px-3">Unique ID</th>
+                  <th class="py-2.5 px-3">Input By</th>
+                  <th class="py-2.5 px-3">Owner & Dept</th>
+                  <th class="py-2.5 px-3">Items & Defect</th>
+                  <th class="py-2.5 px-3">Status</th>
+                </tr>
+              </thead>
+              <tbody id="uniform-submissions-table" class="divide-y divide-gray-100">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <!-- PANEL 2: UNIFORM RECEIVED -->
     <section id="uniform-panel-received" class="uniform-binder-panel p-4 md:p-5">
       <div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 grid place-items-center"><i class="fa-solid fa-box-open"></i></div><div><h3 class="text-lg font-bold text-slate-800">Uniform Received</h3><p class="text-xs text-slate-500">Record every supplier delivery, including partial PO delivery.</p></div></div>
       <div class="uniform-form-note mb-4"><i class="fa-solid fa-circle-info mr-1"></i> Satu PO boleh memiliki banyak transaksi karena supplier dapat melakukan partial delivery.</div>
@@ -396,11 +382,11 @@
               <option value="Skirt">Skirt</option>
               <option value="Blazer">Blazer</option>
               <option value="Dress">Dress</option>
-               <option value="Cook Jacket">Cook Jacket</option>
+              <option value="Cook Jacket">Cook Jacket</option>
               <option value="Apron">Apron</option>
               <option value="Others">Others</option></select></div>
           <div class="uniform-field"><label>Quantity</label><input name="quantity" type="number" min="1" required placeholder="0"></div>
-          <div class="uniform-field"><label>Department</label><select name="department" required><option value="">-- Choose Departement --</option>
+          <div class="uniform-field"><label>Department</label><select name="department" required><option value="">-- Choose Department --</option>
               <option value="Front Office">Front Office</option>
               <option value="GRE">GRE</option>
               <option value="GSC">GSC</option>
@@ -429,28 +415,38 @@
         <div class="mt-5 flex justify-end"><button type="submit" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm"><i class="fa-solid fa-floppy-disk mr-2"></i> Save Received</button></div>
       </form>
     </section>
+
+    <!-- PANEL 3: UNIFORM PRODUCTION (UPDATED FORMAT) -->
     <section id="uniform-panel-production" class="uniform-binder-panel p-4 md:p-5">
-      <div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 grid place-items-center"><i class="fa-solid fa-shirt"></i></div><div><h3 class="text-lg font-bold text-slate-800">Uniform Production</h3><p class="text-xs text-slate-500">Record uniform production by department.</p></div></div>
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 grid place-items-center">
+          <i class="fa-solid fa-shirt"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-slate-800">Uniform Production</h3>
+          <p class="text-xs text-slate-500">Record uniform production entries</p>
+        </div>
+      </div>
+
       <form id="uniform-production-form" onsubmit="submitUniformProduction(event)">
-        <div class="uniform-form-grid">
-          <div class="uniform-field"><label>Input By</label><select name="inputBy" required><option value="">-- Uniform Colleague --</option>
-                <option value="Prima">Prima</option>
-                <option value="Mukhlis">Mukhlis</option>
-                <option value="Kodriyah">Kodriyah</option>
-                <option value="Made">Made</option>
-                <option value="Arik">Arik</option>
-                <option value="Arif">Arif</option></select></div>
-          <div class="uniform-field"><label>Uniform Type</label><select name="uniformType" required><option value="">-- Choose Uniform Type --</option>
-              <option value="Shirt">Shirt</option>
-              <option value="Trousers">Trousers</option>
-              <option value="Skirt">Skirt</option>
-              <option value="Blazer">Blazer</option>
-              <option value="Dress">Dress</option>
-               <option value="Cook Jacket">Cook Jacket</option>
-              <option value="Apron">Apron</option>
-              <option value="Others">Others</option></select></div>
-          <div class="uniform-field"><label>Quantity</label><input name="quantity" type="number" min="1" required placeholder="0"></div>
-          <div class="uniform-field"><label>Department</label><select name="department" required><option value="">-- Choose Departement --</option>
+        <!-- Header Inputs -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="uniform-field">
+            <label>Input By <span class="text-red-500">*</span></label>
+            <select name="inputBy" required>
+              <option value="">-- Uniform Colleague --</option>
+              <option value="Prima">Prima</option>
+              <option value="Mukhlis">Mukhlis</option>
+              <option value="Kodriyah">Kodriyah</option>
+              <option value="Made">Made</option>
+              <option value="Arik">Arik</option>
+              <option value="Arif">Arif</option>
+            </select>
+          </div>
+          <div class="uniform-field">
+            <label>Department</label>
+            <select name="department">
+              <option value="">-- Choose Department --</option>
               <option value="Front Office">Front Office</option>
               <option value="GRE">GRE</option>
               <option value="GSC">GSC</option>
@@ -472,14 +468,99 @@
               <option value="P&C">P&C</option>
               <option value="Wellness">Wellness</option>
               <option value="Sales & Executive">Sales & Executive</option>
-              <option value="Other">Other</option></select></div>
+              <option value="Other">Other</option>
+            </select>
+          </div>
         </div>
-        <div class="mt-5 flex justify-end"><button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm"><i class="fa-solid fa-floppy-disk mr-2"></i> Save Production</button></div>
+
+        <!-- Uniform Items Grid List -->
+        <div class="mb-4">
+          <label class="block font-bold text-xs uppercase text-slate-600 mb-2">Uniform Items & Quantity</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Trousers</span>
+              <input type="number" name="Trousers" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Skirt</span>
+              <input type="number" name="Skirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Shirt</span>
+              <input type="number" name="Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Blouse</span>
+              <input type="number" name="Blouse" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Jacket</span>
+              <input type="number" name="Jacket" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Cook Jacket</span>
+              <input type="number" name="Cook Jacket" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">T-Shirt</span>
+              <input type="number" name="T-Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Polo Shirt</span>
+              <input type="number" name="Polo Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Apron</span>
+              <input type="number" name="Apron" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Hat</span>
+              <input type="number" name="Hat" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Dress</span>
+              <input type="number" name="Dress" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Vest</span>
+              <input type="number" name="Vest" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Cloth</span>
+              <input type="number" name="Cloth" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Napkin</span>
+              <input type="number" name="Napkin" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
+            </div>
+
+          </div>
+        </div>
+
+        <div class="mt-5 flex justify-end">
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow">
+            <i class="fa-solid fa-floppy-disk mr-2"></i> Save Production
+          </button>
+        </div>
       </form>
     </section>
   </section>
-  <!-- 3. TAILOR MODULE VIEW (TASK QUEUE & WORKFLOW) -->
-  <!-- ======================================================= -->
+
+  <!-- 3. TAILOR MODULE VIEW -->
   <section id="view-tailor" class="tab-content space-y-6">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
       <div>
@@ -499,7 +580,6 @@
       </div>
     </div>
 
-    <!-- Task Status Tabs Filter -->
     <div class="flex space-x-2 border-b border-gray-200 pb-2">
       <button onclick="filterTailorQueue('ALL')" id="tailor-filter-ALL" class="tailor-filter-btn px-4 py-2 rounded-lg text-xs font-bold bg-indigo-600 text-white">
         All Tasks
@@ -515,9 +595,8 @@
       </button>
     </div>
 
-    <!-- Task Cards Grid -->
     <div id="tailor-task-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <!-- Task Cards generated dynamically -->
+      <!-- Task Cards -->
     </div>
   </section>
 
@@ -526,7 +605,7 @@
   </div>
 </main>
 
-<!-- Tailor Task Action Modal -->
+<!-- Modal Action -->
 <div id="task-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
   <div class="bg-white rounded-xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
     <div class="flex justify-between items-center border-b pb-3">
@@ -571,19 +650,16 @@
 
 <!-- JavaScript Logic -->
 <script>
-// Store Application State
 let state = {
-  apiUrl: 'https://script.google.com/macros/s/AKfycbwLypkw4WDyBz6Zmx9dUfbliO20nkl9C1OjX-pTnpvgtGQL4Da2YkwC7sS-9irEAeQK/exec',
+  apiUrl: 'https://script.google.com/macros/s/AKfycbwNJhEyj2SYSP6XRdAGtxLSDWqqoCgXh5f0_BF9QJsyAexeLYOhBvTJN89Th0_6VsIp/exec',
   tasks: [],
   currentTailorFilter: 'ALL'
 };
 
-// Initialize App
 document.addEventListener('DOMContentLoaded', () => {
   refreshData();
 });
 
-// Tab Navigation Router
 function switchTab(tabName) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('bg-indigo-800'));
@@ -597,7 +673,6 @@ function switchTab(tabName) {
   if (mobileButtons[tabIndex]) mobileButtons[tabIndex].classList.add('active');
 }
 
-// Auto Weight Calculation based on Item & Defect, scaled by Quantity
 function autoFillCredit() {
   const defect = document.getElementById('inp-defect').value;
   const creditInput = document.getElementById('inp-credit');
@@ -619,7 +694,6 @@ function autoFillCredit() {
   totalDisplay.innerText = total;
 }
 
-// Fetch Data from API
 async function refreshData() {
   if (state.apiUrl) {
     try {
@@ -641,13 +715,11 @@ function renderAllViews() {
   renderTailorQueue();
 }
 
-// Render Dashboard Metrics & Table
 function renderDashboard() {
   const tasks = state.tasks;
   const open = tasks.filter(t => t.status === 'OPEN').length;
   const progress = tasks.filter(t => t.status === 'IN_PROGRESS').length;
   const completed = tasks.filter(t => t.status === 'COMPLETED').length;
-  // Use totalCredit if present (unit credit x quantity), fall back to credit x quantity, then flat credit.
   const credits = tasks.reduce((acc, curr) => {
     const qty = Number(curr.quantity) || 1;
     const totalCredit = curr.totalCredit != null ? Number(curr.totalCredit) : (Number(curr.credit) || 0) * qty;
@@ -682,7 +754,6 @@ function renderDashboard() {
   });
 }
 
-// Render Uniform Submissions Log
 function renderUniformTable() {
   const tbody = document.getElementById('uniform-submissions-table');
   tbody.innerHTML = '';
@@ -702,7 +773,6 @@ function renderUniformTable() {
   });
 }
 
-// Handle Form Submit (Fixed CORS/JSON issue using text/plain)
 async function handleCreateSubmission(e) {
   e.preventDefault();
 
@@ -717,8 +787,8 @@ async function handleCreateSubmission(e) {
     item: document.getElementById('inp-item').value,
     defect: document.getElementById('inp-defect').value,
     quantity: quantity,
-    credit: unitCredit,        // credit weight per unit
-    totalCredit: totalCredit,  // credit weight x quantity, used for EFTE / dashboard aggregation
+    credit: unitCredit,
+    totalCredit: totalCredit,
     remarks: document.getElementById('inp-remarks').value
   };
 
@@ -734,9 +804,6 @@ async function handleCreateSubmission(e) {
         body: JSON.stringify({ action: 'createSubmission', data: payload })
       });
       const textResponse = await res.text();
-      if (textResponse.startsWith('<')) {
-        throw new Error("Server returned HTML. Please check your Apps Script deployment URL.");
-      }
       const result = JSON.parse(textResponse);
       if (result.success) {
         alert("Report logged! ID: " + result.uniqueID);
@@ -748,7 +815,6 @@ async function handleCreateSubmission(e) {
       }
     } catch (err) {
       alert("Error submitting: " + err.message);
-      console.error("Submission detail error:", err);
     }
   }
 
@@ -756,7 +822,6 @@ async function handleCreateSubmission(e) {
   btn.innerHTML = `<i class="fa-solid fa-paper-plane mr-1"></i> Submit & Generate ID`;
 }
 
-// Render Tailor Queue Grid Cards
 function renderTailorQueue() {
   const grid = document.getElementById('tailor-task-grid');
   grid.innerHTML = '';
@@ -825,7 +890,6 @@ function filterTailorQueue(status) {
   renderTailorQueue();
 }
 
-// Active Tailor validation
 function validateActiveTailor() {
   const input = document.getElementById('active-tailor-name');
   const warning = document.getElementById('tailor-name-warning');
@@ -837,12 +901,10 @@ function validateActiveTailor() {
   return isValid;
 }
 
-// Modal Action Handlers
 function openActionModal(id, targetStatus) {
   const tailorInput = document.getElementById('active-tailor-name');
   const warning = document.getElementById('tailor-name-warning');
 
-  // Block opening the modal until Active Tailor Name is filled in
   if (!validateActiveTailor()) {
     warning.classList.remove('hidden');
     tailorInput.classList.add('border-red-400');
@@ -885,7 +947,6 @@ function closeModal() {
   document.getElementById('task-modal').classList.remove('flex');
 }
 
-// Optimistic UI Workflow Update
 async function handleModalSubmit(e) {
   e.preventDefault();
 
@@ -901,7 +962,6 @@ async function handleModalSubmit(e) {
   const targetStatus = document.getElementById('modal-hidden-target-status').value;
   const tailorName = tailorInput.value.trim();
 
-  // 1. Optimistic Update Lokal (0 ms delay)
   const taskIndex = state.tasks.findIndex(t => t.uniqueID === uniqueID);
   if (taskIndex !== -1) {
     state.tasks[taskIndex].status = targetStatus;
@@ -910,7 +970,6 @@ async function handleModalSubmit(e) {
   }
   closeModal();
 
-  // 2. Background Sync ke GAS
   try {
     let action = '';
     let payloadData = {};
@@ -935,7 +994,6 @@ async function handleModalSubmit(e) {
       if (!textResponse.startsWith('<')) {
         const result = JSON.parse(textResponse);
         if (!result.success) {
-          console.error("Sync failed:", result.message);
           refreshData();
         }
       } else {
@@ -948,7 +1006,6 @@ async function handleModalSubmit(e) {
   }
 }
 
-// Utility: Status Badge Generator
 function getBadgeHtml(status) {
   if (status === 'OPEN') return `<span class="badge-open px-2.5 py-1 text-xs font-bold rounded-full">OPEN</span>`;
   if (status === 'IN_PROGRESS') return `<span class="badge-progress px-2.5 py-1 text-xs font-bold rounded-full">IN PROGRESS</span>`;
@@ -964,26 +1021,48 @@ function filterUniformTable() {
     row.style.display = text.includes(term) ? '' : 'none';
   });
 }
-</script>
-<script>
+
 function switchUniformTab(tabName){
   document.querySelectorAll('.uniform-binder-tab').forEach(b=>b.classList.toggle('active',b.dataset.ut===tabName));
   document.querySelectorAll('.uniform-binder-panel').forEach(p=>p.classList.toggle('active',p.id==='uniform-panel-'+tabName));
 }
-function uniformFormData(id){const f=document.getElementById(id),o={};new FormData(f).forEach((v,k)=>o[k]=v);return o;}
-async function postUniformTransaction(action,data,formId){
-  const payload={action,...data,clientTimestamp:new Date().toISOString()};
-  try{
-    if(!state.apiUrl)throw new Error('API URL not configured');
-    const r=await fetch(state.apiUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    const result=await r.json().catch(()=>({}));
-    if(result.success===false)throw new Error(result.message||'Server rejected transaction');
-    document.getElementById(formId).reset(); alert('Saved successfully.');
-  }catch(e){console.error(e);alert('Error submitting: '+e.message);}
+
+function uniformFormData(id){
+  const f = document.getElementById(id);
+  const o = {};
+  new FormData(f).forEach((v,k) => o[k] = v);
+  return o;
 }
-function submitUniformReceived(e){e.preventDefault();postUniformTransaction('createUniformReceived',uniformFormData('uniform-received-form'),'uniform-received-form');}
-function submitUniformProduction(e){e.preventDefault();postUniformTransaction('createUniformProduction',uniformFormData('uniform-production-form'),'uniform-production-form');}
+
+async function postUniformTransaction(action, data, formId){
+  const payload = { action, ...data, clientTimestamp: new Date().toISOString() };
+  try{
+    if(!state.apiUrl) throw new Error('API URL tidak diset.');
+    const r = await fetch(state.apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    const result = await r.json().catch(() => ({}));
+    if(result.success === false) throw new Error(result.message || 'Gagal menyimpan transaksi.');
+    document.getElementById(formId).reset(); 
+    alert('Berhasil disimpan!');
+  } catch(e){
+    console.error(e);
+    alert('Error submitting: ' + e.message);
+  }
+}
+
+function submitUniformReceived(e){
+  e.preventDefault();
+  postUniformTransaction('createUniformReceived', uniformFormData('uniform-received-form'), 'uniform-received-form');
+}
+
+function submitUniformProduction(e){
+  e.preventDefault();
+  postUniformTransaction('createUniformProduction', uniformFormData('uniform-production-form'), 'uniform-production-form');
+}
 </script>
 </body>
 </html>
