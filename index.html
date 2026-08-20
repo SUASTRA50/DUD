@@ -698,7 +698,7 @@
 
 <script>
 let state = {
-  apiUrl: 'https://script.google.com/macros/s/AKfycbzSDw7T1cHzMhRHY2nGcmvXfQTOEVDggIFUUAOm34QLLOAppSs6aF9qek3cO89SZBhc/exec',
+  apiUrl: 'https://script.google.com/macros/s/AKfycbyVFBMpO942ygMaOhT9J0_Lz5awGX-eQd7el4JxjW8Hg1LpTM_2RU3FvdNPlhCbT4o/exec',
   tasks: [],
   currentTailorFilter: 'ALL'
 };
@@ -757,6 +757,8 @@ async function refreshData() {
   }
   renderAllViews();
 }
+
+function showToast(msg){ const t=document.getElementById("toast"); if(!t) return; t.textContent=msg; t.classList.remove("hidden"); t.classList.add("flex"); clearTimeout(window._toastTimer); window._toastTimer=setTimeout(()=>{t.classList.add("hidden");}, 2500); }
 
 function renderAllViews() {
   renderDashboard();
@@ -1175,5 +1177,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-sm px-5 py-2.5 rounded-full shadow-lg hidden z-[100] transition-all">Berhasil</div>
 </body>
 </html>
