@@ -15,77 +15,199 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-  :root { --ud-navy:#172554; --ud-blue:#2563eb; --ud-bg:#f8fafc; --ud-border:#e2e8f0; }
-  body { font-family:'Inter',sans-serif; background:var(--ud-bg); -webkit-tap-highlight-color:transparent; }
+  :root {
+    --x-bg: #000000;
+    --x-bg-secondary: #16181C;
+    --x-bg-hover: #1D1F23;
+    --x-border: #2F3336;
+    --x-border-light: #EFF3F4;
+    --x-text: #E7E9EA;
+    --x-text-secondary: #71767B;
+    --x-text-secondary-light: #536471;
+    --x-blue: #1D9BF0;
+    --x-blue-hover: #1A8CD8;
+    --x-bg-light: #FFFFFF;
+    --x-bg-secondary-light: #F7F9F9;
+    --x-bg-hover-light: #EFF3F4;
+  }
+  [data-theme="light"] {
+    --x-bg: #FFFFFF;
+    --x-bg-secondary: #F7F9F9;
+    --x-bg-hover: #EFF3F4;
+    --x-border: #EFF3F4;
+    --x-text: #0F1419;
+    --x-text-secondary: #536471;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--x-bg);
+    color: var(--x-text);
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.2s ease, color 0.2s ease;
+    margin: 0;
+  }
   .tab-content { display:none; }
   .tab-content.active { display:block; }
-  .badge-open { background:#fef3c7; color:#b45309; }
-  .badge-progress { background:#dbeafe; color:#1d4ed8; }
-  .badge-completed { background:#d1fae5; color:#047857; }
-  button,select,input,textarea { min-height:44px; }
-  button { touch-action:manipulation; }
-  .ud-header { background:linear-gradient(135deg,#172554 0%,#1e3a8a 100%); }
-  .ud-section-card { border-radius:16px !important;border-color:var(--ud-border) !important;box-shadow:0 4px 18px rgba(15,23,42,.045) !important; }
-  .ud-metric { position:relative;overflow:hidden;min-height:112px; }
-  .ud-metric-icon { position:absolute;right:14px;top:14px;width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#f8fafc; }
-  .ud-table-wrap { scrollbar-width:thin; }
-  
-  /* Animasi Tombol Bergerak / Membal */
-  .btn-animate-click {
-    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* X Header */
+  .x-header {
+    position: sticky; top:0; z-index:50;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--x-border);
   }
-  .btn-animate-click:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  [data-theme="light"] .x-header { background: rgba(255,255,255,0.85); }
+  .x-header-top {
+    display:flex; align-items:center; justify-content:space-between;
+    height:56px; padding:0 16px; max-width:600px; margin:0 auto; width:100%;
   }
-  .btn-animate-click:active {
-    transform: scale(0.95) translateY(0);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  .x-avatar {
+    width:32px; height:32px; border-radius:9999px; background:#333; display:grid; place-items:center;
+    overflow:hidden; cursor:pointer;
   }
+  [data-theme="light"] .x-avatar { background:#E7E9EA; }
+  .x-title { font-size:17px; font-weight:700; letter-spacing:-0.2px; }
+  .x-header-actions { display:flex; align-items:center; gap:12px; }
+  .x-icon-btn {
+    width:34px; height:34px; border-radius:9999px; display:grid; place-items:center;
+    background:transparent; border:0; color:var(--x-text); cursor:pointer; min-height:34px;
+    transition: background 0.15s;
+  }
+  .x-icon-btn:hover { background: var(--x-bg-hover); }
+
+  /* X Tab Bar ala Screenshot Semua/Sebutan/Terverifikasi */
+  .x-tab-bar {
+    display:flex; max-width:600px; margin:0 auto; width:100%;
+    border-bottom: 1px solid var(--x-border);
+    background: var(--x-bg);
+  }
+  .x-tab-bar button {
+    flex:1; position:relative; min-height:52px;
+    background:transparent; border:0; color:var(--x-text-secondary);
+    font-size:15px; font-weight:500; cursor:pointer;
+    transition: background 0.15s, color 0.15s;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .x-tab-bar button:hover { background: var(--x-bg-hover); }
+  .x-tab-bar button.active { color:var(--x-text); font-weight:700; }
+  .x-tab-bar button.active::after {
+    content:''; position:absolute; bottom:0; left:25%; right:25%;
+    height:4px; background:var(--x-blue); border-radius:9999px;
+  }
+
+  /* Main container ala X timeline */
+  main { max-width:600px !important; margin:0 auto !important; padding:0 !important; border-left:1px solid var(--x-border); border-right:1px solid var(--x-border); min-height:100vh; }
+  .ud-section-card { background:transparent !important; border:0 !important; border-bottom:1px solid var(--x-border) !important; border-radius:0 !important; box-shadow:none !important; }
+  .ud-header { display:none; } /* hide old header, replaced by x-header */
+
+  /* X Post Card */
+  .x-post {
+    display:flex; gap:12px; padding:12px 16px; border-bottom:1px solid var(--x-border);
+    transition: background 0.15s; cursor:pointer;
+  }
+  .x-post:hover { background: var(--x-bg-hover); }
+  .x-post-avatar { width:40px; height:40px; border-radius:9999px; background:var(--x-bg-secondary); display:grid; place-items:center; flex-shrink:0; }
+  .x-post-content { flex:1; min-width:0; }
+  .x-post-name { font-weight:700; font-size:15px; display:flex; align-items:center; gap:4px; }
+  .x-post-handle { color:var(--x-text-secondary); font-weight:400; }
+  .x-post-text { font-size:15px; line-height:20px; margin-top:2px; color:var(--x-text); word-break:break-word; }
+  .x-post-meta { color:var(--x-text-secondary); font-size:13px; margin-top:6px; }
+
+  /* Metrics as X stats row */
+  .ud-metric { background:transparent !important; border:0 !important; border-bottom:1px solid var(--x-border) !important; border-radius:0 !important; min-height:auto !important; padding:16px !important; }
+  .ud-metric-icon { position:static !important; width:32px !important; height:32px !important; border-radius:9999px !important; background:var(--x-bg-secondary) !important; }
+
+  /* Forms - X style */
+  .uniform-binder { background:var(--x-bg); border-bottom:1px solid var(--x-border); gap:0; padding:0; }
+  .uniform-binder-tab { background:transparent; border:0; border-bottom:0; border-radius:0; color:var(--x-text-secondary); font-size:15px; font-weight:500; min-height:52px; flex:1; }
+  .uniform-binder-tab.active { background:transparent; color:var(--x-text); font-weight:700; box-shadow:none; position:relative; }
+  .uniform-binder-tab.active::after { content:''; position:absolute; bottom:0; left:20%; right:20%; height:4px; background:var(--x-blue); border-radius:9999px; }
+  .uniform-binder-panel { border:0; border-radius:0; background:var(--x-bg); box-shadow:none; }
+  .uniform-form-grid { gap:16px; padding:16px; }
+  .uniform-field label { color:var(--x-text-secondary); font-size:13px; font-weight:500; text-transform:none; }
+  .uniform-field input, .uniform-field select {
+    background:var(--x-bg); border:1px solid var(--x-border); border-radius:8px; color:var(--x-text);
+  }
+  .uniform-field input:focus, .uniform-field select:focus { border-color:var(--x-blue); box-shadow:none; }
+  .uniform-form-note { background:var(--x-bg-secondary); color:var(--x-blue); border:1px solid var(--x-border); }
+
+  /* Buttons - X blue */
+  .x-btn-primary {
+    background:var(--x-blue); color:#fff; border-radius:9999px; font-weight:700; font-size:15px;
+    padding:10px 20px; border:0; cursor:pointer; transition:background 0.15s;
+  }
+  .x-btn-primary:hover { background:var(--x-blue-hover); }
+  .btn-animate-click { transition: all 0.15s ease; }
+  .btn-animate-click:active { transform: scale(0.96); }
+
+  /* Bottom Nav - exact X */
+  .ud-mobile-nav {
+    position:fixed; left:0; right:0; bottom:0; transform:none;
+    background:var(--x-bg) !important; border:0 !important; border-top:1px solid var(--x-border) !important;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-radius:0 !important; padding:0 !important; gap:0 !important;
+    display:flex; justify-content:space-around; box-shadow:none !important;
+    max-width:600px; margin:0 auto; width:100%; z-index:60; height:52px;
+  }
+  [data-theme="light"] .ud-mobile-nav { background:rgba(255,255,255,0.92) !important; }
+  .ud-mobile-nav button {
+    flex:1; display:grid !important; place-items:center; background:transparent !important;
+    color:var(--x-text) !important; border-radius:0 !important; padding:0 !important; font-size:20px !important; min-height:52px !important; box-shadow:none !important;
+  }
+  .ud-mobile-nav button.active { background:transparent !important; color:var(--x-text) !important; }
+  .ud-mobile-nav button.active i { font-weight:900; }
+  .ud-mobile-nav button i { font-size:22px; }
+
+  /* Desktop nav - hide old, use same x-tab-bar */
+  nav.hidden.md\:flex { display:none !important; }
+
+  /* FAB - X blue + */
+  .x-fab {
+    position:fixed; right:16px; bottom:70px; width:56px; height:56px; border-radius:9999px;
+    background:var(--x-blue); color:#fff; display:grid; place-items:center; font-size:24px;
+    box-shadow:0 4px 12px rgba(29,155,240,0.4); border:0; cursor:pointer; z-index:55; min-height:56px;
+  }
+  .x-fab:hover { background:var(--x-blue-hover); }
+
+  /* Tables - X minimal */
+  .ud-table-wrap table { min-width:100% !important; }
+  table { border-collapse:collapse; width:100%; }
+  th { text-align:left; font-size:13px; color:var(--x-text-secondary); font-weight:500; padding:12px 16px; border-bottom:1px solid var(--x-border); background:transparent; }
+  td { padding:12px 16px; border-bottom:1px solid var(--x-border); font-size:14px; }
+
+  .badge-open, .badge-progress, .badge-completed { border-radius:9999px; font-size:11px; font-weight:700; padding:4px 10px; }
 
   @media (max-width:767px) {
-    body { padding-bottom:92px; }
-    .ud-mobile-nav {
-      position:fixed; left:50%; bottom:calc(14px + env(safe-area-inset-bottom));
-      transform:translateX(-50%); z-index:60;
-      display:flex; align-items:center; gap:2px;
-      padding:5px; border-radius:9999px;
-      background:rgba(23,37,84,.92);
-      border:1px solid rgba(255,255,255,.08);
-      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-      box-shadow:0 12px 28px rgba(15,23,42,.35), 0 0 0 1px rgba(15,23,42,.15);
-    }
-    .ud-mobile-nav button {
-      display:flex; align-items:center; gap:6px;
-      padding:10px 14px; border-radius:9999px;
-      font-size:12px; font-weight:600; color:#94a3b8;
-      min-height:auto; white-space:nowrap; border:0; background:transparent;
-      transition:background .15s ease, color .15s ease;
-    }
-    .ud-mobile-nav button i { font-size:13px; }
-    .ud-mobile-nav button.active { background:#4f46e5; color:#fff; box-shadow:0 4px 12px rgba(79,70,229,.45); }
-    main { padding-top:16px !important;padding-left:12px !important;padding-right:12px !important; }
-    .ud-table-wrap table { min-width:760px; }
-    #task-modal { align-items:flex-end; }
-    #task-modal > div { max-height:92vh;overflow-y:auto;border-radius:18px 18px 0 0;padding:18px; }
+    body { padding-bottom:52px; }
+    main { border-left:0; border-right:0; }
   }
-
-  .uniform-binder{display:flex;gap:6px;overflow-x:auto;padding:4px 4px 0;scrollbar-width:none}
-  .uniform-binder::-webkit-scrollbar{display:none}
-  .uniform-binder-tab{flex:1 0 auto;min-width:112px;min-height:48px;padding:9px 12px;border:1px solid #dbe3ef;border-bottom:0;border-radius:12px 12px 0 0;background:#e8eef7;color:#475569;font-size:12px;font-weight:700;line-height:1.1}
-  .uniform-binder-tab.active{background:#fff;color:#172554;box-shadow:0 -2px 0 #2563eb,0 2px 0 #fff}
-  .uniform-binder-panel{display:none;background:#fff;border:1px solid #dbe3ef;border-radius:0 14px 14px 14px;box-shadow:0 4px 18px rgba(15,23,42,.045)}
-  .uniform-binder-panel.active{display:block}
-  .uniform-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-  .uniform-field label{display:block;margin-bottom:6px;font-size:11px;font-weight:700;color:#475569}
-  .uniform-field input,.uniform-field select{width:100%;min-height:44px;border:1px solid #cbd5e1;border-radius:10px;padding:9px 11px;background:#fff;color:#0f172a;outline:none}
-  .uniform-field input:focus,.uniform-field select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.10)}
-  .uniform-form-note{padding:10px 12px;border-radius:10px;background:#eff6ff;color:#1e40af;font-size:11px;line-height:1.45}
-  @media(max-width:767px){.uniform-form-grid{grid-template-columns:1fr;gap:12px}.uniform-binder-panel{border-radius:0 12px 12px 12px}}
+  /* Toast X style */
+  #toast { background:#000; color:#fff; border-radius:9999px; }
+  [data-theme="light"] #toast { background:#0F1419; }
 </style>
+
 </head>
-<body class="text-gray-800">
+<body class="text-gray-800" data-theme="dark">
+<header class="x-header">
+  <div class="x-header-top">
+    <div class="x-avatar"><i class="fa-solid fa-shirt" style="font-size:14px;"></i></div>
+    <div class="x-title">Uniform Management</div>
+    <div class="x-header-actions">
+      <button id="theme-toggle" class="x-icon-btn" title="Toggle light/dark mode"><i class="fa-solid fa-sun"></i></button>
+      <button class="x-icon-btn"><i class="fa-solid fa-gear"></i></button>
+    </div>
+  </div>
+  <div class="x-tab-bar">
+    <button onclick="switchTab('dashboard')" id="x-tab-dashboard" class="active"><i class="fa-solid fa-house"></i> Dashboard</button>
+    <button onclick="switchTab('uniform')" id="x-tab-uniform"><i class="fa-solid fa-file-pen"></i> Uniform</button>
+    <button onclick="switchTab('tailor')" id="x-tab-tailor"><i class="fa-solid fa-scissors"></i> Tailor</button>
+  </div>
+</header>
+<button class="x-fab" onclick="document.querySelector('#uniform-panel-received') ? switchUniformTab('received') : null; window.scrollTo({top:0,behavior:'smooth'})"><i class="fa-solid fa-plus"></i></button>
+
 
 <header class="ud-header text-white shadow-lg sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -283,7 +405,7 @@
                 Uniform Item <span class="text-red-500">*</span>
               </label>
               <select id="inp-item" required onchange="autoFillCredit()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
-                <option value="">-- Choose Uniform Type --</option>
+                <option value="">-- Choose Uniform/Linen Type --</option>
                 <option value="Trousers">Trousers</option>
                 <option value="Shirt">Shirt</option>
                 <option value="Polo Shirt">Polo Shirt</option>
@@ -294,6 +416,8 @@
                 <option value="Cook Jacket">Cook Jacket</option>
                 <option value="Apron">Apron</option>
                 <option value="Hat">Hat</option>
+                <option value="Duvet Cover">Duvet Cover</option>
+                <option value="Curtain">Curtain</option>
                 <option value="Others">Others</option>
               </select>
             </div>
@@ -466,8 +590,8 @@
               <input type="number" name="Vest" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-blue-500">
             </div>
             <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
-              <span class="text-sm font-medium text-slate-700">Cloth</span>
-              <input type="number" name="Cloth" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-blue-500">
+              <span class="text-sm font-medium text-slate-700">Kitchen Cloth</span>
+              <input type="number" name="Kitchen Cloth" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-blue-500">
             </div>
             <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
               <span class="text-sm font-medium text-slate-700">Napkin</span>
@@ -482,6 +606,17 @@
           </button>
         </div>
       </form>
+      <div class="mt-6">
+        <h4 class="font-bold text-sm text-slate-700 mb-2 flex items-center gap-2"><i class="fa-solid fa-list"></i> Recent Received (50)</h4>
+        <div class="ud-table-wrap overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-left">
+            <thead class="bg-slate-50 text-[11px] uppercase font-bold text-slate-500">
+              <tr><th class="py-2.5 px-3">ID</th><th class="py-2.5 px-3">Date</th><th class="py-2.5 px-3">Input By</th><th class="py-2.5 px-3">Owner / Dept</th><th class="py-2.5 px-3">Item</th><th class="py-2.5 px-3">PO</th><th class="py-2.5 px-3">Supplier</th></tr>
+            </thead>
+            <tbody id="uniform-received-table-body" class="text-xs"></tbody>
+          </table>
+        </div>
+      </div>
     </section>
 
     <section id="uniform-panel-production" class="uniform-binder-panel p-4 md:p-5">
@@ -593,8 +728,12 @@
               <input type="number" name="Vest" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
             </div>
             <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
-              <span class="text-sm font-medium text-slate-700">Cloth</span>
-              <input type="number" name="Cloth" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
+              <span class="text-sm font-medium text-slate-700">Kitchen Cloth</span>
+              <input type="number" name="Kitchen Cloth" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Table Cloth</span>
+              <input type="number" name="Kitchen Cloth" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
             </div>
             <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
               <span class="text-sm font-medium text-slate-700">Napkin</span>
@@ -609,6 +748,17 @@
           </button>
         </div>
       </form>
+      <div class="mt-6">
+        <h4 class="font-bold text-sm text-slate-700 mb-2 flex items-center gap-2"><i class="fa-solid fa-list"></i> Recent Production (50)</h4>
+        <div class="ud-table-wrap overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-left">
+            <thead class="bg-slate-50 text-[11px] uppercase font-bold text-slate-500">
+              <tr><th class="py-2.5 px-3">ID</th><th class="py-2.5 px-3">Date</th><th class="py-2.5 px-3">Input By</th><th class="py-2.5 px-3">Item</th><th class="py-2.5 px-3">Dept</th></tr>
+            </thead>
+            <tbody id="uniform-production-table-body" class="text-xs"></tbody>
+          </table>
+        </div>
+      </div>
     </section>
   </section>
 
@@ -700,6 +850,8 @@
 let state = {
   apiUrl: 'https://script.google.com/macros/s/AKfycbzSDw7T1cHzMhRHY2nGcmvXfQTOEVDggIFUUAOm34QLLOAppSs6aF9qek3cO89SZBhc/exec',
   tasks: [],
+  uniformReceived: [],
+  uniformProduction: [],
   currentTailorFilter: 'ALL'
 };
 
@@ -744,18 +896,69 @@ function autoFillCredit() {
 }
 
 async function refreshData() {
-  if (state.apiUrl) {
-    try {
-      const res = await fetch(`${state.apiUrl}?action=getTasks`);
-      const json = await res.json();
-      if (json.success) {
-        state.tasks = json.data;
-      }
-    } catch (e) {
-      console.error("API Fetch Error:", e);
-    }
+  if (!state.apiUrl) { renderAllViews(); return; }
+  try {
+    const [jsonTasks, jsonRcv, jsonPrd] = await Promise.all([
+      fetch(`${state.apiUrl}?action=getTasks`).then(r=>r.json()).catch(()=>({success:false})),
+      fetch(`${state.apiUrl}?action=getUniformReceived`).then(r=>r.json()).catch(()=>({success:false})),
+      fetch(`${state.apiUrl}?action=getUniformProduction`).then(r=>r.json()).catch(()=>({success:false}))
+    ]);
+    if (jsonTasks.success) state.tasks = jsonTasks.data || [];
+    if (jsonRcv.success) state.uniformReceived = jsonRcv.data || [];
+    if (jsonPrd.success) state.uniformProduction = jsonPrd.data || [];
+  } catch (e) {
+    console.error("API Fetch Error:", e);
   }
   renderAllViews();
+}
+
+
+function renderUniformReceivedTable(){
+  const tbody = document.getElementById('uniform-received-table-body');
+  if(!tbody) return;
+  tbody.innerHTML = '';
+  const list = state.uniformReceived || [];
+  if(list.length===0){
+    tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-xs text-slate-400">Belum ada data Received</td></tr>`;
+    return;
+  }
+  list.slice(0,50).forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.className = 'border-b border-slate-100 hover:bg-slate-50';
+    tr.innerHTML = `
+      <td class="py-2.5 px-3 font-mono text-xs font-bold text-blue-600">${r.uniqueID||'-'}</td>
+      <td class="py-2.5 px-3 text-xs text-slate-500">${r.createdAt||'-'}</td>
+      <td class="py-2.5 px-3 text-xs">${r.inputBy||'-'}</td>
+      <td class="py-2.5 px-3 text-xs font-medium">${r.uniformOwner||'-'}<div class="text-[11px] text-slate-500">${r.department||''}</div></td>
+      <td class="py-2.5 px-3 text-xs"><span class="font-medium">${r.uniformType||'-'}</span> x ${r.quantity||0}</td>
+      <td class="py-2.5 px-3 text-xs">${r.poNumber||'-'}</td>
+      <td class="py-2.5 px-3 text-xs">${r.supplierName||'-'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderUniformProductionTable(){
+  const tbody = document.getElementById('uniform-production-table-body');
+  if(!tbody) return;
+  tbody.innerHTML = '';
+  const list = state.uniformProduction || [];
+  if(list.length===0){
+    tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-xs text-slate-400">Belum ada data Production</td></tr>`;
+    return;
+  }
+  list.slice(0,50).forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.className = 'border-b border-slate-100 hover:bg-slate-50';
+    tr.innerHTML = `
+      <td class="py-2.5 px-3 font-mono text-xs font-bold text-indigo-600">${r.uniqueID||'-'}</td>
+      <td class="py-2.5 px-3 text-xs text-slate-500">${r.createdAt||'-'}</td>
+      <td class="py-2.5 px-3 text-xs">${r.inputBy||'-'}</td>
+      <td class="py-2.5 px-3 text-xs"><span class="font-medium">${r.uniformType||'-'}</span> x ${r.quantity||0}</td>
+      <td class="py-2.5 px-3 text-xs">${r.department||'-'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
 }
 
 function showToast(msg){ const t=document.getElementById("toast"); if(!t) return; t.textContent=msg; t.classList.remove("hidden"); t.classList.add("flex"); clearTimeout(window._toastTimer); window._toastTimer=setTimeout(()=>{t.classList.add("hidden");}, 2500); }
@@ -764,6 +967,8 @@ function renderAllViews() {
   renderDashboard();
   renderUniformTable();
   renderTailorQueue();
+  renderUniformReceivedTable();
+  renderUniformProductionTable();
 }
 
 function renderDashboard() {
@@ -1145,7 +1350,7 @@ async function postUniformTransaction(action, data, formId, btnId){
 function submitUniformReceived(e){
   e.preventDefault();
   const data = uniformFormData('uniform-received-form');
-  const itemKeys = ['Trousers','Skirt','Shirt','Blouse','Jacket','Cook Jacket','T-Shirt','Polo Shirt','Apron','Hat','Dress','Vest','Cloth','Napkin'];
+  const itemKeys = ['Trousers','Skirt','Shirt','Blouse','Jacket','Cook Jacket','T-Shirt','Polo Shirt','Apron','Hat','Dress','Vest','Kitchen Cloth','Napkin'];
   const hasItem = itemKeys.some(k => Number(data[k]) > 0);
   if(!hasItem){
     alert('Harap isi minimal satu jumlah item pada "What Received".');
@@ -1157,7 +1362,7 @@ function submitUniformReceived(e){
 function submitUniformProduction(e){
   e.preventDefault();
   const data = uniformFormData('uniform-production-form');
-  const itemKeys = ['Trousers','Skirt','Shirt','Blouse','Jacket','Cook Jacket','T-Shirt','Polo Shirt','Apron','Hat','Dress','Vest','Cloth','Napkin'];
+  const itemKeys = ['Trousers','Skirt','Shirt','Blouse','Jacket','Cook Jacket','T-Shirt','Polo Shirt','Apron','Hat','Dress','Vest','Kitchen Cloth','Napkin'];
   const hasItem = itemKeys.some(k => Number(data[k]) > 0);
   if(!hasItem){
     alert('Harap isi minimal satu jumlah item produksi.');
@@ -1178,5 +1383,35 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-sm px-5 py-2.5 rounded-full shadow-lg hidden z-[100] transition-all">Berhasil</div>
+
+<script>
+// Theme toggle
+(function(){
+  const saved = localStorage.getItem('umx-theme');
+  if(saved) document.body.setAttribute('data-theme', saved);
+  const btn = document.getElementById('theme-toggle');
+  function updateIcon(){
+    const theme = document.body.getAttribute('data-theme');
+    btn.innerHTML = theme === 'light' ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#ffffff' : '#000000');
+  }
+  updateIcon();
+  btn.addEventListener('click', ()=>{
+    const cur = document.body.getAttribute('data-theme');
+    const next = cur === 'light' ? 'dark' : 'light';
+    document.body.setAttribute('data-theme', next);
+    localStorage.setItem('umx-theme', next);
+    updateIcon();
+  });
+  // Sync X tabs with original logic
+  const origSwitchTab = window.switchTab;
+  window.switchTab = function(tab){
+    if(origSwitchTab) origSwitchTab(tab);
+    document.querySelectorAll('.x-tab-bar button').forEach(b=>b.classList.remove('active'));
+    const el = document.getElementById('x-tab-'+tab);
+    if(el) el.classList.add('active');
+  };
+})();
+</script>
 </body>
 </html>
