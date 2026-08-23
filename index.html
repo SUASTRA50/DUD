@@ -134,6 +134,20 @@
   .kpi-mini{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px 12px}
   body.dark .kpi-mini{background:#0f172a !important}
 
+
+  /* COMPACT DASHBOARD AFTER REMOVALS */
+  #dashboard-analytics-section, #tailor-performance-section, #dashboard-production-analytics { margin-top: 12px !important; }
+  #dashboard-analytics-section .analytics-card, #tailor-performance-section .analytics-card, #dashboard-production-analytics .analytics-card { margin-top: 8px !important; padding: 14px !important; }
+  #tailor-monthly-ranking { margin-top: 12px !important; }
+  .space-y-5 { --tw-space-y-reverse:0; margin-top:0; }
+  .space-y-5 > * + * { margin-top: 12px !important; }
+  .mt-8 { margin-top: 16px !important; }
+  .mt-6 { margin-top: 12px !important; }
+  .gap-5 { gap: 12px !important; }
+  .chart-wrap.tall { height: 300px !important; }
+  .chart-wrap { height: 260px !important; }
+  @media(max-width:767px){ .chart-wrap.tall{height:260px !important} .chart-wrap{height:220px !important} }
+
 </style>
 </head>
 <body class="text-gray-800">
@@ -281,7 +295,7 @@
     
     <!-- ADDED: DASHBOARD ANALYTICS -->
     <div id="dashboard-analytics-section" class="space-y-5">
-      <div class="flex justify-between items-center"><h3 class="font-bold text-sm"><i class="fa-solid fa-chart-line text-indigo-600 mr-2"></i>Graphic Analysis (Sesuai Filter Tanggal)</h3><div class="flex gap-2"><button onclick="exportDashboardPDF()" class="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-[11px] font-bold">PDF</button><button onclick="exportAllExcel()" class="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-[11px] font-bold">Excel</button></div></div>
+      <div class="flex justify-between items-center"><h3 class="font-bold text-sm"><i class="fa-solid fa-chart-line text-indigo-600 mr-2"></i>Graphic Analysis (Sesuai Filter Tanggal)</h3></div>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div class="analytics-card" id="card-inputter"><div class="analytics-title"><span>a. Jumlah Penginput per Nama</span><span id="inputter-total-label" class="text-[10px] text-gray-400"></span></div><div class="chart-wrap"><canvas id="chartInputter"></canvas></div><div id="inputter-summary" class="mt-2 text-[11px] text-gray-500 bg-slate-50 p-2 rounded"></div></div>
         <div class="analytics-card" id="card-defect"><div class="analytics-title"><span>b. Defect Paling Banyak</span><span id="defect-total-label" class="text-[10px] text-gray-400"></span></div><div class="chart-wrap"><canvas id="chartDefect"></canvas></div><div id="defect-summary" class="mt-2 text-[11px] text-gray-500 bg-slate-50 p-2 rounded"></div></div>
@@ -291,24 +305,43 @@
 
     <!-- MOVED: TAILOR PERFORMANCE + RANKING BULANAN KE DASHBOARD ATAS RECENT LOG -->
     <div id="tailor-performance-section" class="mt-8 space-y-5">
-      <div class="flex justify-between items-center"><h3 class="font-bold text-sm"><i class="fa-solid fa-award mr-2 text-amber-600"></i>Tailor Performance + Ranking Bulanan</h3><div class="flex gap-2 items-center"><label class="flex items-center gap-1 text-[11px] bg-white border px-2 py-1 rounded"><input type="checkbox" id="auto-refresh-toggle" onchange="toggleAutoRefresh(this.checked)"> Auto 30s <span id="auto-refresh-countdown" class="text-[10px] text-gray-400"></span></label><button onclick="exportAllExcel()" class="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-[11px] font-bold">Excel</button><button onclick="exportTailorPDF()" class="px-3 py-1.5 bg-amber-600 text-white rounded-lg text-[11px] font-bold">PDF</button></div></div>
+      <div class="flex justify-between items-center"><h3 class="font-bold text-sm"><i class="fa-solid fa-award mr-2 text-amber-600"></i>Tailor Performance + Ranking Bulanan</h3><div class="flex gap-2 items-center"><label class="flex items-center gap-1 text-[11px] bg-white border px-2 py-1 rounded"><input type="checkbox" id="auto-refresh-toggle" onchange="toggleAutoRefresh(this.checked)"> Auto 30s <span id="auto-refresh-countdown" class="text-[10px] text-gray-400"></span></label></div></div>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <div class="analytics-card"><div class="analytics-title">Completed per Tailor</div><div class="chart-wrap"><canvas id="chartTailorCompleted"></canvas></div></div>
-        <div class="analytics-card"><div class="analytics-title">Credit / Workload</div><div class="chart-wrap"><canvas id="chartTailorCredit"></canvas></div></div>
-        <div class="analytics-card"><div class="analytics-title">Status Distribusi</div><div class="chart-wrap"><canvas id="chartTailorStatus"></canvas></div><div id="tailor-leaderboard" class="mt-2 space-y-1"></div></div>
-      </div>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <div class="analytics-card"><div class="analytics-title">Trend per Bulan</div><div class="chart-wrap tall"><canvas id="chartTailorTrend"></canvas></div></div>
-        <div class="analytics-card"><div class="analytics-title">Detail Table</div><div class="overflow-auto max-h-[360px]"><table class="w-full text-[11px]"><thead class="text-[10px] uppercase text-gray-400 sticky top-0 bg-white"><tr><th class="text-left">Tailor</th><th class="text-center">Open</th><th class="text-center">Prog</th><th class="text-center">Done</th><th class="text-center">Credit</th><th class="text-center">Rate</th></tr></thead><tbody id="tailor-perf-table"></tbody></table></div></div>
-      </div>
-      <div id="tailor-monthly-ranking" class="space-y-4">
-        <div class="flex justify-between items-center"><h4 class="font-bold text-xs"><i class="fa-solid fa-trophy text-yellow-500 mr-1"></i>Ranking Bulanan</h4><select id="ranking-month-filter" onchange="renderMonthlyRanking()" class="border rounded px-2 py-1 text-[11px]"><option value="">Semua Bulan</option></select></div>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <div class="analytics-card"><div class="analytics-title">Top 3 Bulan Ini</div><div id="monthly-top3" class="space-y-2"></div><div class="chart-wrap short mt-2"><canvas id="chartMonthlyRanking"></canvas></div></div>
+        
           <div class="analytics-card lg:col-span-2"><div class="analytics-title">Credit per Bulan</div><div class="chart-wrap tall"><canvas id="chartMonthlyCredit"></canvas></div></div>
         </div>
-        <div class="analytics-card"><div class="analytics-title">Tabel Ranking Lengkap</div><div class="overflow-auto max-h-[400px]"><table class="w-full text-[11px]"><thead class="text-[10px] uppercase text-gray-400 sticky top-0 bg-white"><tr><th>Bulan</th><th>Tailor</th><th class="text-center">Done</th></tr></thead><tbody id="monthly-ranking-table"></tbody></table></div></div>
+        
       </div>
+    </div>
+
+    
+    <!-- ADDED: UNIFORM PRODUCTION ANALYTICS DI DASHBOARD BAWAH TAILOR PERFORMANCE -->
+    <div id="dashboard-production-analytics" class="space-y-5 mt-6">
+      <h3 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-industry mr-2 text-emerald-600"></i>Analisis Uniform Production - Semua Product (Dashboard View)</h3>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div class="analytics-card">
+          <div class="analytics-title">Total Production per Jenis (Bar)</div>
+          <div class="chart-wrap tall"><canvas id="chartDashProdByType"></canvas></div>
+          <div class="text-[10px] text-gray-400 mt-2">Jenis uniform paling banyak diproduksi</div>
+        </div>
+        <div class="analytics-card lg:col-span-2">
+          <div class="analytics-title">Trend Production per Bulan (Line Area)</div>
+          <div class="chart-wrap tall"><canvas id="chartDashProdTrend"></canvas></div>
+          <div class="text-[10px] text-gray-400 mt-2">Tren kenaikan/penurunan produksi bulanan</div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div class="analytics-card">
+          <div class="analytics-title">Production by Departemen (Doughnut)</div>
+          <div class="chart-wrap"><canvas id="chartDashProdByDept"></canvas></div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-title">Distribusi Product (Polar Area - Menarik)</div>
+          <div class="chart-wrap"><canvas id="chartDashProdDonut"></canvas></div>
+          <div id="dash-prod-summary" class="mt-2 text-[11px] bg-emerald-50 border border-emerald-100 p-2 rounded-lg"></div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3" id="dash-production-kpi"></div>
     </div>
 
     <!-- RECENT ACTIVITY TABBED TABLE (DIPERBARUI DENGAN PILIHAN TAB) -->
@@ -1724,9 +1757,9 @@ function renderAddedAnalytics(){
     const months=Object.keys(byMonthTailor).sort(); const sel=document.getElementById('ranking-month-filter'); if(sel&&sel.options.length<=1){ months.forEach(m=>{ const o=document.createElement('option'); o.value=m; o.textContent=m; sel.appendChild(o); }); }
     const selectedMonth=sel?.value||''; const latestMonth=months[months.length-1];
     const top3Div=document.getElementById('monthly-top3'); if(top3Div&&latestMonth){ const tailors=Object.entries(byMonthTailor[latestMonth]||{}).sort((a,b)=>b[1].credit-a[1].credit).slice(0,3); top3Div.innerHTML=tailors.map(([name,data],i)=>{ const medal=['🥇','🥈','🥉'][i]; return `<div class="flex justify-between bg-yellow-50 border rounded px-2 py-1 text-[11px]"><span>${medal} ${name}</span><span><b>${data.completed}</b> • ${data.credit} cr</span></div>`; }).join(''); }
-    const ctxMR=document.getElementById('chartMonthlyRanking'); if(ctxMR&&latestMonth){ const tailors=Object.entries(byMonthTailor[latestMonth]||{}).sort((a,b)=>b[1].credit-a[1].credit).slice(0,6); destroyAnalyticsChart('monthlyRanking'); analyticsCharts['monthlyRanking']=new Chart(ctxMR,{type:'bar', data:{labels:tailors.map(t=>t[0]), datasets:[{label:'Credit', data:tailors.map(t=>t[1].credit), backgroundColor:'#f59e0b'}]}, options:{responsive:true, maintainAspectRatio:false}}); }
+    const ctxMR=null; // removed Top 3 chart per request if(ctxMR&&latestMonth){ const tailors=Object.entries(byMonthTailor[latestMonth]||{}).sort((a,b)=>b[1].credit-a[1].credit).slice(0,6); destroyAnalyticsChart('monthlyRanking'); // removed chartMonthlyRanking - analyticsCharts['monthlyRanking']=new Chart(ctxMR,{type:'bar', data:{labels:tailors.map(t=>t[0]), datasets:[{label:'Credit', data:tailors.map(t=>t[1].credit), backgroundColor:'#f59e0b'}]}, options:{responsive:true, maintainAspectRatio:false}}); }
     const ctxMC=document.getElementById('chartMonthlyCredit'); if(ctxMC&&months.length){ const tailorNamesMonth=[...new Set(months.flatMap(m=>Object.keys(byMonthTailor[m]||{})))].slice(0,5); const datasets=tailorNamesMonth.map((name,i)=>({label:name, data:months.map(m=>byMonthTailor[m]?.[name]?.credit||0), borderColor:`hsl(${i*70} 70% 50%)`, tension:.3})); destroyAnalyticsChart('monthlyCredit'); analyticsCharts['monthlyCredit']=new Chart(ctxMC,{type:'line', data:{labels:months, datasets}, options:{responsive:true, maintainAspectRatio:false}}); }
-    const mBody=document.getElementById('monthly-ranking-table'); if(mBody){ const rows=[]; (selectedMonth?[selectedMonth]:months).forEach(month=>{ const entries=Object.entries(byMonthTailor[month]||{}).sort((a,b)=>b[1].credit-a[1].credit); entries.forEach(([tailor,data],idx)=>{ const rank=idx+1; const bonus=rank===1?100:rank===2?50:rank===3?25:0; rows.push(`<tr class="border-b"><td class="py-1.5">${month}</td><td class="py-1.5 font-medium">${tailor}</td><td class="text-center font-bold text-emerald-600">${data.completed}</td></tr>`); }); }); mBody.innerHTML=rows.join('')||'<tr><td colspan=3 class="text-center py-3 text-gray-400">Tidak ada data</td></tr>'; }
+    const mBody=document.getElementById('monthly-ranking-table'); if(mBody){ const rows=[]; (selectedMonth?[selectedMonth]:months).forEach(month=>{ const entries=Object.entries(byMonthTailor[month]||{}).sort((a,b)=>b[1].credit-a[1].credit); entries.forEach(([tailor,data],idx)=>{ const rank=idx+1; const bonus=rank===1?100:rank===2?50:rank===3?25:0; rows.push(`<tr class="border-b hover:bg-slate-50"><td class="py-2 px-3 text-[11px] text-slate-600">${month}</td><td class="py-2 px-3 font-medium text-slate-800 truncate">${tailor}</td><td class="text-center py-2 px-3"><span class="bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-0.5 rounded-full font-bold text-[11px]">${data.completed}</span></td></tr>`); }); }); mBody.innerHTML=rows.join('')||'<tr><td colspan=3 class="text-center py-3 text-gray-400">Tidak ada data</td></tr>'; }
 
   }catch(e){ console.error('Analytics error',e); }
   finally{ _analyticsRunning=false; }
@@ -1779,7 +1812,28 @@ function exportTailorMonthlyExcel(){ exportAllExcel(); }
 
 window.addEventListener('load', ()=>{ setTimeout(renderAddedAnalytics, 1000); });
 
+
+/* ADDED DASHBOARD PRODUCTION CHARTS - TYPE MENARIK SESUAI ANALISIS */
+function renderDashboardProduction(){
+  try{
+    const filtered = typeof getFilteredData==='function' ? getFilteredData() : {production: state.uniformProduction||[]};
+    const productionList=filtered.production||[];
+    const prodByType={}, prodByDept={}, prodByMonth={};
+    productionList.forEach(p=>{ const dept=p.department||'General'; const type=p.uniformType||p.item||'Unknown'; const q=Number(p.quantity)||0; if(q<=0) return; prodByType[type]=(prodByType[type]||0)+q; prodByDept[dept]=(prodByDept[dept]||0)+q; const m=(p.createdAt||p.date||'').slice(0,7); if(m) prodByMonth[m]=(prodByMonth[m]||0)+q; });
+    const prodLabels=Object.keys(prodByType).sort((a,b)=>prodByType[b]-prodByType[a]);
+    const c1=document.getElementById('chartDashProdByType'); if(c1&&prodLabels.length){ destroyAnalyticsChart('dashProdType'); analyticsCharts['dashProdType']=new Chart(c1,{type:'bar', data:{labels:prodLabels, datasets:[{label:'Produced', data:prodLabels.map(k=>prodByType[k]), backgroundColor:prodLabels.map((_,i)=>`hsl(${150+i*18} 70% 50%)`), borderRadius:8, borderSkipped:false}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true, grid:{color:'#f1f5f9'}}, x:{grid:{display:false}}}}}); }
+    const c2=document.getElementById('chartDashProdTrend'); if(c2){ const months=Object.keys(prodByMonth).sort(); if(months.length){ destroyAnalyticsChart('dashProdTrend'); analyticsCharts['dashProdTrend']=new Chart(c2,{type:'line', data:{labels:months, datasets:[{label:'Production', data:months.map(m=>prodByMonth[m]), borderColor:'#059669', backgroundColor:'rgba(16,185,129,0.18)', fill:true, tension:0.45, pointRadius:5, pointBackgroundColor:'#059669'}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}}); } }
+    const c3=document.getElementById('chartDashProdByDept'); if(c3&&Object.keys(prodByDept).length){ destroyAnalyticsChart('dashProdDept'); analyticsCharts['dashProdDept']=new Chart(c3,{type:'doughnut', data:{labels:Object.keys(prodByDept), datasets:[{data:Object.values(prodByDept), backgroundColor:['#065f46','#059669','#10b981','#34d399','#6ee7b7','#a7f3d0'], borderWidth:0}]}, options:{responsive:true, maintainAspectRatio:false, cutout:'58%', plugins:{legend:{position:'bottom', labels:{boxWidth:12, font:{size:11}}}}}}); }
+    const c4=document.getElementById('chartDashProdDonut'); if(c4&&prodLabels.length){ destroyAnalyticsChart('dashProdDonut'); analyticsCharts['dashProdDonut']=new Chart(c4,{type:'polarArea', data:{labels:prodLabels, datasets:[{data:prodLabels.map(k=>prodByType[k]), backgroundColor:prodLabels.map((_,i)=>`hsl(${160+i*22} 70% ${55+i%2*5}%)`), borderWidth:0}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:10, font:{size:10}}}}}}); }
+    const kpi=document.getElementById('dash-production-kpi'); if(kpi){ const total=Object.values(prodByType).reduce((a,b)=>a+b,0); kpi.innerHTML=prodLabels.slice(0,4).map(k=>`<div class="kpi-mini border-emerald-100 bg-emerald-50"><div class="text-[10px] font-bold text-emerald-700 uppercase">${k}</div><div class="text-lg font-bold text-slate-800">${prodByType[k]}</div><div class="text-[10px] text-gray-500">${total?Math.round(prodByType[k]/total*100):0}%</div></div>`).join('')+`<div class="bg-emerald-900 text-white rounded-xl p-3"><div class="text-[10px] opacity-70">TOTAL PRODUCED</div><div class="text-lg font-bold">${total}</div><div class="text-[10px] opacity-60">${prodLabels.length} jenis product</div></div>`; }
+    const sum=document.getElementById('dash-prod-summary'); if(sum){ const total=Object.values(prodByType).reduce((a,b)=>a+b,0); sum.innerHTML = prodLabels.length? `Top: <b>${prodLabels[0]}</b> ${prodByType[prodLabels[0]]} pcs (${total?Math.round(prodByType[prodLabels[0]]/total*100):0}% dari total) • Rata-rata ${prodLabels.length?Math.round(total/prodLabels.length):0} pcs/jenis` : 'Tidak ada data'; }
+  }catch(e){ console.error('dash prod error',e); }
+}
+// Hook into main analytics
+const _origRenderAdded2 = window.renderAddedAnalytics;
+window.renderAddedAnalytics = function(){ if(typeof _origRenderAdded2==='function') _origRenderAdded2(); renderDashboardProduction(); };
+
 </script>
 <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-sm px-5 py-2.5 rounded-full shadow-lg hidden z-[100] transition-all">Berhasil</div>
 </body>
-</
+</html>
