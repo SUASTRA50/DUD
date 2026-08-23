@@ -96,6 +96,31 @@
     background-color: #172554;
     color: #ffffff;
   }
+
+  /* === DARK / LIGHT MODE === */
+  body.dark { background:#0f172a; color:#e2e8f0; }
+  body.dark .ud-header { background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%); }
+  body.dark .bg-white { background-color:#1e293b !important; }
+  body.dark .text-gray-900 { color:#f1f5f9 !important; }
+  body.dark .text-gray-800 { color:#e2e8f0 !important; }
+  body.dark .text-gray-700 { color:#cbd5e1 !important; }
+  body.dark .text-gray-600 { color:#94a3b8 !important; }
+  body.dark .text-gray-500 { color:#94a3b8 !important; }
+  body.dark .text-gray-400 { color:#64748b !important; }
+  body.dark .border-gray-200 { border-color:#334155 !important; }
+  body.dark .border { border-color:#334155 !important; }
+  body.dark .bg-gray-50 { background-color:#0f172a !important; }
+  body.dark .bg-slate-100 { background-color:#0f172a !important; }
+  body.dark .bg-indigo-50 { background-color:#1e1b4b !important; }
+  body.dark table thead { background-color:#0f172a !important; }
+  body.dark .ud-section-card { border-color:#334155 !important; box-shadow:0 4px 18px rgba(0,0,0,.3) !important; }
+  body.dark .ud-metric-icon { background:#0f172a !important; }
+  body.dark input, body.dark select, body.dark textarea { background:#0f172a !important; color:#e2e8f0 !important; border-color:#334155 !important; }
+  body.dark .uniform-binder-panel { background:#1e293b !important; border-color:#334155 !important; }
+  body.dark .uniform-binder-tab { background:#0f172a; border-color:#334155; color:#94a3b8; }
+  body.dark .uniform-binder-tab.active { background:#1e293b; color:#f1f5f9; }
+  body.dark .uniform-form-note { background:#1e293b; color:#93c5fd; }
+  
 </style>
 </head>
 <body class="text-gray-800">
@@ -112,7 +137,12 @@
           <p class="text-xs text-indigo-200">System Lifecycle & Task Queue</p>
         </div>
       </div>
-      <nav class="hidden md:flex space-x-1">
+      <div class="flex items-center gap-2 md:hidden">
+        <button id="theme-toggle-mobile" onclick="toggleTheme()" class="p-2.5 rounded-full bg-indigo-700/60 border border-white/10" title="Mode">
+          <i id="theme-icon-mobile" class="fa-solid fa-moon text-sm"></i>
+        </button>
+      </div>
+      <nav class="hidden md:flex items-center space-x-1">
         <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition bg-indigo-800">
           <i class="fa-solid fa-chart-pie mr-1.5"></i> Dashboard
         </button>
@@ -121,6 +151,10 @@
         </button>
         <button onclick="switchTab('tailor')" id="tab-btn-tailor" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition">
           <i class="fa-solid fa-scissors mr-1.5"></i> Tailor Queue
+        </button>
+        <button id="theme-toggle-desktop" onclick="toggleTheme()" class="ml-2 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition bg-indigo-700/50 border border-white/10" title="Ganti Mode">
+          <i id="theme-icon-desktop" class="fa-solid fa-moon"></i>
+          <span class="ml-1.5 hidden lg:inline" id="theme-label-desktop">Gelap</span>
         </button>
       </nav>
     </div>
@@ -152,8 +186,33 @@
       </button>
     </div>
 
-    <!-- METRICS CARD (DIPERBARUI) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+    <!-- FILTER RANGE TANGGAL DASHBOARD -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex flex-col md:flex-row md:items-end gap-3">
+      <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-[11px] font-bold uppercase text-gray-500 mb-1"><i class="fa-regular fa-calendar mr-1"></i> Tanggal Mulai</label>
+          <input type="date" id="filter-start-date" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold uppercase text-gray-500 mb-1"><i class="fa-regular fa-calendar mr-1"></i> Tanggal Akhir</label>
+          <input type="date" id="filter-end-date" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="applyDashboardDateFilter()" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm btn-animate-click">
+          <i class="fa-solid fa-filter mr-2"></i> Filter
+        </button>
+        <button onclick="resetDashboardDateFilter()" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-semibold rounded-lg shadow-sm btn-animate-click">
+          <i class="fa-solid fa-rotate-left mr-2"></i> Reset
+        </button>
+      </div>
+      <div id="filter-info" class="hidden md:flex items-center text-xs text-indigo-600 font-medium bg-indigo-50 border border-indigo-100 rounded-full px-3 py-1">
+        <i class="fa-solid fa-circle-info mr-1.5"></i><span id="filter-info-text"></span>
+      </div>
+    </div>
+
+    <!-- METRICS CARD (DIPERBARUI - TAMBAH IN PROGRESS) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-4">
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm ud-section-card ud-metric">
         <div class="ud-metric-icon text-indigo-600"><i class="fa-solid fa-triangle-exclamation"></i></div>
         <div class="text-xs font-semibold uppercase text-gray-400">Total Defects</div>
@@ -166,6 +225,13 @@
         <div class="text-xs font-semibold uppercase text-amber-600">Open Tasks</div>
         <div class="text-2xl font-bold text-amber-600 mt-1" id="stat-open">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-hourglass-start mr-1"></i> Waiting for Tailor</div>
+      </div>
+
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-blue-500 ud-section-card ud-metric">
+        <div class="ud-metric-icon text-blue-600"><i class="fa-solid fa-spinner"></i></div>
+        <div class="text-xs font-semibold uppercase text-blue-600">In Progress</div>
+        <div class="text-2xl font-bold text-blue-600 mt-1" id="stat-inprogress">0</div>
+        <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-person-digging mr-1"></i> On Tailor Work</div>
       </div>
 
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-emerald-500 ud-section-card ud-metric">
@@ -821,10 +887,119 @@ let state = {
   tasks: [],
   uniformReceived: [],
   uniformProduction: [],
-  currentTailorFilter: 'ALL'
+  currentTailorFilter: 'ALL',
+  dashboardDateFilter: { start: null, end: null }
 };
 
+/* === THEME MODE LOGIC === */
+function initTheme(){
+  const saved = localStorage.getItem('um-theme');
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const theme = saved || (prefersDark ? 'dark' : 'light');
+  applyTheme(theme);
+}
+function applyTheme(theme){
+  const isDark = theme === 'dark';
+  document.body.classList.toggle('dark', isDark);
+  const iconD = document.getElementById('theme-icon-desktop');
+  const labelD = document.getElementById('theme-label-desktop');
+  const iconM = document.getElementById('theme-icon-mobile');
+  if(iconD){ iconD.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon'; }
+  if(labelD){ labelD.textContent = isDark ? 'Terang' : 'Gelap'; }
+  if(iconM){ iconM.className = isDark ? 'fa-solid fa-sun text-sm' : 'fa-solid fa-moon text-sm'; }
+  localStorage.setItem('um-theme', theme);
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute('content', isDark ? '#0f172a' : '#172554');
+}
+function toggleTheme(){
+  const isDark = document.body.classList.contains('dark');
+  applyTheme(isDark ? 'light' : 'dark');
+}
+
+/* === DATE FILTER LOGIC === */
+function parseDateValue(val){
+  if(!val) return null;
+  // val is already YYYY-MM-DD from input date, but data might be various formats
+  // return Date object from input string
+  const d = new Date(val);
+  d.setHours(0,0,0,0);
+  return isNaN(d) ? null : d;
+}
+function parseDataDate(str){
+  if(!str) return null;
+  // Try direct Date parse
+  let d = new Date(str);
+  if(!isNaN(d)) { d.setHours(0,0,0,0); return d; }
+  // Try DD/MM/YYYY or DD-MM-YYYY
+  const m = str.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
+  if(m){
+    let day = parseInt(m[1],10), month = parseInt(m[2],10)-1, year = parseInt(m[3],10);
+    if(year<100) year+=2000;
+    d = new Date(year, month, day);
+    if(!isNaN(d)) { d.setHours(0,0,0,0); return d; }
+  }
+  return null;
+}
+function isWithinDateRange(dataDateStr, start, end){
+  if(!start && !end) return true;
+  const d = parseDataDate(dataDateStr);
+  if(!d) return true; // if unparseable, show it
+  if(start && d < start) return false;
+  if(end){
+    const endInclusive = new Date(end); endInclusive.setHours(23,59,59,999);
+    if(d > endInclusive) return false;
+  }
+  return true;
+}
+function getFilteredData(){
+  const start = state.dashboardDateFilter.start;
+  const end = state.dashboardDateFilter.end;
+  if(!start && !end) return { tasks: state.tasks||[], received: state.uniformReceived||[], production: state.uniformProduction||[] };
+  const tasks = (state.tasks||[]).filter(t => isWithinDateRange(t.createdAt||t.date||'', start, end));
+  const received = (state.uniformReceived||[]).filter(r => isWithinDateRange(r.createdAt||r.date||'', start, end));
+  const production = (state.uniformProduction||[]).filter(p => isWithinDateRange(p.createdAt||p.date||'', start, end));
+  return { tasks, received, production };
+}
+function applyDashboardDateFilter(){
+  const sVal = document.getElementById('filter-start-date')?.value || '';
+  const eVal = document.getElementById('filter-end-date')?.value || '';
+  if(sVal && eVal && new Date(sVal) > new Date(eVal)){
+    alert('Tanggal Mulai tidak boleh lebih besar dari Tanggal Akhir');
+    return;
+  }
+  state.dashboardDateFilter.start = sVal ? parseDateValue(sVal) : null;
+  state.dashboardDateFilter.end = eVal ? parseDateValue(eVal) : null;
+  updateFilterInfo();
+  renderDashboard();
+  if(typeof showToast==='function') showToast('Filter tanggal diterapkan');
+}
+function resetDashboardDateFilter(){
+  const sEl = document.getElementById('filter-start-date');
+  const eEl = document.getElementById('filter-end-date');
+  if(sEl) sEl.value = '';
+  if(eEl) eEl.value = '';
+  state.dashboardDateFilter.start = null;
+  state.dashboardDateFilter.end = null;
+  updateFilterInfo();
+  renderDashboard();
+  if(typeof showToast==='function') showToast('Filter direset');
+}
+function updateFilterInfo(){
+  const info = document.getElementById('filter-info');
+  const txt = document.getElementById('filter-info-text');
+  if(!info || !txt) return;
+  const s = state.dashboardDateFilter.start;
+  const e = state.dashboardDateFilter.end;
+  if(!s && !e){ info.classList.add('hidden'); return; }
+  info.classList.remove('hidden');
+  const fmt = (d)=> d ? d.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) : '';
+  if(s && e) txt.textContent = `${fmt(s)} - ${fmt(e)}`;
+  else if(s) txt.textContent = `Dari ${fmt(s)}`;
+  else txt.textContent = `Sampai ${fmt(e)}`;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
   refreshData();
 });
 
@@ -953,14 +1128,16 @@ function renderAllViews() {
   renderUniformProductionTable();
 }
 
-/* FUNGSI DASHBOARD UTAMA DENGAN TAMBAHAN DATA RECEIVED DAN PRODUCTION */
+/* FUNGSI DASHBOARD UTAMA DENGAN TAMBAHAN DATA RECEIVED DAN PRODUCTION + FILTER TANGGAL + IN_PROGRESS */
 function renderDashboard() {
-  const tasks = state.tasks || [];
-  const receivedList = state.uniformReceived || [];
-  const productionList = state.uniformProduction || [];
+  const filtered = getFilteredData();
+  const tasks = filtered.tasks || [];
+  const receivedList = filtered.received || [];
+  const productionList = filtered.production || [];
 
   // 1. Ringkasan Defect
   const open = tasks.filter(t => t.status === 'OPEN').length;
+  const inProgress = tasks.filter(t => t.status === 'IN_PROGRESS').length;
   const completed = tasks.filter(t => t.status === 'COMPLETED').length;
   const credits = tasks.reduce((acc, curr) => {
     const qty = Number(curr.quantity) || 1;
@@ -977,6 +1154,8 @@ function renderDashboard() {
   // Update KPI Cards UI
   document.getElementById('stat-today').innerText = tasks.length;
   document.getElementById('stat-open').innerText = open;
+  const elInProg = document.getElementById('stat-inprogress');
+  if(elInProg) elInProg.innerText = inProgress;
   document.getElementById('stat-completed').innerText = completed;
   document.getElementById('stat-credits').innerText = credits;
   document.getElementById('stat-received-items').innerText = totalReceivedItems;
