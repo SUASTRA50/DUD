@@ -148,6 +148,14 @@
   .chart-wrap { height: 260px !important; }
   @media(max-width:767px){ .chart-wrap.tall{height:260px !important} .chart-wrap{height:220px !important} }
 
+
+@media(max-width:768px){
+  #mobile-date-grid{display:grid !important; grid-template-columns:1fr 1fr !important; gap:8px !important;}
+  #metrics-grid{grid-template-columns:repeat(2, minmax(0,1fr)) !important;}
+  .kpi-grid-mobile{grid-template-columns:repeat(2, minmax(0,1fr)) !important;}
+}
+.hide-total-prod{display:none !important;}
+
 </style>
 </head>
 <body class="text-gray-800">
@@ -283,13 +291,7 @@
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-truck-ramp-box mr-1"></i> Total Received Items</div>
       </div>
 
-      <!-- METRIC BARU: TOTAL PRODUCTION -->
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-teal-500 ud-section-card ud-metric">
-        <div class="ud-metric-icon text-teal-600"><i class="fa-solid fa-shirt"></i></div>
-        <div class="text-xs font-semibold uppercase text-teal-600">Total Production</div>
-        <div class="text-2xl font-bold text-teal-600 mt-1" id="stat-production-items">0</div>
-        <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-scissors mr-1"></i> Total Produced Items</div>
-      </div>
+      
     </div>
 
     
@@ -304,6 +306,17 @@
 
 
     <!-- MOVED: TAILOR PERFORMANCE + RANKING BULANAN KE DASHBOARD ATAS RECENT LOG -->
+    <div id="received-analytics-section" class="mt-8 pt-6 border-t space-y-4">
+        <h3 class="font-bold text-sm"><i class="fa-solid fa-boxes-stacked mr-2 text-blue-600"></i>Analisis Received - Per Jenis & Departemen (Sesuai Filter)</h3>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <div class="analytics-card lg:col-span-2"><div class="analytics-title">Per Jenis Uniform</div><div class="chart-wrap tall"><canvas id="chartReceivedByType"></canvas></div></div>
+          <div class="analytics-card"><div class="analytics-title">Per Departemen</div><div class="chart-wrap tall"><canvas id="chartReceivedByDept"></canvas></div></div>
+        </div>
+        <div class="analytics-card"><div class="analytics-title">Stacked Jenis vs Departemen</div><div class="chart-wrap tall"><canvas id="chartReceivedStacked"></canvas></div></div>
+        <div id="received-kpi" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+      </div>
+
+    <!-- MOVED RECEIVED ABOVE TAILOR -->
     <div id="tailor-performance-section" class="mt-8 space-y-5">
       <div class="flex justify-between items-center"><h3 class="font-bold text-sm"><i class="fa-solid fa-award mr-2 text-amber-600"></i>Tailor Performance + Ranking Bulanan</h3><div class="flex gap-2 items-center"><label class="flex items-center gap-1 text-[11px] bg-white border px-2 py-1 rounded"><input type="checkbox" id="auto-refresh-toggle" onchange="toggleAutoRefresh(this.checked)"> Auto 30s <span id="auto-refresh-countdown" class="text-[10px] text-gray-400"></span></label></div></div>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -728,15 +741,7 @@
         </div>
       </div>
 
-      <div id="received-analytics-section" class="mt-8 pt-6 border-t space-y-4">
-        <h3 class="font-bold text-sm"><i class="fa-solid fa-boxes-stacked mr-2 text-blue-600"></i>Analisis Received - Per Jenis & Departemen (Sesuai Filter)</h3>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <div class="analytics-card lg:col-span-2"><div class="analytics-title">Per Jenis Uniform</div><div class="chart-wrap tall"><canvas id="chartReceivedByType"></canvas></div></div>
-          <div class="analytics-card"><div class="analytics-title">Per Departemen</div><div class="chart-wrap tall"><canvas id="chartReceivedByDept"></canvas></div></div>
-        </div>
-        <div class="analytics-card"><div class="analytics-title">Stacked Jenis vs Departemen</div><div class="chart-wrap tall"><canvas id="chartReceivedStacked"></canvas></div></div>
-        <div id="received-kpi" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
-      </div>
+      
 
     </section>
 
@@ -1835,5 +1840,22 @@ window.renderAddedAnalytics = function(){ if(typeof _origRenderAdded2==='functio
 
 </script>
 <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-sm px-5 py-2.5 rounded-full shadow-lg hidden z-[100] transition-all">Berhasil</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const s=document.getElementById('filter-start-date');
+  const e=document.getElementById('filter-end-date');
+  if(s&&e){
+    const ps=s.closest('div'); const pe=e.closest('div');
+    if(ps&&pe&&ps.parentElement&&!document.getElementById('mobile-date-grid')){
+      const w=document.createElement('div'); w.id='mobile-date-grid'; w.className='grid grid-cols-2 gap-2 mb-2';
+      w.style.display='grid'; w.style.gridTemplateColumns='1fr 1fr';
+      ps.parentElement.insertBefore(w, ps); w.appendChild(ps); w.appendChild(pe);
+    }
+  }
+  // TOTAL PRODUCTION card removed per request
+});
+</script>
+
 </body>
 </html>
