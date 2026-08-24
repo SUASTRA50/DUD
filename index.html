@@ -156,6 +156,22 @@
 }
 .hide-total-prod{display:none !important;}
 
+
+/* KPI 2 KOLOM HP SEPERTI CONTOH NAPKIN/TROUSERS - 2 kolom rapi */
+@media(max-width: 640px){
+  #metrics-grid{
+    display:grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+  #metrics-grid > div{
+    padding: 12px !important;
+  }
+}
+@media(max-width: 768px){
+  #mobile-date-grid{ display:grid !important; grid-template-columns:1fr 1fr !important; gap:8px !important; }
+}
+
 </style>
 </head>
 <body class="text-gray-800">
@@ -216,9 +232,7 @@
         <h2 class="text-2xl font-bold text-gray-900">Operational Dashboard</h2>
         <p class="text-sm text-gray-500">Activity Summary & Real-time Google Sheets Sync.</p>
       </div>
-      <button onclick="refreshData()" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm btn-animate-click">
-        <i class="fa-solid fa-rotate mr-2"></i> Refresh Data
-      </button>
+      
     </div>
 
     <!-- FILTER RANGE TANGGAL DASHBOARD -->
@@ -240,6 +254,9 @@
         <button onclick="resetDashboardDateFilter()" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-semibold rounded-lg shadow-sm btn-animate-click">
           <i class="fa-solid fa-rotate-left mr-2"></i> Reset
         </button>
+            <button onclick="refreshData()" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm btn-animate-click">
+        <i class="fa-solid fa-rotate mr-2"></i> Refresh Data
+      </button>
       </div>
       <div id="filter-info" class="hidden md:flex items-center text-xs text-indigo-600 font-medium bg-indigo-50 border border-indigo-100 rounded-full px-3 py-1">
         <i class="fa-solid fa-circle-info mr-1.5"></i><span id="filter-info-text"></span>
@@ -1854,6 +1871,22 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   }
   // TOTAL PRODUCTION card removed per request
+});
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const s=document.getElementById('filter-start-date');
+  const e=document.getElementById('filter-end-date');
+  if(s&&e){
+    const ps=s.closest('div'); const pe=e.closest('div');
+    if(ps&&pe&&ps.parentElement&&!document.getElementById('mobile-date-grid')){
+      const w=document.createElement('div'); w.id='mobile-date-grid'; w.className='grid grid-cols-2 gap-2';
+      w.style.display='grid'; w.style.gridTemplateColumns='1fr 1fr';
+      ps.parentElement.insertBefore(w, ps); w.appendChild(ps); w.appendChild(pe);
+    }
+  }
 });
 </script>
 
