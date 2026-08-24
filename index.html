@@ -154,40 +154,25 @@
   #metrics-grid{grid-template-columns:repeat(2, minmax(0,1fr)) !important;}
   .kpi-grid-mobile{grid-template-columns:repeat(2, minmax(0,1fr)) !important;}
 }
-.hide-total-prod{display:none !important;}
 
 
-/* KPI 2 KOLOM HP SEPERTI CONTOH NAPKIN/TROUSERS - 2 kolom rapi */
+
+/* MOBILE ONLY - KPI 2 KOLOM HP TANPA MERUSAK WEB */
 @media(max-width: 640px){
   #metrics-grid{
-    display:grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px !important;
   }
-  #metrics-grid > div{
-    padding: 12px !important;
-  }
 }
+
+
 @media(max-width: 768px){
-  #mobile-date-grid{ display:grid !important; grid-template-columns:1fr 1fr !important; gap:8px !important; }
-}
-
-
-/* FIX KPI 2 KOLOM HP - AGRESIF */
-@media(max-width: 640px){
-  #metrics-grid{
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0,1fr)) !important;
-    gap: 10px !important;
+  /* Tanggal 1 baris 2 kolom di HP */
+  #filter-section-date-grid{
+    display:grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
   }
-  #metrics-grid > div{
-    width: 100% !important;
-    margin: 0 !important;
-  }
-}
-/* Extra small */
-@media(max-width: 480px){
-  #metrics-grid{ grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
 }
 
 </style>
@@ -255,7 +240,7 @@
 
     <!-- FILTER RANGE TANGGAL DASHBOARD -->
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex flex-col md:flex-row md:items-end gap-3">
-      <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div id="filter-section-date-grid" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block text-[11px] font-bold uppercase text-gray-500 mb-1"><i class="fa-regular fa-calendar mr-1"></i> Tanggal Mulai</label>
           <input type="date" id="filter-start-date" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
@@ -272,7 +257,7 @@
         <button onclick="resetDashboardDateFilter()" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-semibold rounded-lg shadow-sm btn-animate-click">
           <i class="fa-solid fa-rotate-left mr-2"></i> Reset
         </button>
-            <button onclick="refreshData()" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm btn-animate-click">
+              <button onclick="refreshData()" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm btn-animate-click">
         <i class="fa-solid fa-rotate mr-2"></i> Refresh Data
       </button>
       </div>
@@ -282,7 +267,7 @@
     </div>
 
     <!-- METRICS CARD (DIPERBARUI - TAMBAH IN PROGRESS) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-4">
+    <div id="metrics-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-4">
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm ud-section-card ud-metric">
         <div class="ud-metric-icon text-indigo-600"><i class="fa-solid fa-triangle-exclamation"></i></div>
         <div class="text-xs font-semibold uppercase text-gray-400">Total Defects</div>
@@ -1892,39 +1877,5 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 
-
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  const s=document.getElementById('filter-start-date');
-  const e=document.getElementById('filter-end-date');
-  if(s&&e){
-    const ps=s.closest('div'); const pe=e.closest('div');
-    if(ps&&pe&&ps.parentElement&&!document.getElementById('mobile-date-grid')){
-      const w=document.createElement('div'); w.id='mobile-date-grid'; w.className='grid grid-cols-2 gap-2';
-      w.style.display='grid'; w.style.gridTemplateColumns='1fr 1fr';
-      ps.parentElement.insertBefore(w, ps); w.appendChild(ps); w.appendChild(pe);
-    }
-  }
-});
-</script>
-
-
-<script>
-function forceKPI2Col(){
-  const grid = document.getElementById('metrics-grid');
-  if(!grid) return;
-  if(window.innerWidth <= 640){
-    grid.style.display = 'grid';
-    grid.style.gridTemplateColumns = 'repeat(2, minmax(0, 1fr))';
-    grid.style.gap = '10px';
-  } else {
-    grid.style.gridTemplateColumns = '';
-    grid.style.gap = '';
-  }
-}
-document.addEventListener('DOMContentLoaded', forceKPI2Col);
-window.addEventListener('resize', forceKPI2Col);
-</script>
-
 </body>
-</html>
+</html
