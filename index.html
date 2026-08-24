@@ -379,78 +379,7 @@
 
     <!-- RECENT ACTIVITY TABBED TABLE (DIPERBARUI DENGAN PILIHAN TAB) -->
  (DIPERBARUI DENGAN PILIHAN TAB) -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <div class="flex items-center gap-2">
-          <h3 class="font-bold text-gray-800 text-base">Recent Activity Log</h3>
-          <span class="text-xs bg-indigo-50 text-indigo-700 font-semibold px-2.5 py-1 rounded-full border border-indigo-100">Live Sheets Sync</span>
-        </div>
-        <!-- Sub-tab switcher untuk dashboard -->
-        <div class="flex bg-slate-100 p-1 rounded-lg space-x-1 border">
-          <button onclick="switchDashboardTable('defect')" id="dash-tab-defect" class="dash-tab-btn active">
-            <i class="fa-solid fa-triangle-exclamation mr-1"></i> Report Defect
-          </button>
-          <button onclick="switchDashboardTable('received')" id="dash-tab-received" class="dash-tab-btn">
-            <i class="fa-solid fa-box-open mr-1"></i> Uniform Received
-          </button>
-          <button onclick="switchDashboardTable('production')" id="dash-tab-production" class="dash-tab-btn">
-            <i class="fa-solid fa-shirt mr-1"></i> Uniform Production
-          </button>
-        </div>
-      </div>
-
-      <!-- TABEL 1: DEFECT REPORT -->
-      <div id="dash-view-defect" class="overflow-x-auto ud-table-wrap">
-        <table class="w-full text-left border-collapse text-sm">
-          <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-semibold border-b">
-            <tr>
-              <th class="py-3 px-4">Unique ID</th>
-              <th class="py-3 px-4">Date / Time</th>
-              <th class="py-3 px-4">Input By</th>
-              <th class="py-3 px-4">Owner & Dept</th>
-              <th class="py-3 px-4">Item & Defect</th>
-              <th class="py-3 px-4">Status</th>
-              <th class="py-3 px-4">Tailor</th>
-            </tr>
-          </thead>
-          <tbody id="dashboard-recent-table" class="divide-y divide-gray-100"></tbody>
-        </table>
-      </div>
-
-      <!-- TABEL 2: UNIFORM RECEIVED -->
-      <div id="dash-view-received" class="overflow-x-auto ud-table-wrap hidden">
-        <table class="w-full text-left border-collapse text-sm">
-          <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-semibold border-b">
-            <tr>
-              <th class="py-3 px-4">Unique ID</th>
-              <th class="py-3 px-4">Date / Time</th>
-              <th class="py-3 px-4">Input By</th>
-              <th class="py-3 px-4">Owner & Dept</th>
-              <th class="py-3 px-4">Item & Quantity</th>
-              <th class="py-3 px-4">PO Number</th>
-              <th class="py-3 px-4">Supplier</th>
-            </tr>
-          </thead>
-          <tbody id="dashboard-received-table" class="divide-y divide-gray-100"></tbody>
-        </table>
-      </div>
-
-      <!-- TABEL 3: UNIFORM PRODUCTION -->
-      <div id="dash-view-production" class="overflow-x-auto ud-table-wrap hidden">
-        <table class="w-full text-left border-collapse text-sm">
-          <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-semibold border-b">
-            <tr>
-              <th class="py-3 px-4">Unique ID</th>
-              <th class="py-3 px-4">Date / Time</th>
-              <th class="py-3 px-4">Input By</th>
-              <th class="py-3 px-4">Department</th>
-              <th class="py-3 px-4">Item & Quantity</th>
-            </tr>
-          </thead>
-          <tbody id="dashboard-production-table" class="divide-y divide-gray-100"></tbody>
-        </table>
-      </div>
-    </div>
+    
   </section>
 
   <!-- UNIFORM MODULE VIEW -->
@@ -1149,13 +1078,13 @@ function switchTab(tabName) {
 
 // FUNGSI KHUSUS UNTUK MEMINDAHKAN TABEL PADA DASHBOARD
 function switchDashboardTable(tabName) {
-  document.getElementById('dash-view-defect').classList.add('hidden');
-  document.getElementById('dash-view-received').classList.add('hidden');
-  document.getElementById('dash-view-production').classList.add('hidden');
+  const dv1=document.getElementById('dash-view-defect'); if(dv1) dv1.classList.add('hidden');
+  const dv2=document.getElementById('dash-view-received'); if(dv2) dv2.classList.add('hidden');
+  const dv3=document.getElementById('dash-view-production'); if(dv3) dv3.classList.add('hidden');
 
-  document.getElementById('dash-tab-defect').classList.remove('active');
-  document.getElementById('dash-tab-received').classList.remove('active');
-  document.getElementById('dash-tab-production').classList.remove('active');
+  const dt1=document.getElementById('dash-tab-defect'); if(dt1) dt1.classList.remove('active');
+  const dt2=document.getElementById('dash-tab-received'); if(dt2) dt2.classList.remove('active');
+  const dt3=document.getElementById('dash-tab-production'); if(dt3) dt3.classList.remove('active');
 
   document.getElementById(`dash-view-${tabName}`).classList.remove('hidden');
   document.getElementById(`dash-tab-${tabName}`).classList.add('active');
@@ -1878,4 +1807,4 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 </body>
-</html
+</html>
