@@ -203,6 +203,12 @@
 }
 
 </style>
+
+<style id="fix-pointer-final">
+html, body { pointer-events: auto !important; }
+#matrix-filter-section, #matrix-filter-section *, #filter-matrix-department, #btnMatrixDownload { pointer-events: auto !important; }
+</style>
+
 </head>
 <body class="text-gray-800">
 
@@ -302,6 +308,8 @@
       </div>
     </div>
 
+    </div>
+
 
     <!-- METRICS CARD (DIPERBARUI - TAMBAH IN PROGRESS) -->
     <div id="metrics-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-4">
@@ -388,6 +396,26 @@
     <!-- ADDED: UNIFORM PRODUCTION ANALYTICS DI DASHBOARD BAWAH TAILOR PERFORMANCE -->
     <div id="dashboard-production-analytics" class="space-y-5 mt-6">
       <h3 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-industry mr-2 text-emerald-600"></i>Analisis Uniform Production - Semua Product (Dashboard View)</h3>
+      <div class="bg-white rounded-xl border border-emerald-200 shadow-sm p-4 mt-3 mb-4" id="matrix-filter-section">
+        <div class="flex flex-col md:flex-row md:items-end gap-3">
+          <div class="flex-1">
+            <label class="block text-[11px] font-bold uppercase text-emerald-700 mb-1">FILTER DEPARTEMEN KHUSUS MATRIX PRODUCTION</label>
+            <select id="filter-matrix-department" class="w-full border border-emerald-200 rounded-lg px-3 py-2 text-sm bg-emerald-50/50">
+              <option value="">Semua Department</option>
+            </select>
+            <p class="text-[10px] text-gray-500 mt-1" id="matrix-info">Klik Refresh Data jika daftar department masih kosong</p>
+          </div>
+          <div>
+            <button type="button" id="btnMatrixDownload" onclick="downloadProductionMatrixExcel()" class="inline-flex items-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-lg">
+              <i class="fa-solid fa-file-excel mr-2"></i> Download Excel Matrix
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTER DEPARTEMEN KHUSUS MATRIX - TARUH DIBAWAH JUDUL Analisis Uniform Production - Semua Product (Dashboard View) - TIDAK UBAH LAINNYA -->
+      
+
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <div class="analytics-card">
           <div class="analytics-title">Total Production per Jenis (Bar)</div>
@@ -500,8 +528,7 @@
                 <option value="P&C">P&C</option>
                 <option value="Wellness">Wellness</option>
                 <option value="Sales & Executive">Sales & Executive</option>
-                <option value="Other">Other</option>
-              </select>
+                </select>
             </div>
 
             <div>
@@ -522,7 +549,8 @@
                 <option value="Hat">Hat</option>
                 <option value="Duvet Cover">Duvet Cover</option>
                 <option value="Curtain">Curtain</option>
-                <option value="Others">Others</option>
+                <option value="Underwear">Underwear</option>
+                <option value="Undershirt">Undershirt</option>
               </select>
             </div>
 
@@ -539,7 +567,7 @@
                 <option value="Torn Fabric">Torn Fabric/Sobek Kain</option>
                 <option value="Alteration">Alteration/Vermak</option>
                 <option value="Cut /Length">Potong/Panjang</option>
-                <option value="Others">Others</option>
+               
               </select>
             </div>
 
@@ -638,7 +666,7 @@
               <option value="P&C">P&C</option>
               <option value="Wellness">Wellness</option>
               <option value="Sales & Executive">Sales & Executive</option>
-              <option value="Other">Other</option></select></div>
+              </select></div>
           <div class="uniform-field"><label>PO Number</label><input name="poNumber" required placeholder="PO Number"></div>
           <div class="uniform-field"><label>Supplier Name</label><input name="supplierName" required placeholder="Supplier"></div>
         </div>
@@ -784,7 +812,7 @@
               <option value="P&C">P&C</option>
               <option value="Wellness">Wellness</option>
               <option value="Sales & Executive">Sales & Executive</option>
-              <option value="Other">Other</option>
+             
             </select>
           </div>
         </div>
@@ -873,18 +901,7 @@
         </div>
       </div>
 
-      <div id="production-analytics-section" class="mt-8 pt-6 border-t space-y-4">
-        <h3 class="font-bold text-sm"><i class="fa-solid fa-industry mr-2 text-emerald-600"></i>Analisis Production - Semua Product</h3>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <div class="analytics-card"><div class="analytics-title">Per Jenis</div><div class="chart-wrap tall"><canvas id="chartProdByType"></canvas></div></div>
-          <div class="analytics-card lg:col-span-2"><div class="analytics-title">Trend per Bulan</div><div class="chart-wrap tall"><canvas id="chartProdTrend"></canvas></div></div>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <div class="analytics-card"><div class="analytics-title">By Departemen</div><div class="chart-wrap"><canvas id="chartProdByDept"></canvas></div></div>
-          <div class="analytics-card"><div class="analytics-title">Distribusi</div><div class="chart-wrap"><canvas id="chartProdDonut"></canvas></div><div id="prod-summary" class="mt-2 text-[11px] bg-slate-50 p-2 rounded"></div></div>
-        </div>
-        <div id="production-kpi" class="grid grid-cols-2 md:grid-cols-5 gap-3"></div>
-      </div>
+      
 
     </section>
   </section>
@@ -1024,23 +1041,51 @@ function parseDateValue(val){
 }
 function parseDataDate(str){
   if(!str) return null;
-  // Try direct Date parse
-  let d = new Date(str);
-  if(!isNaN(d)) { d.setHours(0,0,0,0); return d; }
-  // Try DD/MM/YYYY or DD-MM-YYYY
-  const m = str.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
-  if(m){
-    let day = parseInt(m[1],10), month = parseInt(m[2],10)-1, year = parseInt(m[3],10);
-    if(year<100) year+=2000;
-    d = new Date(year, month, day);
-    if(!isNaN(d)) { d.setHours(0,0,0,0); return d; }
+  // If already Date
+  if(str instanceof Date){ 
+    const d = new Date(str); d.setHours(0,0,0,0); return isNaN(d)?null:d; 
   }
+  // Try direct parse first (ISO, MM/DD/YYYY, etc)
+  let d = new Date(str);
+  if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
+  
+  // Clean string
+  const s = String(str).trim();
+  
+  // Try DD/MM/YYYY or DD-MM-YYYY or MM/DD/YYYY - detect by checking if first part >12
+  const m = s.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
+  if(m){
+    let p1 = parseInt(m[1],10), p2 = parseInt(m[2],10), y = parseInt(m[3],10);
+    if(y<100) y+=2000;
+    // If p1 >12, assume DD/MM, else try MM/DD first then DD/MM
+    let day, month;
+    if(p1>12){ day=p1; month=p2-1; }
+    else if(p2>12){ day=p2; month=p1-1; }
+    else { // ambiguous, try DD/MM as common in ID
+      day=p1; month=p2-1;
+    }
+    d = new Date(y, month, day);
+    if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
+    // Try alternative
+    d = new Date(y, p1-1, p2);
+    if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
+  }
+  
+  // Try YYYY-MM-DD
+  const m2 = s.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+  if(m2){
+    let y=parseInt(m2[1],10), mo=parseInt(m2[2],10)-1, da=parseInt(m2[3],10);
+    d = new Date(y, mo, da);
+    if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
+  }
+  
   return null;
 }
 function isWithinDateRange(dataDateStr, start, end){
   if(!start && !end) return true;
+  if(!dataDateStr) return true;
   const d = parseDataDate(dataDateStr);
-  if(!d) return true; // if unparseable, show it
+  if(!d) return true; // if unparseable, show it to avoid data loss
   if(start && d < start) return false;
   if(end){
     const endInclusive = new Date(end); endInclusive.setHours(23,59,59,999);
@@ -1052,9 +1097,15 @@ function getFilteredData(){
   const start = state.dashboardDateFilter.start;
   const end = state.dashboardDateFilter.end;
   if(!start && !end) return { tasks: state.tasks||[], received: state.uniformReceived||[], production: state.uniformProduction||[] };
-  const tasks = (state.tasks||[]).filter(t => isWithinDateRange(t.createdAt||t.date||'', start, end));
-  const received = (state.uniformReceived||[]).filter(r => isWithinDateRange(r.createdAt||r.date||'', start, end));
-  const production = (state.uniformProduction||[]).filter(p => isWithinDateRange(p.createdAt||p.date||'', start, end));
+  
+  function getDateStr(obj){
+    // Try multiple possible date fields from Sheets
+    return obj.createdAt || obj.date || obj.timestamp || obj.Timestamp || obj.TIMESTAMP || obj.receivedAt || obj.receivedDate || obj.productionDate || obj.prodDate || obj.Date || obj['Created At'] || obj['Tanggal'] || '';
+  }
+  
+  const tasks = (state.tasks||[]).filter(t => isWithinDateRange(getDateStr(t), start, end));
+  const received = (state.uniformReceived||[]).filter(r => isWithinDateRange(getDateStr(r), start, end));
+  const production = (state.uniformProduction||[]).filter(p => isWithinDateRange(getDateStr(p), start, end));
   return { tasks, received, production };
 }
 function applyDashboardDateFilter(){
@@ -1720,7 +1771,7 @@ function renderAddedAnalytics(){
     const cRT=document.getElementById('chartReceivedByType'); if(cRT&&recLabels.length){ destroyAnalyticsChart('recType'); analyticsCharts['recType']=new Chart(cRT,{type:'bar', data:{labels:recLabels, datasets:[{data:recLabels.map(k=>recByType[k]), backgroundColor:'#2563eb'}]}, options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}}}); }
     const cRD=document.getElementById('chartReceivedByDept'); if(cRD&&Object.keys(recByDept).length){ destroyAnalyticsChart('recDept'); analyticsCharts['recDept']=new Chart(cRD,{type:'pie', data:{labels:Object.keys(recByDept), datasets:[{data:Object.values(recByDept), backgroundColor:['#1e3a8a','#2563eb','#60a5fa','#93c5fd']}]}, options:{responsive:true, maintainAspectRatio:false}}); }
     const cRS=document.getElementById('chartReceivedStacked'); if(cRS){ const depts=Object.keys(recStack); const datasets=recLabels.map((it,i)=>({label:it, data:depts.map(d=>recStack[d][it]||0), backgroundColor:`hsl(${i*30} 70% 55%)`})); destroyAnalyticsChart('recStack'); if(depts.length) analyticsCharts['recStack']=new Chart(cRS,{type:'bar', data:{labels:depts, datasets}, options:{responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true}, y:{stacked:true}}}}); }
-    const recKpi=document.getElementById('received-kpi'); if(recKpi){ const total=Object.values(recByType).reduce((a,b)=>a+b,0); recKpi.innerHTML=Object.entries(recByDept).map(([d,v])=>`<div class="kpi-mini"><div class="text-[10px] font-bold text-blue-600">${d}</div><div class="font-bold">${v}</div></div>`).join('')+`<div class="bg-slate-900 text-white rounded-xl p-3"><div class="text-[10px]">TOTAL</div><div class="font-bold">${total}</div></div>`; }
+    const recKpi=document.getElementById('received-kpi'); if(recKpi){ const total=Object.values(recByType).reduce((a,b)=>a+b,0); recKpi.innerHTML=Object.entries(recByDept).map(([d,v])=>`<div class="kpi-mini"><div class="text-[10px] font-bold text-blue-600">${d}</div><div class="font-bold">${v}</div></div>`).join('')+`<div class="bg-indigo-500 text-white rounded-xl p-3 shadow-sm border border-indigo-400"><div class="text-[10px] font-bold uppercase tracking-wide">TOTAL RECEIVED</div><div class="font-bold text-lg mt-1">${total}</div></div>`; }
 
     // Production
     const prodByType={}, prodByDept={}, prodByMonth={};
@@ -1892,6 +1943,189 @@ function setDatePreset(preset){
     applyDashboardDateFilter();
   }
 }
+</script>
+
+
+<!-- MATRIX REPORT EXCEL DOWNLOAD - TAMBAHAN BARU -->
+
+
+
+<script>
+// TAMBAHAN SAJA - TIDAK UBAH CODE LAIN
+function downloadProductionMatrixExcel(){
+  try{
+    let prodByDate = [];
+    try{
+      if(typeof getFilteredData==='function'){
+        const f=getFilteredData();
+        if(f && f.production) prodByDate=f.production;
+      }
+    }catch(e){}
+    if(!prodByDate.length && typeof state!=='undefined' && state.uniformProduction) prodByDate=state.uniformProduction;
+    if(!prodByDate.length){ alert('Data kosong. Klik Refresh Data dulu.'); return; }
+
+    const deptEl=document.getElementById('filter-matrix-department');
+    const deptMatrix=deptEl?deptEl.value.trim():'';
+    const order=["Trousers","Shirt","Skirt","Blouse","Jacket","Dress","Vest","Polo Shirt","Cook Jacket","Napkin","Kitchen Cloth","Apron","Table Cloth"];
+    function parseDate(s){
+      if(!s) return null;
+      s=s.toString().trim().slice(0,10);
+      if(!s) return null;
+      var isoPat=/^\d{4}-\d{2}-\d{2}$/;
+      if(isoPat.test(s)){ var d=new Date(s); return isNaN(d)?null:d; }
+      var m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+      if(m){ var day=parseInt(m[1],10), mo=parseInt(m[2],10)-1, yr=parseInt(m[3],10); if(yr<100) yr+=2000; var dd=new Date(yr,mo,day); return isNaN(dd)?null:dd; }
+      var dd=new Date(s); return isNaN(dd)?null:dd;
+    }
+    function toISO(d){ if(!d||isNaN(d)) return null; return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+    function fmt(d){ if(!d||isNaN(d)) return ''; try{ return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'}).replace(/ /g,'-'); }catch(e){ return toISO(d)||''; } }
+
+    var dateMap={};
+    prodByDate.forEach(function(p){
+      var raw=(p.date||p.productionDate||p.createdAt||'').toString();
+      var d=parseDate(raw);
+      if(!d) return;
+      var iso=toISO(d);
+      if(iso) dateMap[iso]=d;
+    });
+    var dateEntries=Object.entries(dateMap).sort(function(a,b){ return a[0].localeCompare(b[0]); });
+    var dateList=dateEntries.map(function(e){ return e[1]; });
+
+    var sEl=document.getElementById('filter-start-date');
+    var eEl=document.getElementById('filter-end-date');
+    var startStr=sEl&&sEl.value?sEl.value:'';
+    var endStr=eEl&&eEl.value?eEl.value:'';
+    if(startStr && endStr){
+      var sDate=parseDate(startStr);
+      var eDate=parseDate(endStr);
+      if(sDate && eDate){
+        var cur=new Date(sDate); cur.setHours(0,0,0,0);
+        var end=new Date(eDate); end.setHours(0,0,0,0);
+        dateList=[];
+        while(cur<=end){ dateList.push(new Date(cur)); cur.setDate(cur.getDate()+1); }
+      }
+    }
+    if(!dateList.length){ alert('Tanggal tidak terbaca'); return; }
+
+    var wsData=[];
+    wsData.push(['', ...dateList.map(function(d){ return fmt(d); })]);
+
+    if(!deptMatrix){
+      var allDepts=[...new Set(prodByDate.map(function(p){ return (p.department||p.dept||'').toString().trim(); }).filter(Boolean))].sort(function(a,b){ return a.toLowerCase().localeCompare(b.toLowerCase()); });
+      if(!allDepts.length) allDepts=['Unknown'];
+      allDepts.forEach(function(deptName){
+        var filteredDept = prodByDate.filter(function(p){ return (p.department||p.dept||'').toString().trim().toLowerCase()===deptName.toLowerCase(); });
+        if(!filteredDept.length) return;
+        var typesInData=[...new Set(filteredDept.map(function(p){ return (p.uniformType||p.item||'').trim(); }).filter(Boolean))];
+        var allTypes=[...order.filter(function(t){ return typesInData.includes(t); }), ...typesInData.filter(function(t){ return !order.includes(t); })];
+        var map={}; allTypes.forEach(function(t){ map[t]={}; });
+        filteredDept.forEach(function(p){
+          var t=(p.uniformType||p.item||'').trim();
+          var raw=(p.date||p.productionDate||p.createdAt||'').toString();
+          var d=parseDate(raw);
+          if(!t||!d) return;
+          var iso=toISO(d);
+          if(!map[t]) map[t]={};
+          map[t][iso]=(map[t][iso]||0)+(Number(p.quantity)||0);
+        });
+        wsData.push([deptName]);
+        allTypes.forEach(function(t){
+          var row=[t];
+          dateList.forEach(function(d){ row.push(map[t]?.[toISO(d)]||''); });
+          wsData.push(row);
+        });
+        wsData.push([]);
+      });
+    } else {
+      var filtered = prodByDate.filter(function(p){ return (p.department||p.dept||'').toString().trim().toLowerCase()===deptMatrix.toLowerCase(); });
+      if(!filtered.length){ alert('Tidak ada data dept '+deptMatrix); return; }
+      var typesInData=[...new Set(filtered.map(function(p){ return (p.uniformType||p.item||'').trim(); }).filter(Boolean))];
+      var allTypes=[...order.filter(function(t){ return typesInData.includes(t); }), ...typesInData.filter(function(t){ return !order.includes(t); })];
+      var map={}; allTypes.forEach(function(t){ map[t]={}; });
+      filtered.forEach(function(p){
+        var t=(p.uniformType||p.item||'').trim();
+        var raw=(p.date||p.productionDate||p.createdAt||'').toString();
+        var d=parseDate(raw);
+        if(!t||!d) return;
+        var iso=toISO(d);
+        if(!map[t]) map[t]={};
+        map[t][iso]=(map[t][iso]||0)+(Number(p.quantity)||0);
+      });
+      allTypes.forEach(function(t){
+        var row=[t];
+        dateList.forEach(function(d){ row.push(map[t]?.[toISO(d)]||''); });
+        wsData.push(row);
+      });
+    }
+
+    if(typeof XLSX==='undefined'){ alert('Library XLSX belum load'); return; }
+    var ws=XLSX.utils.aoa_to_sheet(wsData);
+    ws['!cols']=[{wch:18}, ...dateList.map(function(){ return {wch:12}; })];
+    var wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Production Matrix');
+    var fileName='Production_Matrix_'+(startStr||'all')+'_to_'+(endStr||'all')+(deptMatrix?'_'+deptMatrix:'_AllDepts')+'.xlsx';
+    XLSX.writeFile(wb, fileName);
+  }catch(e){
+    console.error(e);
+    alert('Error: '+e.message);
+  }
+}
+
+function populateMatrixDeptFilter(){
+  try{
+    var prod=(typeof state!=='undefined'&&state.uniformProduction)?state.uniformProduction:[];
+    if(!prod||!prod.length){
+      setTimeout(populateMatrixDeptFilter, 1000);
+      return;
+    }
+    var depts=[...new Set(prod.map(function(p){ return (p.department||p.dept||'').toString().trim(); }).filter(Boolean))].sort(function(a,b){ return a.toLowerCase().localeCompare(b.toLowerCase()); });
+    var sel=document.getElementById('filter-matrix-department');
+    if(!sel) return;
+    var cur=sel.value;
+    sel.innerHTML='<option value="">Semua Department</option>'+depts.map(function(d){ return '<option value="'+d+'">'+d+'</option>'; }).join('');
+    if(cur) sel.value=cur;
+    var info=document.getElementById('matrix-info');
+    if(info) info.textContent='Depts: '+depts.join(', ')+' | Total: '+prod.length;
+    console.log('[Matrix] depts', depts);
+  }catch(e){}
+}
+
+(function(){
+  function fixPointer(){
+    try{
+      if(document.body){
+        document.body.style.setProperty('pointer-events','auto','important');
+        var s=document.body.getAttribute('style')||'';
+        if(s.includes('pointer-events: none')||s.includes('pointer-events:none')){
+          document.body.setAttribute('style', s.replace(/pointer-events\s*:\s*none/gi,'pointer-events: auto'));
+        }
+      }
+      var sel=document.getElementById('filter-matrix-department');
+      if(sel) sel.style.setProperty('pointer-events','auto','important');
+      var btn=document.getElementById('btnMatrixDownload');
+      if(btn) btn.style.setProperty('pointer-events','auto','important');
+    }catch(e){}
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    fixPointer();
+    setTimeout(populateMatrixDeptFilter, 800);
+    setTimeout(populateMatrixDeptFilter, 2500);
+    setInterval(fixPointer, 1000);
+    var iv=setInterval(function(){
+      if(populateMatrixDeptFilter()!==false) {}
+      var prod=(typeof state!=='undefined'&&state.uniformProduction)?state.uniformProduction:[];
+      if(prod&&prod.length) clearInterval(iv);
+    }, 1000);
+  });
+  if(typeof window.renderAllViews==='function'){
+    var old=window.renderAllViews;
+    window.renderAllViews=function(){
+      var r=old.apply(this, arguments);
+      setTimeout(function(){ fixPointer(); populateMatrixDeptFilter(); }, 400);
+      return r;
+    };
+  }
+})();
 </script>
 
 </body>
