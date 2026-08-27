@@ -212,6 +212,84 @@ html, body { pointer-events: auto !important; }
 </head>
 <body class="text-gray-800">
 
+<!-- AUTH OVERLAY -->
+<div id="auth-overlay" class="fixed inset-0 z-[9999] bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <div class="bg-white rounded-[20px] shadow-2xl overflow-hidden">
+      <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 p-6 text-white text-center">
+        <div class="mx-auto w-16 h-16 bg-white/20 rounded-2xl grid place-items-center mb-3"><i class="fa-solid fa-shirt text-2xl"></i></div>
+        <h1 class="text-xl font-bold">Uniform Management</h1>
+        <p class="text-xs text-indigo-200 mt-1">System Lifecycle & Task Queue</p>
+      </div>
+      <div class="p-6 md:p-7">
+        <h2 class="font-bold text-slate-800 mb-1">Login Required</h2>
+        <p class="text-xs text-slate-500 mb-5">Masukkan User ID yang dibuat Admin device ini</p>
+        <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1.5">User ID</label>
+            <input type="text" id="login-user-id" required placeholder="ADMIN / QC01" class="w-full px-4 py-3 border border-slate-300 rounded-xl text-sm font-bold uppercase focus:ring-2 focus:ring-indigo-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1.5">Password</label>
+            <div class="relative">
+              <input type="password" id="login-password" required placeholder="Password" class="w-full px-4 py-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none pr-10">
+              <button type="button" onclick="toggleLoginPass()" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 grid place-items-center text-slate-400"><i id="eye-icon" class="fa-solid fa-eye"></i></button>
+            </div>
+          </div>
+          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-sm shadow">Login</button>
+          <div id="login-error" class="hidden p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl"></div>
+        </form>
+        <div class="mt-6 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+          <p class="text-[11px] font-bold text-amber-800">Default Admin: ADMIN / admin123</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="user-management-modal" class="fixed inset-0 z-[9000] bg-slate-900/60 hidden items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+    <div class="p-5 border-b flex items-center justify-between bg-slate-50 gap-2">
+      <h3 class="font-bold text-slate-800"><i class="fa-solid fa-users-gear mr-2 text-indigo-600"></i>User Management</h3>
+      <div class="flex gap-2">
+        <button onclick="handleChangeAdminPassword()" class="bg-amber-500 hover:bg-amber-600 text-white text-[11px] font-bold px-3 py-1.5 rounded-full">Ganti Pass ADMIN</button>
+        <button onclick="closeUserManagement()" class="w-8 h-8 grid place-items-center bg-slate-200 rounded-full"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+    <div class="p-5 space-y-5 overflow-y-auto">
+      <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+        <h4 class="text-xs font-bold uppercase text-indigo-900 mb-3">Buat User Baru (ID Tidak Bisa Diubah)</h4>
+        <form id="create-user-form" onsubmit="handleCreateUser(event)" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <input type="text" id="new-user-id" required placeholder="USER ID" class="px-3 py-2 border rounded-lg text-sm font-bold uppercase">
+          <input type="text" id="new-user-pass" required placeholder="Password Awal" class="px-3 py-2 border rounded-lg text-sm">
+          <button type="submit" class="bg-indigo-600 text-white font-bold rounded-lg text-sm">Buat User</button>
+        </form>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="exportUsers()" class="flex-1 min-w-[120px] bg-slate-800 text-white text-xs font-bold py-2.5 rounded-lg">Export JSON</button>
+        <label class="flex-1 min-w-[120px] bg-white border text-xs font-bold py-2.5 rounded-lg text-center cursor-pointer">Import (Merge)<input type="file" id="import-users-file" accept=".json" class="hidden" onchange="importUsers(event)"></label>
+        <button onclick="importUsersOverwrite()" class="flex-1 min-w-[120px] bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold py-2.5 rounded-lg">Overwrite</button>
+      </div>
+      <div>
+        <h4 class="text-xs font-bold uppercase text-slate-600 mb-2">Daftar User (<span id="user-count">0</span>)</h4>
+        <div class="border rounded-xl overflow-hidden"><table class="w-full text-sm"><thead class="bg-slate-50 text-[11px] uppercase text-slate-500"><tr><th class="text-left p-2.5">User ID</th><th class="text-left p-2.5">Role</th><th class="text-left p-2.5">Dibuat</th><th class="text-right p-2.5">Aksi</th></tr></thead><tbody id="user-list-body"></tbody></table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="change-pass-modal" class="fixed inset-0 z-[9000] bg-slate-900/50 hidden items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-5">
+    <h3 class="font-bold mb-4">Ganti Password</h3>
+    <form id="change-pass-form" onsubmit="handleChangePassword(event)" class="space-y-3">
+      <div><label class="block text-xs font-bold uppercase text-slate-600 mb-1">Password Lama</label><input type="password" id="old-password" required class="w-full px-3 py-2 border rounded-lg text-sm"></div>
+      <div><label class="block text-xs font-bold uppercase text-slate-600 mb-1">Password Baru</label><input type="password" id="new-password" required minlength="4" class="w-full px-3 py-2 border rounded-lg text-sm"></div>
+      <div class="flex gap-2 pt-2"><button type="button" onclick="closeChangePass()" class="flex-1 bg-slate-100 py-2 rounded-lg text-sm font-bold">Batal</button><button type="submit" class="flex-1 bg-indigo-600 text-white py-2 rounded-lg text-sm font-bold">Simpan</button></div>
+    </form>
+  </div>
+</div>
+
+
 <header class="ud-header text-white shadow-lg sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
@@ -470,24 +548,11 @@ html, body { pointer-events: auto !important; }
             <p class="text-xs text-gray-500">Uniform staff entry form</p>
           </div>
           <form id="form-new-defect" onsubmit="handleCreateSubmission(event)" class="space-y-4">
-            <div>
-              <label class="block text-xs font-bold uppercase text-indigo-900 mb-1">
-                Input By (Uniform Staff Name) <span class="text-red-500">*</span>
-              </label>
-              <div class="relative">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-                  <i class="fa-solid fa-id-badge"></i>
-                </span>
-                <select id="inp-reporting-staff" required
-                  class="w-full pl-9 pr-3 py-2 bg-indigo-50 border border-indigo-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none appearance-none">
-                  <option value="">-- Uniform Colleague --</option>
-                  <option value="Prima">Prima</option>
-                  <option value="Mukhlis">Mukhlis</option>
-                  <option value="Kodriyah">Kodriyah</option>
-                  <option value="Made">Made</option>
-                  <option value="Arik">Arik</option>
-                  <option value="Arif">Arif</option>
-                </select>
+                        <div>
+              <label class="block text-xs font-bold uppercase text-indigo-900 mb-1">Input By (Otomatis dari Login)</label>
+              <div class="w-full px-3 py-2.5 bg-indigo-50 border border-indigo-200 rounded-lg text-sm font-bold text-indigo-900 flex items-center gap-2">
+                <i class="fa-solid fa-user-check text-indigo-600"></i><span id="defect-input-by-badge">-</span>
+                <input type="hidden" id="inp-reporting-staff" value="">
               </div>
             </div>
 
@@ -528,7 +593,8 @@ html, body { pointer-events: auto !important; }
                 <option value="P&C">P&C</option>
                 <option value="Wellness">Wellness</option>
                 <option value="Sales & Executive">Sales & Executive</option>
-                </select>
+                <option value="Other">Other</option>
+              </select>
             </div>
 
             <div>
@@ -549,8 +615,7 @@ html, body { pointer-events: auto !important; }
                 <option value="Hat">Hat</option>
                 <option value="Duvet Cover">Duvet Cover</option>
                 <option value="Curtain">Curtain</option>
-                <option value="Underwear">Underwear</option>
-                <option value="Undershirt">Undershirt</option>
+                <option value="Others">Others</option>
               </select>
             </div>
 
@@ -567,7 +632,7 @@ html, body { pointer-events: auto !important; }
                 <option value="Torn Fabric">Torn Fabric/Sobek Kain</option>
                 <option value="Alteration">Alteration/Vermak</option>
                 <option value="Cut /Length">Potong/Panjang</option>
-               
+                <option value="Others">Others</option>
               </select>
             </div>
 
@@ -634,13 +699,7 @@ html, body { pointer-events: auto !important; }
       <div class="uniform-form-note mb-4"><i class="fa-solid fa-circle-info mr-1"></i> Satu PO boleh memiliki banyak transaksi karena supplier dapat melakukan partial delivery.</div>
       <form id="uniform-received-form" onsubmit="submitUniformReceived(event)">
         <div class="uniform-form-grid">
-          <div class="uniform-field"><label>Input By</label><select name="inputBy" required><option value="">-- Uniform Colleague --</option>
-                <option value="Prima">Prima</option>
-                <option value="Mukhlis">Mukhlis</option>
-                <option value="Kodriyah">Kodriyah</option>
-                <option value="Made">Made</option>
-                <option value="Arik">Arik</option>
-                <option value="Arif">Arif</option></select></div>
+          <div class="uniform-field"><label>Input By (Auto)</label><div class="w-full min-h-[44px] px-3 py-2.5 bg-indigo-50 border border-indigo-200 rounded-[10px] text-sm font-bold text-indigo-900 flex items-center gap-2"><i class="fa-solid fa-user-check text-indigo-600"></i><span id="received-input-by-badge">-</span></div><input type="hidden" name="inputBy" id="received-input-by-hidden" value=""></div>
           <div class="uniform-field"><label>Uniform Owner</label><input name="uniformOwner" required placeholder="Staff / New Joiner / Stock"></div>
           <div class="uniform-field"><label>Department</label><select name="department" required><option value="">-- Choose Department --</option>
               <option value="Front Office">Front Office</option>
@@ -666,7 +725,7 @@ html, body { pointer-events: auto !important; }
               <option value="P&C">P&C</option>
               <option value="Wellness">Wellness</option>
               <option value="Sales & Executive">Sales & Executive</option>
-              </select></div>
+              <option value="Other">Other</option></select></div>
           <div class="uniform-field"><label>PO Number</label><input name="poNumber" required placeholder="PO Number"></div>
           <div class="uniform-field"><label>Supplier Name</label><input name="supplierName" required placeholder="Supplier"></div>
         </div>
@@ -773,17 +832,10 @@ html, body { pointer-events: auto !important; }
 
       <form id="uniform-production-form" onsubmit="submitUniformProduction(event)">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
-          <div class="uniform-field">
-            <label>Input By <span class="text-red-500">*</span></label>
-            <select name="inputBy" required>
-              <option value="">-- Uniform Colleague --</option>
-              <option value="Prima">Prima</option>
-              <option value="Mukhlis">Mukhlis</option>
-              <option value="Kodriyah">Kodriyah</option>
-              <option value="Made">Made</option>
-              <option value="Arik">Arik</option>
-              <option value="Arif">Arif</option>
-            </select>
+                    <div class="uniform-field">
+            <label>Input By (Auto) <span class="text-red-500">*</span></label>
+            <div class="w-full min-h-[44px] px-3 py-2.5 bg-indigo-50 border border-indigo-200 rounded-[10px] text-sm font-bold text-indigo-900 flex items-center gap-2"><i class="fa-solid fa-user-check text-indigo-600"></i><span id="production-input-by-badge">-</span></div>
+            <input type="hidden" name="inputBy" id="production-input-by-hidden" value="">
           </div>
           <div class="uniform-field">
             <label>Department <span class="text-red-500">*</span></label>
@@ -812,7 +864,7 @@ html, body { pointer-events: auto !important; }
               <option value="P&C">P&C</option>
               <option value="Wellness">Wellness</option>
               <option value="Sales & Executive">Sales & Executive</option>
-             
+              <option value="Other">Other</option>
             </select>
           </div>
         </div>
@@ -914,11 +966,12 @@ html, body { pointer-events: auto !important; }
         <p class="text-xs text-gray-500">Manage and track uniform repair progress.</p>
       </div>
       <div class="flex flex-col items-start gap-1">
-        <div class="flex items-center gap-3">
-          <label class="text-xs font-semibold text-gray-600">Active Tailor Name:</label>
-          <input type="text" id="active-tailor-name" required placeholder="Required before processing task"
-            oninput="validateActiveTailor()"
-            class="px-3 py-1.5 border border-indigo-300 rounded-lg text-sm font-semibold text-indigo-900 bg-indigo-50 focus:bg-white outline-none">
+                <div class="flex items-center gap-3">
+          <label class="text-xs font-semibold text-gray-600">Active Tailor Name (Auto):</label>
+          <div class="px-3 py-1.5 border border-indigo-300 rounded-lg text-sm font-bold text-indigo-900 bg-indigo-50 flex items-center gap-2">
+            <i class="fa-solid fa-user-check text-indigo-600"></i><span id="active-tailor-display">-</span>
+          </div>
+          <input type="hidden" id="active-tailor-name" value="">
         </div>
         <span id="tailor-name-warning" class="text-xs text-red-500 hidden">
           <i class="fa-solid fa-triangle-exclamation mr-1"></i> Input tailor name.
@@ -997,7 +1050,7 @@ html, body { pointer-events: auto !important; }
 
 <script>
 let state = {
-  apiUrl: 'https://script.google.com/macros/s/AKfycbwI_FR8bAvof8VOBz-dzqRPt2l-1awR6BVfxTZFig3lFQGHA3-cXAgusk02-lvqq9s/exec',
+  apiUrl: 'https://script.google.com/macros/s/AKfycbykTM8w-0CIR5x8g4ZD5tI8LtZ_PiExHxIJQioPOD3qmXxSZ84Kxwg9OcZ_zGP3OB0/exec',
   tasks: [],
   uniformReceived: [],
   uniformProduction: [],
@@ -2126,6 +2179,121 @@ function populateMatrixDeptFilter(){
     };
   }
 })();
+</script>
+
+
+<script>
+// AUTH - CLEAN VERSION - NO LAYOUT CHANGE
+const AUTH_KEYS={users:'um_users_final_v2',current:'um_current_user_final_v2'};
+function simpleHash(s){ try{ return btoa(unescape(encodeURIComponent(s.split('').reverse().join('')+'|'+s.length))); }catch(e){ let h=0; for(let i=0;i<s.length;i++){ h=((h<<5)-h)+s.charCodeAt(i); h|=0; } return h.toString(); } }
+function loadUsers(){ try{ const r=localStorage.getItem(AUTH_KEYS.users); if(!r){ const a={id:'ADMIN',passHash:simpleHash('admin123'),role:'ADMIN',createdAt:new Date().toISOString(),createdBy:'SYSTEM'}; localStorage.setItem(AUTH_KEYS.users,JSON.stringify([a])); return [a]; } return JSON.parse(r); }catch(e){ return [{id:'ADMIN',passHash:simpleHash('admin123'),role:'ADMIN',createdAt:new Date().toISOString(),createdBy:'SYSTEM'}]; } }
+function saveUsers(u){ localStorage.setItem(AUTH_KEYS.users,JSON.stringify(u)); }
+function getCurrentUser(){ try{ const r=localStorage.getItem(AUTH_KEYS.current); return r?JSON.parse(r):null; }catch(e){ return null; } }
+function setCurrentUser(u){ localStorage.setItem(AUTH_KEYS.current,JSON.stringify(u)); if(window.state) state.currentUser=u; updateAuthUI(); }
+function clearCurrentUser(){ localStorage.removeItem(AUTH_KEYS.current); if(window.state) state.currentUser=null; }
+function toggleLoginPass(){ const i=document.getElementById('login-password'); const e=document.getElementById('eye-icon'); if(!i) return; if(i.type==='password'){ i.type='text'; e.className='fa-solid fa-eye-slash'; } else { i.type='password'; e.className='fa-solid fa-eye'; } }
+function showLogin(){ const o=document.getElementById('auth-overlay'); if(o){ o.classList.remove('hidden'); o.classList.add('flex'); } const hdr=document.querySelector('header.ud-header'); const main=document.querySelector('main'); if(hdr) hdr.style.display='none'; if(main) main.style.display='none'; }
+function hideLogin(){ const o=document.getElementById('auth-overlay'); if(o){ o.classList.add('hidden'); o.classList.remove('flex'); } const hdr=document.querySelector('header.ud-header'); const main=document.querySelector('main'); if(hdr) hdr.style.display=''; if(main) main.style.display=''; updateAuthUI(); }
+function updateAuthUI(){
+  const cur=getCurrentUser()|| (window.state&&state.currentUser);
+  if(!cur) return;
+  const ids={ 'defect-input-by-badge':cur.id, 'received-input-by-badge':cur.id, 'production-input-by-badge':cur.id, 'active-tailor-display':cur.id };
+  Object.entries(ids).forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.textContent=val; });
+  [['inp-reporting-staff',cur.id],['received-input-by-hidden',cur.id],['production-input-by-hidden',cur.id],['active-tailor-name',cur.id]].forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.value=val; });
+  let info=document.getElementById('auth-header-info');
+  if(!info){
+    const headerFlex=document.querySelector('header .max-w-7xl > div.flex');
+    if(headerFlex){
+      const div=document.createElement('div');
+      div.id='auth-header-info';
+      div.className='flex items-center gap-2 ml-auto pl-4';
+      headerFlex.appendChild(div);
+      info=div;
+    }
+  }
+  if(info){
+    const isAdmin=cur.role==='ADMIN';
+    info.innerHTML=`<div class="flex items-center gap-2 bg-indigo-800/60 border border-white/10 rounded-full px-3 py-1"><span class="text-xs font-bold text-white">${cur.id}</span><span class="text-[9px] px-1.5 py-0.5 rounded bg-white/20 text-white">${cur.role}</span></div><button onclick="openChangePass()" class="w-8 h-8 grid place-items-center bg-white/10 rounded-full" title="Ganti Password"><i class="fa-solid fa-key text-xs text-white"></i></button>${isAdmin?`<button onclick="openUserManagement()" class="w-8 h-8 grid place-items-center bg-amber-500 rounded-full" title="User Management"><i class="fa-solid fa-users-gear text-xs text-white"></i></button>`:''}<button onclick="handleLogout()" class="w-8 h-8 grid place-items-center bg-red-500/80 rounded-full" title="Logout"><i class="fa-solid fa-right-from-bracket text-xs text-white"></i></button>`;
+  }
+}
+function handleLogin(e){
+  e.preventDefault();
+  const id=document.getElementById('login-user-id').value.trim().toUpperCase().replace(/\s+/g,'');
+  const pass=document.getElementById('login-password').value;
+  const err=document.getElementById('login-error');
+  const users=loadUsers();
+  const user=users.find(u=>u.id===id);
+  if(!user){ err.textContent='User ID tidak ditemukan di device ini.'; err.classList.remove('hidden'); return; }
+  if(user.passHash!==simpleHash(pass)){ err.textContent='Password salah.'; err.classList.remove('hidden'); return; }
+  err.classList.add('hidden');
+  setCurrentUser({id:user.id,role:user.role,loginAt:new Date().toISOString()});
+  hideLogin();
+  // trigger original data load if exists
+  if(typeof refreshData==='function'){ setTimeout(()=>{ try{ refreshData(); }catch(e){} }, 300); }
+}
+function handleLogout(){ if(!confirm('Logout?')) return; clearCurrentUser(); location.reload(); }
+function openUserManagement(){ const cur=getCurrentUser(); if(!cur||cur.role!=='ADMIN'){ alert('Hanya ADMIN'); return; } renderUserList(); const el=document.getElementById('user-management-modal'); el.classList.remove('hidden'); el.classList.add('flex'); }
+function closeUserManagement(){ const el=document.getElementById('user-management-modal'); el.classList.add('hidden'); el.classList.remove('flex'); }
+function renderUserList(){ const users=loadUsers(); const tbody=document.getElementById('user-list-body'); const cnt=document.getElementById('user-count'); if(cnt) cnt.textContent=users.length; if(!tbody) return; tbody.innerHTML=users.map(u=>`<tr class="border-t"><td class="p-2.5 font-bold ${u.role==='ADMIN'?'text-amber-600':''}">${u.id}</td><td class="p-2.5"><span class="text-[10px] px-2 py-0.5 rounded-full ${u.role==='ADMIN'?'bg-amber-100 text-amber-700':'bg-slate-100'}">${u.role}</span></td><td class="p-2.5 text-xs text-slate-500">${new Date(u.createdAt).toLocaleDateString()}</td><td class="p-2.5 text-right"><button onclick="handleResetPass('${u.id}')" class="text-xs bg-slate-100 px-2 py-1 rounded mr-1"><i class="fa-solid fa-rotate"></i></button>${u.id!=='ADMIN'?`<button onclick="handleDeleteUser('${u.id}')" class="text-xs bg-red-50 text-red-600 px-2 py-1 rounded"><i class="fa-solid fa-trash"></i></button>`:''}</td></tr>`).join(''); }
+function handleCreateUser(e){ e.preventDefault(); const id=document.getElementById('new-user-id').value.trim().toUpperCase().replace(/\s+/g,''); const pass=document.getElementById('new-user-pass').value; if(id.length<3){ alert('Min 3'); return; } if(!/^[A-Z0-9_-]+$/.test(id)){ alert('Hanya A-Z 0-9 - _'); return; } const users=loadUsers(); if(users.find(u=>u.id===id)){ alert('Sudah ada'); return; } users.push({id,passHash:simpleHash(pass),role:id==='ADMIN'?'ADMIN':'USER',createdAt:new Date().toISOString(),createdBy:getCurrentUser()?.id||'ADMIN'}); saveUsers(users); e.target.reset(); renderUserList(); }
+function handleResetPass(id){ const np=prompt('Password baru untuk '+id+':'); if(np===null) return; if(np.length<4){ alert('Min 4'); return; } const users=loadUsers(); const u=users.find(x=>x.id===id); u.passHash=simpleHash(np); saveUsers(users); alert('Password '+id+' = '+np); renderUserList(); }
+function handleDeleteUser(id){ if(id==='ADMIN') return; if(!confirm('Hapus '+id+'?')) return; let users=loadUsers(); users=users.filter(u=>u.id!==id); saveUsers(users); renderUserList(); }
+function openChangePass(){ document.getElementById('change-pass-modal').classList.remove('hidden'); document.getElementById('change-pass-modal').classList.add('flex'); }
+function closeChangePass(){ const m=document.getElementById('change-pass-modal'); m.classList.add('hidden'); m.classList.remove('flex'); }
+function handleChangePassword(e){ e.preventDefault(); const oldP=document.getElementById('old-password').value; const newP=document.getElementById('new-password').value; const cur=getCurrentUser(); const users=loadUsers(); const u=users.find(x=>x.id===cur.id); if(u.passHash!==simpleHash(oldP)){ alert('Lama salah'); return; } u.passHash=simpleHash(newP); saveUsers(users); closeChangePass(); alert('Password diganti'); }
+function handleChangeAdminPassword(){ const cur=getCurrentUser(); if(!cur||cur.role!=='ADMIN'){ alert('Hanya ADMIN'); return; } const oldP=prompt('Password ADMIN lama:'); if(oldP===null) return; const users=loadUsers(); const admin=users.find(u=>u.id==='ADMIN'); if(admin.passHash!==simpleHash(oldP)){ alert('Salah'); return; } const newP=prompt('Password ADMIN baru:'); if(!newP||newP.length<4) return; const c=prompt('Konfirmasi:'); if(newP!==c){ alert('Tidak cocok'); return; } admin.passHash=simpleHash(newP); saveUsers(users); alert('Password ADMIN baru: '+newP); }
+function exportUsers(){ const users=loadUsers(); const blob=new Blob([JSON.stringify(users,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='uniform_users_'+new Date().toISOString().slice(0,10)+'.json'; a.click(); URL.revokeObjectURL(url); }
+function importUsers(e){ const file=e.target.files[0]; if(!file) return; const isOverwrite=!!window._importOverwrite; const r=new FileReader(); r.onload=function(ev){ try{ const imp=JSON.parse(ev.target.result); const valid=imp.filter(u=>u.id&&u.passHash); if(isOverwrite){ const map={}; valid.forEach(u=>{ const id=(u.id||'').toString().trim().toUpperCase(); if(id) map[id]={id,passHash:u.passHash,role:u.role||'USER',createdAt:u.createdAt||new Date().toISOString(),createdBy:u.createdBy||'IMPORT'}; }); if(!map['ADMIN']) map['ADMIN']={id:'ADMIN',passHash:simpleHash('admin123'),role:'ADMIN',createdAt:new Date().toISOString(),createdBy:'SYSTEM'}; saveUsers(Object.values(map)); renderUserList(); alert('Overwrite: '+Object.keys(map).length+' user'); } else { const cur=loadUsers(); const map={}; cur.forEach(u=>map[u.id]=u); let a=0,s=0; valid.forEach(u=>{ const id=(u.id||'').toString().trim().toUpperCase(); if(!id) return; if(map[id]) s++; else { map[id]={id,passHash:u.passHash,role:u.role||'USER',createdAt:u.createdAt||new Date().toISOString(),createdBy:u.createdBy||'IMPORT'}; a++; } }); saveUsers(Object.values(map)); renderUserList(); alert(a+' baru, '+s+' skip'); } }catch(err){ alert('Gagal: '+err.message); } finally { e.target.value=''; window._importOverwrite=false; } }; r.readAsText(file); }
+function importUsersOverwrite(){ if(!confirm('Yakin TIMPA semua user?')) return; window._importOverwrite=true; document.getElementById('import-users-file').click(); }
+function initAuthClean(){
+  const users=loadUsers();
+  if(!window.state){ window.state={}; }
+  // preserve apiUrl if already defined
+  if(!state.apiUrl){ state.apiUrl='https://script.google.com/macros/s/AKfycbykTM8w-0CIR5x8g4ZD5tI8LtZ_PiExHxIJQioPOD3qmXxSZ84Kxwg9OcZ_zGP3OB0/exec'; }
+  if(!state.tasks) state.tasks=[];
+  if(!state.uniformReceived) state.uniformReceived=[];
+  if(!state.uniformProduction) state.uniformProduction=[];
+  state.users=users;
+  const cur=getCurrentUser();
+  if(cur && users.find(x=>x.id===cur.id)){ state.currentUser=cur; hideLogin(); } else { clearCurrentUser(); showLogin(); }
+  setTimeout(updateAuthUI, 600);
+}
+// Patch for auto fill without breaking original functions
+(function(){
+  const origUFD = window.uniformFormData;
+  window.uniformFormData = function(id){
+    let o={};
+    try{ if(typeof origUFD==='function' && origUFD!==window.uniformFormData) o=origUFD(id)||{}; else { const f=document.getElementById(id); if(f) new FormData(f).forEach((v,k)=>o[k]=v); } }catch(e){ const f=document.getElementById(id); if(f) new FormData(f).forEach((v,k)=>o[k]=v); }
+    const cur=getCurrentUser()|| (window.state&&state.currentUser);
+    if(cur && (id==='uniform-received-form'||id==='uniform-production-form')) o.inputBy=cur.id;
+    return o;
+  };
+})();
+// Override validateActiveTailor
+window.validateActiveTailor = function(){
+  const cur=getCurrentUser()|| (window.state&&state.currentUser);
+  const inp=document.getElementById('active-tailor-name');
+  const disp=document.getElementById('active-tailor-display');
+  if(cur&&cur.id){ if(inp) inp.value=cur.id; if(disp) disp.textContent=cur.id; const w=document.getElementById('tailor-name-warning'); if(w) w.classList.add('hidden'); return true; }
+  return inp&&inp.value.trim().length>0;
+};
+// Init after DOM
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', initAuthClean); } else { initAuthClean(); }
+// Also hook into original handleCreateSubmission to use current user
+document.addEventListener('DOMContentLoaded', ()=>{
+  // Patch handleCreateSubmission if exists
+  const origHCS = window.handleCreateSubmission;
+  if(typeof origHCS==='function'){
+    window.handleCreateSubmission = async function(e){
+      const cur=getCurrentUser();
+      if(cur){
+        const el=document.getElementById('inp-reporting-staff');
+        if(el) el.value=cur.id;
+      }
+      return origHCS.call(this, e);
+    };
+  }
+});
 </script>
 
 </body>
