@@ -202,11 +202,101 @@
   box-shadow: 0 2px 8px rgba(79,70,229,0.3);
 }
 
+
+  /* BOTTOM DOCK - same as header ribbon */
+  #bottom-dock {
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:linear-gradient(135deg,#172554 0%,#1e3a8a 100%);
+    border-top:1px solid rgba(255,255,255,.1);
+    box-shadow:0 -4px 20px rgba(15,23,42,.25);
+    padding:8px 12px;
+    padding-bottom:calc(8px + env(safe-area-inset-bottom));
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+  }
+  #bottom-dock .dock-left { display:flex; align-items:center; gap:4px; }
+  #bottom-dock .dock-right { display:flex; align-items:center; gap:6px; }
+  #bottom-dock .dock-btn {
+    display:flex; align-items:center; gap:6px;
+    padding:9px 14px; border-radius:9999px;
+    font-size:12px; font-weight:600; color:#cbd5e1;
+    border:0; background:rgba(255,255,255,.08);
+    transition:all .15s ease;
+  }
+  #bottom-dock .dock-btn.active { background:#4f46e5; color:#fff; box-shadow:0 4px 12px rgba(79,70,229,.45); }
+  #bottom-dock .dock-btn i { font-size:13px; }
+  #bottom-dock .dock-icon-btn {
+    width:36px; height:36px; display:grid; place-items:center;
+    border-radius:9999px; border:0;
+    background:rgba(255,255,255,.12); color:#fff;
+    transition:all .15s ease;
+  }
+  #bottom-dock .dock-icon-btn.amber { background:#f59e0b; }
+  #bottom-dock .dock-icon-btn.red { background:rgba(239,68,68,.9); }
+  #bottom-dock .dock-user-badge {
+    display:flex; align-items:center; gap:6px;
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.1);
+    padding:6px 10px; border-radius:9999px; color:#fff; font-size:11px; font-weight:700;
+  }
+  body { padding-bottom:78px; }
+  @media (max-width:767px){
+    .ud-mobile-nav { display:none !important; } /* hide old floating */
+    body { padding-bottom:78px; }
+  }
+  @media (min-width:768px){
+    #bottom-dock { padding:10px 24px; }
+    #bottom-dock .dock-btn { padding:8px 16px; font-size:13px; }
+  }
+
 </style>
 
 <style id="fix-pointer-final">
 html, body { pointer-events: auto !important; }
 #matrix-filter-section, #matrix-filter-section *, #filter-matrix-department, #btnMatrixDownload { pointer-events: auto !important; }
+
+  /* BOTTOM DOCK - same as header ribbon */
+  #bottom-dock {
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:linear-gradient(135deg,#172554 0%,#1e3a8a 100%);
+    border-top:1px solid rgba(255,255,255,.1);
+    box-shadow:0 -4px 20px rgba(15,23,42,.25);
+    padding:8px 12px;
+    padding-bottom:calc(8px + env(safe-area-inset-bottom));
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+  }
+  #bottom-dock .dock-left { display:flex; align-items:center; gap:4px; }
+  #bottom-dock .dock-right { display:flex; align-items:center; gap:6px; }
+  #bottom-dock .dock-btn {
+    display:flex; align-items:center; gap:6px;
+    padding:9px 14px; border-radius:9999px;
+    font-size:12px; font-weight:600; color:#cbd5e1;
+    border:0; background:rgba(255,255,255,.08);
+    transition:all .15s ease;
+  }
+  #bottom-dock .dock-btn.active { background:#4f46e5; color:#fff; box-shadow:0 4px 12px rgba(79,70,229,.45); }
+  #bottom-dock .dock-btn i { font-size:13px; }
+  #bottom-dock .dock-icon-btn {
+    width:36px; height:36px; display:grid; place-items:center;
+    border-radius:9999px; border:0;
+    background:rgba(255,255,255,.12); color:#fff;
+    transition:all .15s ease;
+  }
+  #bottom-dock .dock-icon-btn.amber { background:#f59e0b; }
+  #bottom-dock .dock-icon-btn.red { background:rgba(239,68,68,.9); }
+  #bottom-dock .dock-user-badge {
+    display:flex; align-items:center; gap:6px;
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.1);
+    padding:6px 10px; border-radius:9999px; color:#fff; font-size:11px; font-weight:700;
+  }
+  body { padding-bottom:78px; }
+  @media (max-width:767px){
+    .ud-mobile-nav { display:none !important; } /* hide old floating */
+    body { padding-bottom:78px; }
+  }
+  @media (min-width:768px){
+    #bottom-dock { padding:10px 24px; }
+    #bottom-dock .dock-btn { padding:8px 16px; font-size:13px; }
+  }
+
 </style>
 
 </head>
@@ -2200,21 +2290,42 @@ function updateAuthUI(){
   const ids={ 'defect-input-by-badge':cur.id, 'received-input-by-badge':cur.id, 'production-input-by-badge':cur.id, 'active-tailor-display':cur.id };
   Object.entries(ids).forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.textContent=val; });
   [['inp-reporting-staff',cur.id],['received-input-by-hidden',cur.id],['production-input-by-hidden',cur.id],['active-tailor-name',cur.id]].forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.value=val; });
-  let info=document.getElementById('auth-header-info');
-  if(!info){
-    const headerFlex=document.querySelector('header .max-w-7xl > div.flex');
-    if(headerFlex){
-      const div=document.createElement('div');
-      div.id='auth-header-info';
-      div.className='flex items-center gap-2 ml-auto pl-4';
-      headerFlex.appendChild(div);
-      info=div;
+  // Update bottom dock instead of header (header stays clean)
+  const dockBadge=document.getElementById('dock-user-badge');
+  const dockUserId=document.getElementById('dock-user-id');
+  const dockRight=document.getElementById('dock-right-auth');
+  if(dockBadge && dockUserId && dockRight){
+    dockBadge.style.display='flex';
+    dockUserId.textContent=cur.id+' • '+cur.role;
+    // clear old icons but keep badge
+    const existing=dockRight.querySelectorAll('.dock-icon-btn');
+    existing.forEach(e=>e.remove());
+    // add buttons
+    const btnKey=document.createElement('button');
+    btnKey.className='dock-icon-btn';
+    btnKey.title='Ganti Password';
+    btnKey.innerHTML='<i class="fa-solid fa-key text-xs"></i>';
+    btnKey.onclick=()=>openChangePass();
+    dockRight.appendChild(btnKey);
+    if(cur.role==='ADMIN'){
+      const btnMg=document.createElement('button');
+      btnMg.className='dock-icon-btn amber';
+      btnMg.title='User Management';
+      btnMg.innerHTML='<i class="fa-solid fa-users-gear text-xs"></i>';
+      btnMg.onclick=()=>openUserManagement();
+      dockRight.appendChild(btnMg);
     }
+    const btnOut=document.createElement('button');
+    btnOut.className='dock-icon-btn red';
+    btnOut.title='Logout';
+    btnOut.innerHTML='<i class="fa-solid fa-right-from-bracket text-xs"></i>';
+    btnOut.onclick=()=>handleLogout();
+    dockRight.appendChild(btnOut);
   }
-  if(info){
-    const isAdmin=cur.role==='ADMIN';
-    info.innerHTML=`<div class="flex items-center gap-2 bg-indigo-800/60 border border-white/10 rounded-full px-3 py-1"><span class="text-xs font-bold text-white">${cur.id}</span><span class="text-[9px] px-1.5 py-0.5 rounded bg-white/20 text-white">${cur.role}</span></div><button onclick="openChangePass()" class="w-8 h-8 grid place-items-center bg-white/10 rounded-full" title="Ganti Password"><i class="fa-solid fa-key text-xs text-white"></i></button>${isAdmin?`<button onclick="openUserManagement()" class="w-8 h-8 grid place-items-center bg-amber-500 rounded-full" title="User Management"><i class="fa-solid fa-users-gear text-xs text-white"></i></button>`:''}<button onclick="handleLogout()" class="w-8 h-8 grid place-items-center bg-red-500/80 rounded-full" title="Logout"><i class="fa-solid fa-right-from-bracket text-xs text-white"></i></button>`;
-  }
+  // also hide old header info if exists
+  const oldInfo=document.getElementById('auth-header-info');
+  if(oldInfo) oldInfo.style.display='none';
+
 }
 function handleLogin(e){
   e.preventDefault();
@@ -2294,6 +2405,39 @@ document.addEventListener('DOMContentLoaded', ()=>{
     };
   }
 });
+</script>
+
+
+<!-- BOTTOM DOCK - same style as header ribbon -->
+<div id="bottom-dock">
+  <div class="dock-left">
+    <button onclick="switchTab('dashboard')" id="dock-btn-dashboard" class="dock-btn active"><i class="fa-solid fa-chart-pie"></i> Dashboard</button>
+    <button onclick="switchTab('uniform')" id="dock-btn-uniform" class="dock-btn"><i class="fa-solid fa-file-pen"></i> Uniform</button>
+    <button onclick="switchTab('tailor')" id="dock-btn-tailor" class="dock-btn"><i class="fa-solid fa-scissors"></i> Tailor</button>
+  </div>
+  <div class="dock-right" id="dock-right-auth">
+    <!-- auth icons will be injected here -->
+    <div class="dock-user-badge" id="dock-user-badge" style="display:none;"><i class="fa-solid fa-circle-user"></i><span id="dock-user-id">-</span></div>
+  </div>
+</div>
+
+
+<script>
+// Sync bottom dock active state with tab switching
+(function(){
+  const origSwitchTab = window.switchTab;
+  if(typeof origSwitchTab==='function'){
+    window.switchTab = function(tab){
+      const r = origSwitchTab.apply(this, arguments);
+      document.querySelectorAll('#bottom-dock .dock-btn').forEach(b=>b.classList.remove('active'));
+      const activeBtn=document.getElementById('dock-btn-'+tab);
+      if(activeBtn) activeBtn.classList.add('active');
+      // also sync old mobile nav if exists
+      document.querySelectorAll('.ud-mobile-nav button').forEach(b=>b.classList.remove('active'));
+      return r;
+    };
+  }
+})();
 </script>
 
 </body>
