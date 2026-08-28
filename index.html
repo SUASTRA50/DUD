@@ -529,7 +529,7 @@ html, body { pointer-events: auto !important; }
 
     
     <!-- ADDED: DASHBOARD ANALYTICS -->
-    <div id="dashboard-analytics-section" class="space-y-5">
+    <div id="dashboard-analytics-section"><div id="dashboard-inventory-section"></div><div class="space-y-5">
       <div class="flex justify-between items-center"><h3 class="font-bold text-sm"><i class="fa-solid fa-chart-line text-indigo-600 mr-2"></i>Graphic Analysis (Sesuai Filter Tanggal)</h3></div>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div class="analytics-card" id="card-inputter"><div class="analytics-title"><span>a. Jumlah Penginput per Nama</span><span id="inputter-total-label" class="text-[10px] text-gray-400"></span></div><div class="chart-wrap"><canvas id="chartInputter"></canvas></div><div id="inputter-summary" class="mt-2 text-[11px] text-gray-500 bg-slate-50 p-2 rounded"></div></div>
@@ -563,7 +563,7 @@ html, body { pointer-events: auto !important; }
     
     <!-- ADDED: UNIFORM PRODUCTION ANALYTICS DI DASHBOARD BAWAH TAILOR PERFORMANCE -->
     <div id="dashboard-production-analytics" class="space-y-5 mt-6">
-      <h3 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-industry mr-2 text-emerald-600"></i>Analisis Uniform Production - Semua Product (Dashboard View)</h3>
+      <h3 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-industry mr-2 text-emerald-600"></i>Analisis Productivity - Semua Product (Dashboard View)</h3>
       <div class="bg-white rounded-xl border border-emerald-200 shadow-sm p-4 mt-3 mb-4" id="matrix-filter-section">
         <div class="flex flex-col md:flex-row md:items-end gap-3">
           <div class="flex-1">
@@ -581,7 +581,7 @@ html, body { pointer-events: auto !important; }
         </div>
       </div>
 
-      <!-- FILTER DEPARTEMEN KHUSUS MATRIX - TARUH DIBAWAH JUDUL Analisis Uniform Production - Semua Product (Dashboard View) - TIDAK UBAH LAINNYA -->
+      <!-- FILTER DEPARTEMEN KHUSUS MATRIX - TARUH DIBAWAH JUDUL Analisis Productivity - Semua Product (Dashboard View) - TIDAK UBAH LAINNYA -->
       
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -622,9 +622,11 @@ html, body { pointer-events: auto !important; }
       <p class="text-xs text-slate-500 mt-1">Defect, received delivery, and production tracking</p>
     </div>
     <div class="uniform-binder" role="tablist">
-      <button type="button" class="uniform-binder-tab active" data-ut="defect" onclick="switchUniformTab('defect')"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Report Defects</button>
-      <button type="button" class="uniform-binder-tab" data-ut="received" onclick="switchUniformTab('received')"><i class="fa-solid fa-box-open mr-1"></i> Uniform Received</button>
-      <button type="button" class="uniform-binder-tab" data-ut="production" onclick="switchUniformTab('production')"><i class="fa-solid fa-shirt mr-1"></i> Uniform Production</button>
+      <button type="button" class="uniform-binder-tab active" data-ut="defect" onclick="switchUniformTab('defect')"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Defect</button>
+      <button type="button" class="uniform-binder-tab" data-ut="received" onclick="switchUniformTab('received')"><i class="fa-solid fa-box-open mr-1"></i> Received</button>
+      <button type="button" class="uniform-binder-tab" data-ut="production" onclick="switchUniformTab('production')"><i class="fa-solid fa-shirt mr-1"></i> Productivity</button>
+      <button type="button" class="uniform-binder-tab" data-ut="inventory" onclick="switchUniformTab('inventory')"><i class="fa-solid fa-clipboard-list mr-1"></i> Inventory</button>
+      <button type="button" class="uniform-binder-tab" data-ut="discard" onclick="switchUniformTab('discard')"><i class="fa-solid fa-trash-can mr-1"></i> Discard</button>
     </div>
 
     <!-- SUB-PANEL 1: DEFECTS -->
@@ -633,7 +635,7 @@ html, body { pointer-events: auto !important; }
         <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-5">
           <div class="border-b border-gray-100 pb-3">
             <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-              <i class="fa-solid fa-pen-to-square text-indigo-600"></i> Report Defects
+              <i class="fa-solid fa-pen-to-square text-indigo-600"></i> Defect
             </h3>
             <p class="text-xs text-gray-500">Uniform staff entry form</p>
           </div>
@@ -785,7 +787,7 @@ html, body { pointer-events: auto !important; }
 
     <!-- SUB-PANEL 2: RECEIVED -->
     <section id="uniform-panel-received" class="uniform-binder-panel p-4 md:p-5">
-      <div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 grid place-items-center"><i class="fa-solid fa-box-open"></i></div><div><h3 class="text-lg font-bold text-slate-800">Uniform Received</h3><p class="text-xs text-slate-500">Record every supplier delivery, including partial PO delivery.</p></div></div>
+      <div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 grid place-items-center"><i class="fa-solid fa-box-open"></i></div><div><h3 class="text-lg font-bold text-slate-800">Received</h3><p class="text-xs text-slate-500">Record every supplier delivery, including partial PO delivery.</p></div></div>
       <div class="uniform-form-note mb-4"><i class="fa-solid fa-circle-info mr-1"></i> Satu PO boleh memiliki banyak transaksi karena supplier dapat melakukan partial delivery.</div>
       <form id="uniform-received-form" onsubmit="submitUniformReceived(event)">
         <div class="uniform-form-grid">
@@ -915,7 +917,7 @@ html, body { pointer-events: auto !important; }
           <i class="fa-solid fa-shirt"></i>
         </div>
         <div>
-          <h3 class="text-lg font-bold text-slate-800">Uniform Production</h3>
+          <h3 class="text-lg font-bold text-slate-800">Productivity</h3>
           <p class="text-xs text-slate-500">Record uniform production entries</p>
         </div>
       </div>
@@ -1046,6 +1048,95 @@ html, body { pointer-events: auto !important; }
       
 
     </section>
+    <!-- SUB-PANEL: INVENTORY -->
+    <section id="uniform-panel-inventory" class="uniform-binder-panel p-0">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4 md:p-5">
+        <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-5">
+          <div class="border-b border-gray-100 pb-3">
+            <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+              <i class="fa-solid fa-clipboard-list text-indigo-600"></i> Inventory
+            </h3>
+            <p class="text-xs text-gray-500">Input kondisi uniform per staff - Good/Fair/Bad</p>
+          </div>
+          <form id="uniform-inventory-form" onsubmit="submitUniformInventory(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold uppercase text-indigo-900 mb-1">Input By (Otomatis dari Login)</label>
+              <div class="w-full px-3 py-2.5 bg-indigo-50 border border-indigo-200 rounded-lg text-sm font-bold text-indigo-900 flex items-center gap-2">
+                <i class="fa-solid fa-user-check text-indigo-600"></i><span id="inventory-input-by-badge">-</span>
+                <input type="hidden" id="inventory-input-by-hidden" name="inputBy" value="">
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Department <span class="text-red-500">*</span></label>
+              <select name="department" id="inventory-department" required class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm">
+                <option value="">Pilih Department</option>
+                <option>Front office</option><option>Concierge</option><option>GRE</option><option>GSC</option><option>CLUB</option><option>Banquet</option><option>Li Feng</option><option>IRD</option><option>Azure</option><option>Mo Bar</option><option>Cinnamon</option><option>Finance</option><option>Purchasing</option><option>IT</option><option>P&C</option><option>Wellness</option><option>Kitchen</option><option>Steward</option><option>Sales & Marketing</option><option>Reservation</option><option>Security</option><option>Housekeeping</option><option>Laundry</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Staff Name <span class="text-red-500">*</span></label>
+              <input type="text" name="staffName" required placeholder="Contoh: Budi" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm">
+            </div>
+            <div class="uniform-form-note">Contoh: Budi punya Trousers 1 Good + 1 Fair → isi Good 1, Fair 1. Hanya item dengan total >0 yang disimpan.</div>
+            <div id="inventory-items-grid" class="space-y-2 max-h-[420px] overflow-y-auto pr-1"></div>
+            <div>
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Notes</label>
+              <textarea name="notes" rows="2" placeholder="Optional" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"></textarea>
+            </div>
+            <button type="submit" id="btn-save-inventory" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-3 rounded-xl text-sm"><i class="fa-solid fa-floppy-disk mr-2"></i> Simpan Inventory</button>
+          </form>
+        </div>
+        <div class="lg:col-span-2 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+          <h4 class="font-bold text-sm mb-3">Log Inventory Terbaru</h4>
+          <div id="inventory-log-table" class="text-xs text-gray-500">Data dari Google Sheet Inventory</div>
+        </div>
+      </div>
+    </section>
+    <!-- SUB-PANEL: DISCARD -->
+    <section id="uniform-panel-discard" class="uniform-binder-panel p-0">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4 md:p-5">
+        <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-5">
+          <div class="border-b border-gray-100 pb-3">
+            <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+              <i class="fa-solid fa-trash-can text-rose-600"></i> Discard
+            </h3>
+            <p class="text-xs text-gray-500">Uniform yang akan di discard</p>
+          </div>
+          <form id="uniform-discard-form" onsubmit="submitUniformDiscard(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold uppercase text-rose-900 mb-1">Input By (Otomatis dari Login)</label>
+              <div class="w-full px-3 py-2.5 bg-rose-50 border border-rose-200 rounded-lg text-sm font-bold text-rose-900 flex items-center gap-2">
+                <i class="fa-solid fa-user-check text-rose-600"></i><span id="discard-input-by-badge">-</span>
+                <input type="hidden" id="discard-input-by-hidden" name="inputBy" value="">
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Department <span class="text-red-500">*</span></label>
+              <select name="department" id="discard-department" required class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm">
+                <option value="">Pilih Department</option>
+                <option>Front office</option><option>Concierge</option><option>GRE</option><option>GSC</option><option>CLUB</option><option>Banquet</option><option>Li Feng</option><option>IRD</option><option>Azure</option><option>Mo Bar</option><option>Cinnamon</option><option>Finance</option><option>Purchasing</option><option>IT</option><option>P&C</option><option>Wellness</option><option>Kitchen</option><option>Steward</option><option>Sales & Marketing</option><option>Reservation</option><option>Security</option><option>Housekeeping</option><option>Laundry</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Staff Name <span class="text-red-500">*</span></label>
+              <input type="text" name="staffName" required placeholder="Nama staff" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Reason Discard</label>
+              <textarea name="reason" rows="2" placeholder="Sobek, noda permanen, hilang..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"></textarea>
+            </div>
+            <div class="uniform-form-note bg-rose-50 text-rose-700 border border-rose-100">Centang uniform yang akan di discard dan isi jumlahnya.</div>
+            <div id="discard-items-grid" class="space-y-2 max-h-[420px] overflow-y-auto pr-1"></div>
+            <button type="submit" id="btn-save-discard" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-xl text-sm"><i class="fa-solid fa-trash mr-2"></i> Simpan Discard</button>
+          </form>
+        </div>
+        <div class="lg:col-span-2 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+          <h4 class="font-bold text-sm mb-3">Log Discard Terbaru</h4>
+          <div id="discard-log-table" class="text-xs text-gray-500">Data dari Google Sheet Discard</div>
+        </div>
+      </div>
+    </section>
+
   </section>
 
   <!-- TAILOR QUEUE VIEW -->
@@ -1140,7 +1231,7 @@ html, body { pointer-events: auto !important; }
 
 <script>
 let state = {
-  apiUrl: 'https://script.google.com/macros/s/AKfycbykTM8w-0CIR5x8g4ZD5tI8LtZ_PiExHxIJQioPOD3qmXxSZ84Kxwg9OcZ_zGP3OB0/exec',
+  apiUrl: 'https://script.google.com/macros/s/AKfycbwI_FR8bAvof8VOBz-dzqRPt2l-1awR6BVfxTZFig3lFQGHA3-cXAgusk02-lvqq9s/exec',
   tasks: [],
   uniformReceived: [],
   uniformProduction: [],
@@ -1478,11 +1569,11 @@ function renderDashboard() {
     });
   }
 
-  // Render Tabel 2: Uniform Received Log di Dashboard
+  // Render Tabel 2: Received Log di Dashboard
   const tbodyReceived = document.getElementById('dashboard-received-table');
   tbodyReceived.innerHTML = '';
   if(receivedList.length === 0) {
-    tbodyReceived.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-xs text-gray-400">Tidak ada data Uniform Received.</td></tr>`;
+    tbodyReceived.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-xs text-gray-400">Tidak ada data Received.</td></tr>`;
   } else {
     receivedList.slice(0, 10).forEach(r => {
       const tr = document.createElement('tr');
@@ -1502,11 +1593,11 @@ function renderDashboard() {
     });
   }
 
-  // Render Tabel 3: Uniform Production Log di Dashboard
+  // Render Tabel 3: Productivity Log di Dashboard
   const tbodyProduction = document.getElementById('dashboard-production-table');
   tbodyProduction.innerHTML = '';
   if(productionList.length === 0) {
-    tbodyProduction.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-xs text-gray-400">Tidak ada data Uniform Production.</td></tr>`;
+    tbodyProduction.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-xs text-gray-400">Tidak ada data Productivity.</td></tr>`;
   } else {
     productionList.slice(0, 10).forEach(p => {
       const tr = document.createElement('tr');
@@ -2434,6 +2525,241 @@ document.addEventListener('DOMContentLoaded', ()=>{
       if(activeBtn) activeBtn.classList.add('active');
       // also sync old mobile nav if exists
       document.querySelectorAll('.ud-mobile-nav button').forEach(b=>b.classList.remove('active'));
+      return r;
+    };
+  }
+})();
+</script>
+
+
+<script>
+// ==== INVENTORY & DISCARD MODULE ====
+const UNIFORM_ITEMS = ["Trousers","Skirt","Blouse","Shirt","T-shirt","Polo shirt","Male cheongsam","Female cheongsam","Dress","Hat","Jacket","Cook Jacket","Vest"];
+
+function renderInventoryGrid(){
+  const grid=document.getElementById('inventory-items-grid');
+  if(!grid) return;
+  grid.innerHTML = UNIFORM_ITEMS.map(name=>`
+    <div class="border rounded-xl p-3">
+      <label class="flex items-center gap-2 text-sm font-bold"><input type="checkbox" data-item="${name}" onchange="toggleInvItem(this)"> ${name}</label>
+      <div class="hidden mt-2 grid grid-cols-3 gap-2" id="inv-row-${name.replace(/\s+/g,'-')}">
+        <div><div class="text-[10px] font-bold text-emerald-700">GOOD</div><input type="number" min="0" value="0" data-g="${name}" class="w-full border border-emerald-200 bg-emerald-50 rounded-lg px-2 py-1.5 text-sm"></div>
+        <div><div class="text-[10px] font-bold text-amber-700">FAIR</div><input type="number" min="0" value="0" data-f="${name}" class="w-full border border-amber-200 bg-amber-50 rounded-lg px-2 py-1.5 text-sm"></div>
+        <div><div class="text-[10px] font-bold text-rose-700">BAD</div><input type="number" min="0" value="0" data-b="${name}" class="w-full border border-rose-200 bg-rose-50 rounded-lg px-2 py-1.5 text-sm"></div>
+      </div>
+    </div>
+  `).join('');
+}
+function toggleInvItem(cb){
+  const name=cb.dataset.item;
+  const row=document.getElementById('inv-row-'+name.replace(/\s+/g,'-'));
+  if(row) row.classList.toggle('hidden',!cb.checked);
+  if(!cb.checked){
+    row.querySelectorAll('input').forEach(i=>i.value=0);
+  }
+}
+function renderDiscardGrid(){
+  const grid=document.getElementById('discard-items-grid');
+  if(!grid) return;
+  grid.innerHTML = UNIFORM_ITEMS.map(name=>`
+    <div class="border rounded-xl p-3">
+      <label class="flex items-center gap-2 text-sm font-bold"><input type="checkbox" data-ditem="${name}" onchange="toggleDisItem(this)"> ${name}</label>
+      <div class="hidden mt-2" id="dis-row-${name.replace(/\s+/g,'-')}">
+        <div class="text-[10px] font-bold text-rose-700">QTY DISCARD</div>
+        <input type="number" min="1" value="1" data-q="${name}" class="w-full border border-rose-200 bg-rose-50 rounded-lg px-2 py-1.5 text-sm">
+      </div>
+    </div>
+  `).join('');
+}
+function toggleDisItem(cb){
+  const name=cb.dataset.ditem;
+  const row=document.getElementById('dis-row-'+name.replace(/\s+/g,'-'));
+  if(row) row.classList.toggle('hidden',!cb.checked);
+}
+
+function collectInventoryData(form){
+  const fd=new FormData(form);
+  const data={department:fd.get('department'), staffName:fd.get('staffName'), inputBy:fd.get('inputBy')|| (typeof getCurrentUser==='function'?getCurrentUser()?.id:''), notes:fd.get('notes')||'', date:new Date().toISOString().slice(0,10)};
+  const items=[];
+  UNIFORM_ITEMS.forEach(name=>{
+    const cb=document.querySelector(`#inventory-items-grid input[data-item="${name}"]`);
+    if(cb && cb.checked){
+      const g=Number(document.querySelector(`input[data-g="${name}"]`)?.value||0);
+      const f=Number(document.querySelector(`input[data-f="${name}"]`)?.value||0);
+      const b=Number(document.querySelector(`input[data-b="${name}"]`)?.value||0);
+      const total=g+f+b;
+      if(total>0) items.push({name,good:g,fair:f,bad:b,total});
+    }
+  });
+  data.items=items;
+  data.itemsJson=JSON.stringify(items);
+  // flatten for sheet
+  data.itemsSummary=items.map(i=>`${i.name} G${i.good} F${i.fair} B${i.bad}`).join(', ');
+  return data;
+}
+
+function collectDiscardData(form){
+  const fd=new FormData(form);
+  const data={department:fd.get('department'), staffName:fd.get('staffName'), inputBy:fd.get('inputBy')|| (typeof getCurrentUser==='function'?getCurrentUser()?.id:''), reason:fd.get('reason')||'', date:new Date().toISOString().slice(0,10)};
+  const items=[];
+  UNIFORM_ITEMS.forEach(name=>{
+    const cb=document.querySelector(`#discard-items-grid input[data-ditem="${name}"]`);
+    if(cb && cb.checked){
+      const q=Number(document.querySelector(`input[data-q="${name}"]`)?.value||0);
+      if(q>0) items.push({name,qty:q});
+    }
+  });
+  data.items=items;
+  data.itemsJson=JSON.stringify(items);
+  data.itemsSummary=items.map(i=>`${i.name} ${i.qty}`).join(', ');
+  return data;
+}
+
+async function submitUniformInventory(e){
+  e.preventDefault();
+  const form=e.target;
+  const data=collectInventoryData(form);
+  if(!data.department || !data.staffName){ alert('Department & Staff Name wajib'); return; }
+  if(!data.items.length){ alert('Pilih minimal 1 item dengan total >0'); return; }
+  // use existing postUniformTransaction
+  if(typeof postUniformTransaction==='function'){
+    await postUniformTransaction('createUniformInventory', data, 'uniform-inventory-form', 'btn-save-inventory');
+    renderInventoryGrid();
+  } else {
+    alert('API belum siap');
+  }
+}
+async function submitUniformDiscard(e){
+  e.preventDefault();
+  const form=e.target;
+  const data=collectDiscardData(form);
+  if(!data.department || !data.staffName){ alert('Department & Staff Name wajib'); return; }
+  if(!data.items.length){ alert('Pilih minimal 1 item discard'); return; }
+  if(typeof postUniformTransaction==='function'){
+    await postUniformTransaction('createUniformDiscard', data, 'uniform-discard-form', 'btn-save-discard');
+    renderDiscardGrid();
+  }
+}
+
+// Auto-fill login name like Productivity
+function updateInventoryDiscardAuth(){
+  const cur=typeof getCurrentUser==='function'?getCurrentUser():null;
+  if(cur && cur.id){
+    ['inventory-input-by-badge','discard-input-by-badge'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=cur.id; });
+    ['inventory-input-by-hidden','discard-input-by-hidden'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=cur.id; });
+  }
+}
+
+// Hook into existing updateAuthUI
+(function(){
+  const orig=window.updateAuthUI;
+  if(typeof orig==='function'){
+    window.updateAuthUI=function(){ orig.apply(this,arguments); updateInventoryDiscardAuth(); };
+  }
+})();
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  renderInventoryGrid();
+  renderDiscardGrid();
+  setTimeout(updateInventoryDiscardAuth,800);
+});
+
+// ==== DASHBOARD MERGE FOR INVENTORY & DISCARD ====
+function renderInventoryDashboard(){
+  try{
+    const inv = (typeof state!=='undefined' && state.uniformInventory) ? state.uniformInventory : [];
+    const dis = (typeof state!=='undefined' && state.uniformDiscard) ? state.uniformDiscard : [];
+    // Try to get from getFilteredData if exists
+    let filteredInv=inv, filteredDis=dis;
+    if(typeof getFilteredData==='function'){
+      const f=getFilteredData();
+      if(f && f.inventory) filteredInv=f.inventory;
+      if(f && f.discard) filteredDis=f.discard;
+    }
+    const container=document.getElementById('dashboard-inventory-section');
+    if(!container) return;
+    // aggregate inventory
+    let total=0,g=0,fair=0,bad=0;
+    const agg={};
+    filteredInv.forEach(r=>{
+      let items=[];
+      try{ items = typeof r.items==='string'?JSON.parse(r.items): (r.items||[]); if(!Array.isArray(items) && r.itemsJson) items=JSON.parse(r.itemsJson); }catch(e){ items=[]; }
+      // also support flat
+      if(!items.length && r.itemsSummary) {}
+      items.forEach(i=>{
+        total+=Number(i.total||0);
+        g+=Number(i.good||0);
+        fair+=Number(i.fair||0);
+        bad+=Number(i.bad||0);
+        if(!agg[i.name]) agg[i.name]={good:0,fair:0,bad:0,total:0};
+        agg[i.name].good+=Number(i.good||0);
+        agg[i.name].fair+=Number(i.fair||0);
+        agg[i.name].bad+=Number(i.bad||0);
+        agg[i.name].total+=Number(i.total||0);
+      });
+    });
+    const aggDis={}; let totalDis=0;
+    filteredDis.forEach(r=>{
+      let items=[];
+      try{ items = typeof r.items==='string'?JSON.parse(r.items): (r.items||[]); if(!Array.isArray(items) && r.itemsJson) items=JSON.parse(r.itemsJson); }catch(e){ items=[]; }
+      items.forEach(i=>{
+        totalDis+=Number(i.qty||0);
+        if(!aggDis[i.name]) aggDis[i.name]=0;
+        aggDis[i.name]+=Number(i.qty||0);
+      });
+    });
+    container.innerHTML=`
+      <div class="mt-8 border-t pt-6">
+        <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2"><i class="fa-solid fa-clipboard-list text-indigo-600"></i> Inventory Dashboard (Kondisi Uniform per Departemen)</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+          <div class="bg-white border rounded-xl p-3"><div class="text-[10px] text-gray-500">TOTAL PCS</div><div class="text-xl font-bold">${total}</div></div>
+          <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-3"><div class="text-[10px] text-emerald-700">GOOD</div><div class="text-xl font-bold text-emerald-700">${g}</div><div class="text-[10px]">${total?Math.round(g/total*100):0}%</div></div>
+          <div class="bg-amber-50 border border-amber-100 rounded-xl p-3"><div class="text-[10px] text-amber-700">FAIR</div><div class="text-xl font-bold text-amber-700">${fair}</div><div class="text-[10px]">${total?Math.round(fair/total*100):0}%</div></div>
+          <div class="bg-rose-50 border border-rose-100 rounded-xl p-3"><div class="text-[10px] text-rose-700">BAD</div><div class="text-xl font-bold text-rose-700">${bad}</div><div class="text-[10px]">${total?Math.round(bad/total*100):0}%</div></div>
+        </div>
+        <div class="bg-white border rounded-xl p-4 mb-6 overflow-x-auto">
+          <table class="w-full text-sm"><thead class="text-xs text-gray-500 border-b"><tr><th class="text-left py-2">Item</th><th class="text-center bg-emerald-50">Good</th><th class="text-center bg-amber-50">Fair</th><th class="text-center bg-rose-50">Bad</th><th class="text-center">Total</th></tr></thead>
+          <tbody>${Object.entries(agg).sort((a,b)=>b[1].total-a[1].total).map(([k,v])=>`<tr class="border-b"><td class="py-2">${k}</td><td class="text-center bg-emerald-50/50">${v.good}</td><td class="text-center bg-amber-50/50">${v.fair}</td><td class="text-center bg-rose-50/50 font-bold ${v.bad>0?'text-rose-600':''}">${v.bad}</td><td class="text-center font-bold">${v.total}</td></tr>`).join('') || '<tr><td colspan=5 class="py-4 text-center text-gray-400">Belum ada data inventory</td></tr>'}</tbody></table>
+        </div>
+        <h4 class="font-bold text-sm mb-3 flex items-center gap-2"><i class="fa-solid fa-trash-can text-rose-600"></i> Discard Summary - Total ${totalDis} pcs</h4>
+        <div class="bg-white border rounded-xl p-4 overflow-x-auto">
+          <table class="w-full text-sm"><thead class="text-xs text-gray-500 border-b"><tr><th class="text-left py-2">Item Discard</th><th class="text-center">Qty</th></tr></thead>
+          <tbody>${Object.entries(aggDis).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<tr class="border-b"><td class="py-2">${k}</td><td class="text-center font-bold text-rose-600">${v}</td></tr>`).join('') || '<tr><td colspan=2 class="py-4 text-center text-gray-400">Belum ada data discard</td></tr>'}</tbody></table>
+        </div>
+      </div>
+    `;
+  }catch(e){ console.error('inventory dashboard error',e); }
+}
+
+// Hook into renderDashboard / renderAddedAnalytics
+(function(){
+  const orig=window.renderAddedAnalytics;
+  if(typeof orig==='function'){
+    window.renderAddedAnalytics=function(){ orig.apply(this,arguments); renderInventoryDashboard(); };
+  } else {
+    window.renderAddedAnalytics=renderInventoryDashboard;
+  }
+  const origDash=window.renderDashboard;
+  if(typeof origDash==='function'){
+    window.renderDashboard=function(){ try{origDash.apply(this,arguments);}catch(e){} setTimeout(()=>{ if(typeof renderAddedAnalytics==='function') renderAddedAnalytics(); },100); };
+  }
+})();
+</script>
+
+
+<script>
+(function(){
+  const origRefresh = window.refreshData;
+  if(typeof origRefresh==='function'){
+    window.refreshData = async function(){
+      const r = await origRefresh.apply(this,arguments);
+      // Try to fetch inventory/discard if API provides
+      try{
+        if(window.state && window.state.apiUrl){
+          // fetch via GET ?action=getInventory etc if supported
+          // fallback: if state already has them from API response, keep
+        }
+      }catch(e){}
       return r;
     };
   }
