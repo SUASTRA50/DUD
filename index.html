@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#f5f5f7">
+<meta name="theme-color" content="#000000">
 
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <title>Uniform Management</title>
 <script src="https://cdn.tailwindcss.com"></script>
@@ -18,149 +18,175 @@
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-  :root { 
-    --ud-navy:#1d1d1f; 
-    --ud-blue:#0071e3; 
-    --ud-bg:#f5f5f7; 
-    --ud-border:#d2d2d7; 
+  :root {
+    --ud-navy: #1d1d1f;
+    --ud-blue: #0071e3;
+    --ud-bg: #f5f5f7;
+    --ud-border: #d2d2d7;
+    --apple-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
-  body { 
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif; 
-    background:var(--ud-bg); 
+
+  body {
+    font-family: var(--apple-font);
+    background: var(--ud-bg);
     color: #1d1d1f;
-    -webkit-tap-highlight-color:transparent; 
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+    letter-spacing: -0.01em;
   }
+
   .tab-content { display:none; }
   .tab-content.active { display:block; }
-  .badge-open { background:#fff3dc; color:#b25900; }
-  .badge-progress { background:#e8f2ff; color:#0066cc; }
-  .badge-completed { background:#e3f5e1; color:#1b7a2b; }
-  button,select,input,textarea { min-height:44px; border-radius: 12px; }
-  button { touch-action:manipulation; font-weight: 500; }
-  .ud-header { 
+
+  /* Apple-style Badges */
+  .badge-open { background: rgba(255, 149, 0, 0.15); color: #c87d00; border-radius: 980px; font-weight: 600; }
+  .badge-progress { background: rgba(0, 113, 227, 0.15); color: #0071e3; border-radius: 980px; font-weight: 600; }
+  .badge-completed { background: rgba(52, 199, 89, 0.15); color: #248a3d; border-radius: 980px; font-weight: 600; }
+
+  button, select, input, textarea {
+    min-height: 44px;
+    font-family: var(--apple-font);
+    border-radius: 12px;
+  }
+  button { touch-action: manipulation; }
+
+  /* Apple Header Design */
+  .ud-header {
     background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(0,0,0,0.1);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    color: #1d1d1f;
   }
-  .ud-section-card { 
-    border-radius:18px !important;
-    border:1px solid rgba(0,0,0,0.08) !important;
-    background: rgba(255, 255, 255, 0.8) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.04) !important; 
+  .ud-header h1 { color: #1d1d1f; font-weight: 600; }
+  .ud-header p { color: #86868b; }
+  .ud-header .bg-indigo-600 { background-color: #0071e3 !important; }
+
+  /* Apple Cards */
+  .ud-section-card {
+    border-radius: 18px !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    background: #ffffff !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.3s cubic-bezier(0,0,0.2,1);
   }
-  .ud-metric { position:relative;overflow:hidden;min-height:112px; }
-  .ud-metric-icon { position:absolute;right:14px;top:14px;width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#f5f5f7; }
-  .ud-table-wrap { scrollbar-width:thin; }
-  
+  .ud-metric { position: relative; overflow: hidden; min-height: 112px; }
+  .ud-metric-icon {
+    position: absolute; right: 14px; top: 14px; width: 36px; height: 36px;
+    display: grid; place-items: center; border-radius: 50%;
+    background: #f5f5f7;
+  }
+  .ud-table-wrap { scrollbar-width: thin; }
+
+  /* Apple Interactive Animations */
   .btn-animate-click {
-    transition: all 0.2s cubic-bezier(0, 0, 0.58, 1);
+    transition: all 0.2s cubic-bezier(0, 0, 0.2, 1);
+    border-radius: 980px;
   }
   .btn-animate-click:hover {
     transform: scale(1.02);
-    box-shadow: 0 4px 14px rgba(0, 113, 227, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 113, 227, 0.25);
   }
   .btn-animate-click:active {
-    transform: scale(0.98);
-    box-shadow: none;
+    transform: scale(0.96);
   }
 
   @media (max-width:767px) {
     body { padding-bottom:92px; }
     .ud-mobile-nav {
-      position:fixed; left:50%; bottom:calc(14px + env(safe-area-inset-bottom));
-      transform:translateX(-50%); z-index:60;
-      display:flex; align-items:center; gap:2px;
-      padding:5px; border-radius:9999px;
-      background:rgba(255, 255, 255, 0.8);
-      border:1px solid rgba(0, 0, 0, 0.1);
-      backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-      box-shadow:0 12px 28px rgba(0,0,0,0.12);
+      position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom));
+      transform: translateX(-50%); z-index: 60;
+      display: flex; align-items: center; gap: 4px;
+      padding: 6px; border-radius: 980px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.12);
     }
     .ud-mobile-nav button {
-      display:flex; align-items:center; gap:6px;
-      padding:10px 14px; border-radius:9999px;
-      font-size:12px; font-weight:500; color:#86868b;
-      min-height:auto; white-space:nowrap; border:0; background:transparent;
-      transition:background .2s ease, color .2s ease;
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 980px;
+      font-size: 12px; font-weight: 500; color: #86868b;
+      min-height: auto; white-space: nowrap; border: 0; background: transparent;
+      transition: all 0.2s ease;
     }
-    .ud-mobile-nav button i { font-size:13px; }
-    .ud-mobile-nav button.active { background:#0071e3; color:#fff; box-shadow:0 4px 12px rgba(0,113,227,0.3); }
-    main { padding-top:16px !important;padding-left:12px !important;padding-right:12px !important; }
-    .ud-table-wrap table { min-width:760px; }
-    #task-modal { align-items:flex-end; }
-    #task-modal > div { max-height:92vh;overflow-y:auto;border-radius:22px 22px 0 0;padding:18px; }
+    .ud-mobile-nav button i { font-size: 13px; }
+    .ud-mobile-nav button.active { background: #0071e3; color: #fff; box-shadow: 0 2px 8px rgba(0, 113, 227, 0.4); }
+    main { padding-top: 16px !important; padding-left: 12px !important; padding-right: 12px !important; }
+    .ud-table-wrap table { min-width: 760px; }
+    #task-modal { align-items: flex-end; }
+    #task-modal > div { max-height: 92vh; overflow-y: auto; border-radius: 24px 24px 0 0; padding: 24px; }
   }
 
-  .uniform-binder{display:flex;gap:6px;overflow-x:auto;padding:4px 4px 0;scrollbar-width:none}
-  .uniform-binder::-webkit-scrollbar{display:none}
-  .uniform-binder-tab{flex:1 0 auto;min-width:112px;min-height:44px;padding:9px 16px;border:1px solid rgba(0,0,0,0.08);border-bottom:0;border-radius:14px 14px 0 0;background:#e8e8ed;color:#86868b;font-size:12px;font-weight:600;line-height:1.1;transition:all 0.2s ease;}
-  .uniform-binder-tab.active{background:rgba(255,255,255,0.8);color:#1d1d1f;box-shadow:0 -2px 0 #0071e3,0 2px 0 rgba(255,255,255,0.8);backdrop-filter:blur(20px);}
-  .uniform-binder-panel{display:none;background:rgba(255,255,255,0.8);border:1px solid rgba(0,0,0,0.08);border-radius:0 18px 18px 18px;box-shadow:0 4px 24px rgba(0,0,0,0.04);backdrop-filter:blur(20px);}
-  .uniform-binder-panel.active{display:block}
-  .uniform-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-  .uniform-field label{display:block;margin-bottom:6px;font-size:11px;font-weight:600;color:#86868b;letter-spacing:-0.01em;}
-  .uniform-field input,.uniform-field select{width:100%;min-height:44px;border:1px solid #d2d2d7;border-radius:12px;padding:9px 11px;background:rgba(255,255,255,0.8);color:#1d1d1f;outline:none;transition:all 0.2s ease;}
-  .uniform-field input:focus,.uniform-field select:focus{border-color:#0071e3;box-shadow:0 0 0 4px rgba(0,113,227,0.15)}
-  .uniform-form-note{padding:10px 12px;border-radius:12px;background:#f5f5f7;color:#1d1d1f;font-size:11px;line-height:1.45;border:1px solid rgba(0,0,0,0.05);}
-  @media(max-width:767px){.uniform-form-grid{grid-template-columns:1fr;gap:12px}.uniform-binder-panel{border-radius:0 14px 14px 14px}}
+  /* Apple Binder Tabs */
+  .uniform-binder { display: flex; gap: 8px; overflow-x: auto; padding: 4px 4px 0; scrollbar-width: none; }
+  .uniform-binder::-webkit-scrollbar { display: none; }
+  .uniform-binder-tab {
+    flex: 1 0 auto; min-width: 120px; min-height: 44px; padding: 10px 16px;
+    border: 0; border-radius: 12px 12px 0 0; background: rgba(210, 210, 215, 0.3);
+    color: #86868b; font-size: 13px; font-weight: 600; line-height: 1.1; transition: all 0.2s;
+  }
+  .uniform-binder-tab.active { background: #fff; color: #1d1d1f; box-shadow: 0 -2px 12px rgba(0,0,0,0.04); }
+  .uniform-binder-panel { display: none; background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 0 18px 18px 18px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
+  .uniform-binder-panel.active { display: block; }
+  .uniform-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+  .uniform-field label { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 600; color: #1d1d1f; }
+  .uniform-field input, .uniform-field select {
+    width: 100%; min-height: 44px; border: 1px solid var(--ud-border);
+    border-radius: 12px; padding: 10px 14px; background: #fff; color: #1d1d1f; outline: none; transition: all 0.2s;
+  }
+  .uniform-field input:focus, .uniform-field select:focus { border-color: #0071e3; box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15); }
+  .uniform-form-note { padding: 12px 16px; border-radius: 12px; background: rgba(0, 113, 227, 0.08); color: #0071e3; font-size: 12px; line-height: 1.45; font-weight: 500; }
+  @media(max-width:767px) { .uniform-form-grid { grid-template-columns: 1fr; gap: 12px; } .uniform-binder-panel { border-radius: 0 16px 16px 16px; } }
 
   /* Custom tab button dashboard style */
   .dash-tab-btn {
-    padding: 8px 16px;
-    font-size: 12px;
-    font-weight: 600;
-    border-radius: 980px;
-    transition: all 0.2s;
-    color: #86868b;
+    padding: 8px 16px; font-size: 12px; font-weight: 600; border-radius: 980px; transition: all 0.2s; color: #86868b;
   }
-  .dash-tab-btn.active {
-    background-color: #0071e3;
-    color: #ffffff;
-  }
+  .dash-tab-btn.active { background-color: #1d1d1f; color: #ffffff; }
 
-  /* === DARK / LIGHT MODE === */
-  body.dark { background:#000000; color:#f5f5f7; }
-  body.dark .ud-header { background:rgba(29, 29, 31, 0.8); border-bottom-color: rgba(255,255,255,0.1); }
-  body.dark .bg-white { background-color:rgba(29, 29, 31, 0.8) !important; backdrop-filter:blur(20px); }
-  body.dark .text-gray-900 { color:#f5f5f7 !important; }
-  body.dark .text-gray-800 { color:#f5f5f7 !important; }
-  body.dark .text-gray-700 { color:#d2d2d7 !important; }
-  body.dark .text-gray-600 { color:#86868b !important; }
-  body.dark .text-gray-500 { color:#86868b !important; }
-  body.dark .text-gray-400 { color:#86868b !important; }
-  body.dark .border-gray-200 { border-color:rgba(255,255,255,0.15) !important; }
-  body.dark .border { border-color:rgba(255,255,255,0.15) !important; }
-  body.dark .bg-gray-50 { background-color:#1c1c1e !important; }
-  body.dark .bg-slate-100 { background-color:#1c1c1e !important; }
-  body.dark .bg-indigo-50 { background-color:#1c1c1e !important; }
-  body.dark table thead { background-color:#1c1c1e !important; }
-  body.dark .ud-section-card { border-color:rgba(255,255,255,0.15) !important; background:rgba(29, 29, 31, 0.8) !important; box-shadow:0 4px 24px rgba(0,0,0,.4) !important; }
-  body.dark .ud-metric-icon { background:#1c1c1e !important; }
-  body.dark input, body.dark select, body.dark textarea { background:#1c1c1e !important; color:#f5f5f7 !important; border-color:rgba(255,255,255,0.15) !important; }
-  body.dark .uniform-binder-panel { background:rgba(29, 29, 31, 0.8) !important; border-color:rgba(255,255,255,0.15) !important; }
-  body.dark .uniform-binder-tab { background:#1c1c1e; border-color:rgba(255,255,255,0.15); color:#86868b; }
-  body.dark .uniform-binder-tab.active { background:rgba(29, 29, 31, 0.8); color:#f5f5f7; }
-  body.dark .uniform-form-note { background:#1c1c1e; color:#2997ff; border-color:rgba(255,255,255,0.1); }
-  
+  /* === DARK / LIGHT MODE (APPLE DARK SYSTEM) === */
+  body.dark { background: #000000; color: #f5f5f7; }
+  body.dark .ud-header { background: rgba(29, 29, 31, 0.8); border-bottom-color: rgba(255, 255, 255, 0.1); }
+  body.dark .ud-header h1 { color: #f5f5f7; }
+  body.dark .ud-header p { color: #a1a1a6; }
+  body.dark .bg-white { background-color: #1c1c1e !important; }
+  body.dark .text-gray-900 { color: #f5f5f7 !important; }
+  body.dark .text-gray-800 { color: #f5f5f7 !important; }
+  body.dark .text-gray-700 { color: #e5e5ea !important; }
+  body.dark .text-gray-600 { color: #a1a1a6 !important; }
+  body.dark .text-gray-500 { color: #a1a1a6 !important; }
+  body.dark .text-gray-400 { color: #6e6e73 !important; }
+  body.dark .border-gray-200 { border-color: #2c2c2e !important; }
+  body.dark .border { border-color: #2c2c2e !important; }
+  body.dark .bg-gray-50 { background-color: #000000 !important; }
+  body.dark .bg-slate-100 { background-color: #1c1c1e !important; }
+  body.dark .bg-indigo-50 { background-color: rgba(0, 113, 227, 0.15) !important; }
+  body.dark table thead { background-color: #1c1c1e !important; }
+  body.dark .ud-section-card { border-color: #2c2c2e !important; box-shadow: 0 4px 24px rgba(0,0,0,0.5) !important; }
+  body.dark .ud-metric-icon { background: #2c2c2e !important; }
+  body.dark input, body.dark select, body.dark textarea { background: #1c1c1e !important; color: #f5f5f7 !important; border-color: #3a3a3c !important; }
+  body.dark .uniform-binder-panel { background: #1c1c1e !important; border-color: #2c2c2e !important; }
+  body.dark .uniform-binder-tab { background: #2c2c2e; border-color: #3a3a3c; color: #a1a1a6; }
+  body.dark .uniform-binder-tab.active { background: #1c1c1e; color: #f5f5f7; }
+  body.dark .uniform-form-note { background: rgba(0, 113, 227, 0.2); color: #2997ff; }
 
-  .analytics-card{background:rgba(255,255,255,0.8);backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,0.08);border-radius:18px;padding:18px;box-shadow:0 4px 24px rgba(0,0,0,.04);margin-top:16px}
-  body.dark .analytics-card{background:rgba(29,29,31,0.8) !important;border-color:rgba(255,255,255,0.15) !important}
-  .analytics-title{font-size:12px;font-weight:600;color:#1d1d1f;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;letter-spacing:-0.01em}
-  body.dark .analytics-title{color:#f5f5f7}
-  .chart-wrap{position:relative;height:300px} .chart-wrap.tall{height:360px} .chart-wrap.short{height:240px}
-  .kpi-mini{background:#f5f5f7;border:1px solid rgba(0,0,0,0.05);border-radius:14px;padding:10px 12px}
-  body.dark .kpi-mini{background:#1c1c1e !important;border-color:rgba(255,255,255,0.1) !important}
-
+  .analytics-card { background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 18px; padding: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); margin-top: 16px; }
+  body.dark .analytics-card { background: #1c1c1e !important; border-color: #2c2c2e !important; }
+  .analytics-title { font-size: 13px; font-weight: 600; color: #1d1d1f; margin-bottom: 14px; display: flex; align-items: center; justify-space-between: space-between; gap: 8px; letter-spacing: -0.01em; }
+  body.dark .analytics-title { color: #f5f5f7; }
+  .chart-wrap { position: relative; height: 300px; }
+  .chart-wrap.tall { height: 360px; }
+  .chart-wrap.short { height: 240px; }
+  .kpi-mini { background: #f5f5f7; border: 1px solid rgba(0,0,0,0.05); border-radius: 14px; padding: 12px 14px; }
+  body.dark .kpi-mini { background: #2c2c2e !important; border-color: #3a3a3c !important; }
 
   /* COMPACT DASHBOARD AFTER REMOVALS */
   #dashboard-analytics-section, #tailor-performance-section, #dashboard-production-analytics { margin-top: 12px !important; }
-  #dashboard-analytics-section .analytics-card, #tailor-performance-section .analytics-card, #dashboard-production-analytics .analytics-card { margin-top: 8px !important; padding: 14px !important; }
+  #dashboard-analytics-section .analytics-card, #tailor-performance-section .analytics-card, #dashboard-production-analytics .analytics-card { margin-top: 8px !important; padding: 16px !important; }
   #tailor-monthly-ranking { margin-top: 12px !important; }
   .space-y-5 { --tw-space-y-reverse:0; margin-top:0; }
   .space-y-5 > * + * { margin-top: 12px !important; }
@@ -171,205 +197,190 @@
   .chart-wrap { height: 260px !important; }
   @media(max-width:767px){ .chart-wrap.tall{height:260px !important} .chart-wrap{height:220px !important} }
 
-
-@media(max-width:768px){
-  #mobile-date-grid{display:grid !important; grid-template-columns:1fr 1fr !important; gap:8px !important;}
-  #metrics-grid{grid-template-columns:repeat(2, minmax(0,1fr)) !important;}
-  .kpi-grid-mobile{grid-template-columns:repeat(2, minmax(0,1fr)) !important;}
-}
-
-
-
-/* MOBILE ONLY - KPI 2 KOLOM HP TANPA MERUSAK WEB */
-@media(max-width: 640px){
-  #metrics-grid{
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 10px !important;
+  @media(max-width:768px){
+    #mobile-date-grid{display:grid !important; grid-template-columns:1fr 1fr !important; gap:8px !important;}
+    #metrics-grid{grid-template-columns:repeat(2, minmax(0,1fr)) !important;}
+    .kpi-grid-mobile{grid-template-columns:repeat(2, minmax(0,1fr)) !important;}
   }
-}
 
-
-@media(max-width: 768px){
-  /* Tanggal 1 baris 2 kolom di HP */
-  #filter-section-date-grid{
-    display:grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 8px !important;
+  @media(max-width: 640px){
+    #metrics-grid{
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 10px !important;
+    }
   }
-}
 
+  @media(max-width: 768px){
+    #filter-section-date-grid{
+      display:grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 8px !important;
+    }
+  }
 
-/* PRESET DATE PILL ELEGAN - DESIGN ELEGANT */
-.preset-btn{
-  font-size: 11px;
-  font-weight: 500;
-  padding: 6px 14px;
-  border-radius: 980px;
-  border: 1px solid rgba(0,0,0,0.1);
-  background: rgba(255,255,255,0.8);
-  color: #1d1d1f;
-  transition: all 0.2s cubic-bezier(0, 0, 0.58, 1);
-  cursor: pointer;
-}
-.preset-btn:hover{
-  background: #0071e3;
-  color: white;
-  border-color: #0071e3;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0,113,227,0.25);
-}
-.preset-btn.active{
-  background: #0071e3;
-  color: white;
-  border-color: #0071e3;
-  box-shadow: 0 2px 8px rgba(0,113,227,0.3);
-}
+  /* PRESET DATE PILL APPLE DESIGN */
+  .preset-btn {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 980px;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: #ffffff;
+    color: #1d1d1f;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .preset-btn:hover {
+    background: #0071e3;
+    color: white;
+    border-color: #0071e3;
+  }
+  .preset-btn.active {
+    background: #0071e3;
+    color: white;
+    border-color: #0071e3;
+    box-shadow: 0 2px 8px rgba(0,113,227,0.3);
+  }
 
-
-  /* BOTTOM DOCK - same as header ribbon */
+  /* BOTTOM DOCK - Apple Glassmorphic Bar */
   #bottom-dock {
-    position:fixed; left:0; right:0; bottom:0; z-index:60;
-    background:rgba(255, 255, 255, 0.8);
-    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-    border-top:1px solid rgba(0,0,0,0.1);
-    box-shadow:0 -4px 20px rgba(0,0,0,0.05);
-    padding:8px 12px;
-    padding-bottom:calc(8px + env(safe-area-inset-bottom));
-    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-top: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+    padding: 8px 12px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
   }
   body.dark #bottom-dock {
-    background:rgba(29, 29, 31, 0.8);
-    border-top-color:rgba(255,255,255,0.1);
+    background: rgba(29, 29, 31, 0.8);
+    border-top-color: rgba(255,255,255,0.1);
   }
-  #bottom-dock .dock-left { display:flex; align-items:center; gap:4px; }
-  #bottom-dock .dock-right { display:flex; align-items:center; gap:6px; }
+  #bottom-dock .dock-left { display: flex; align-items: center; gap: 4px; }
+  #bottom-dock .dock-right { display: flex; align-items: center; gap: 6px; }
   #bottom-dock .dock-btn {
-    display:flex; align-items:center; gap:6px;
-    padding:9px 14px; border-radius:9999px;
-    font-size:12px; font-weight:500; color:#86868b;
-    border:0; background:rgba(0,0,0,0.04);
-    transition:all .2s ease;
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 980px;
+    font-size: 12px; font-weight: 500; color: #86868b;
+    border: 0; background: rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
   }
-  body.dark #bottom-dock .dock-btn { background:rgba(255,255,255,0.08); color:#86868b; }
-  #bottom-dock .dock-btn.active { background:#0071e3; color:#fff; box-shadow:0 4px 12px rgba(0,113,227,0.3); }
-  #bottom-dock .dock-btn i { font-size:13px; }
+  #bottom-dock .dock-btn.active { background: #0071e3; color: #fff; box-shadow: 0 2px 8px rgba(0,113,227,0.3); }
+  #bottom-dock .dock-btn i { font-size: 13px; }
   #bottom-dock .dock-icon-btn {
-    width:36px; height:36px; display:grid; place-items:center;
-    border-radius:9999px; border:0;
-    background:rgba(0,0,0,0.05); color:#1d1d1f;
-    transition:all .2s ease;
+    width: 36px; height: 36px; display: grid; place-items: center;
+    border-radius: 50%; border: 0;
+    background: rgba(0, 0, 0, 0.05); color: #1d1d1f;
+    transition: all 0.2s ease;
   }
-  body.dark #bottom-dock .dock-icon-btn { background:rgba(255,255,255,0.1); color:#fff; }
-  #bottom-dock .dock-icon-btn.amber { background:#ff9500; color:#fff; }
-  #bottom-dock .dock-icon-btn.red { background:#ff3b30; color:#fff; }
+  body.dark #bottom-dock .dock-icon-btn { background: rgba(255, 255, 255, 0.1); color: #fff; }
+  #bottom-dock .dock-icon-btn.amber { background: #ff9500; color: #fff; }
+  #bottom-dock .dock-icon-btn.red { background: #ff3b30; color: #fff; }
   #bottom-dock .dock-user-badge {
-    display:flex; align-items:center; gap:6px;
-    background:rgba(0,0,0,0.05); border:1px solid rgba(0,0,0,0.05);
-    padding:6px 12px; border-radius:9999px; color:#1d1d1f; font-size:11px; font-weight:600;
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(0, 0, 0, 0.05); border: 1px solid rgba(0,0,0,0.05);
+    padding: 6px 12px; border-radius: 980px; color: #1d1d1f; font-size: 11px; font-weight: 600;
   }
-  body.dark #bottom-dock .dock-user-badge { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.1); color:#fff; }
-  body { padding-bottom:78px; }
+  body.dark #bottom-dock .dock-user-badge { background: rgba(255, 255, 255, 0.1); color: #fff; border-color: rgba(255,255,255,0.1); }
+  body { padding-bottom: 78px; }
   @media (max-width:767px){
-    .ud-mobile-nav { display:none !important; } /* hide old floating */
-    body { padding-bottom:78px; }
+    .ud-mobile-nav { display: none !important; }
+    body { padding-bottom: 78px; }
   }
   @media (min-width:768px){
-    #bottom-dock { padding:10px 24px; }
-    #bottom-dock .dock-btn { padding:8px 16px; font-size:13px; }
+    #bottom-dock { padding: 10px 24px; }
+    #bottom-dock .dock-btn { padding: 8px 18px; font-size: 13px; }
   }
-
 </style>
 
 <style id="fix-pointer-final">
 html, body { pointer-events: auto !important; }
 #matrix-filter-section, #matrix-filter-section *, #filter-matrix-department, #btnMatrixDownload { pointer-events: auto !important; }
 
-  /* BOTTOM DOCK - same as header ribbon */
   #bottom-dock {
-    position:fixed; left:0; right:0; bottom:0; z-index:60;
-    background:rgba(255, 255, 255, 0.8);
-    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-    border-top:1px solid rgba(0,0,0,0.1);
-    box-shadow:0 -4px 20px rgba(0,0,0,0.05);
-    padding:8px 12px;
-    padding-bottom:calc(8px + env(safe-area-inset-bottom));
-    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-top: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+    padding: 8px 12px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
   }
   body.dark #bottom-dock {
-    background:rgba(29, 29, 31, 0.8);
-    border-top-color:rgba(255,255,255,0.1);
+    background: rgba(29, 29, 31, 0.8);
+    border-top-color: rgba(255,255,255,0.1);
   }
-  #bottom-dock .dock-left { display:flex; align-items:center; gap:4px; }
-  #bottom-dock .dock-right { display:flex; align-items:center; gap:6px; }
+  #bottom-dock .dock-left { display: flex; align-items: center; gap: 4px; }
+  #bottom-dock .dock-right { display: flex; align-items: center; gap: 6px; }
   #bottom-dock .dock-btn {
-    display:flex; align-items:center; gap:6px;
-    padding:9px 14px; border-radius:9999px;
-    font-size:12px; font-weight:500; color:#86868b;
-    border:0; background:rgba(0,0,0,0.04);
-    transition:all .2s ease;
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 980px;
+    font-size: 12px; font-weight: 500; color: #86868b;
+    border: 0; background: rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
   }
-  body.dark #bottom-dock .dock-btn { background:rgba(255,255,255,0.08); color:#86868b; }
-  #bottom-dock .dock-btn.active { background:#0071e3; color:#fff; box-shadow:0 4px 12px rgba(0,113,227,0.3); }
-  #bottom-dock .dock-btn i { font-size:13px; }
+  #bottom-dock .dock-btn.active { background: #0071e3; color: #fff; box-shadow: 0 2px 8px rgba(0,113,227,0.3); }
+  #bottom-dock .dock-btn i { font-size: 13px; }
   #bottom-dock .dock-icon-btn {
-    width:36px; height:36px; display:grid; place-items:center;
-    border-radius:9999px; border:0;
-    background:rgba(0,0,0,0.05); color:#1d1d1f;
-    transition:all .2s ease;
+    width: 36px; height: 36px; display: grid; place-items: center;
+    border-radius: 50%; border: 0;
+    background: rgba(0, 0, 0, 0.05); color: #1d1d1f;
+    transition: all 0.2s ease;
   }
-  body.dark #bottom-dock .dock-icon-btn { background:rgba(255,255,255,0.1); color:#fff; }
-  #bottom-dock .dock-icon-btn.amber { background:#ff9500; color:#fff; }
-  #bottom-dock .dock-icon-btn.red { background:#ff3b30; color:#fff; }
+  body.dark #bottom-dock .dock-icon-btn { background: rgba(255, 255, 255, 0.1); color: #fff; }
+  #bottom-dock .dock-icon-btn.amber { background: #ff9500; color: #fff; }
+  #bottom-dock .dock-icon-btn.red { background: #ff3b30; color: #fff; }
   #bottom-dock .dock-user-badge {
-    display:flex; align-items:center; gap:6px;
-    background:rgba(0,0,0,0.05); border:1px solid rgba(0,0,0,0.05);
-    padding:6px 10px; border-radius:9999px; color:#1d1d1f; font-size:11px; font-weight:600;
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(0, 0, 0, 0.05); border: 1px solid rgba(0,0,0,0.05);
+    padding: 6px 12px; border-radius: 980px; color: #1d1d1f; font-size: 11px; font-weight: 600;
   }
-  body.dark #bottom-dock .dock-user-badge { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.1); color:#fff; }
-  body { padding-bottom:78px; }
+  body.dark #bottom-dock .dock-user-badge { background: rgba(255, 255, 255, 0.1); color: #fff; border-color: rgba(255,255,255,0.1); }
+  body { padding-bottom: 78px; }
   @media (max-width:767px){
-    .ud-mobile-nav { display:none !important; } /* hide old floating */
-    body { padding-bottom:78px; }
+    .ud-mobile-nav { display: none !important; }
+    body { padding-bottom: 78px; }
   }
   @media (min-width:768px){
-    #bottom-dock { padding:10px 24px; }
-    #bottom-dock .dock-btn { padding:8px 16px; font-size:13px; }
+    #bottom-dock { padding: 10px 24px; }
+    #bottom-dock .dock-btn { padding: 8px 18px; font-size: 13px; }
   }
-
 </style>
 
 </head>
 <body class="text-gray-800">
 
 <!-- AUTH OVERLAY -->
-<div id="auth-overlay" class="fixed inset-0 z-[9999] bg-black/40 backdrop-blur-xl flex items-center justify-center p-4">
+<div id="auth-overlay" class="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-xl flex items-center justify-center p-4">
   <div class="w-full max-w-md">
-    <div class="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl rounded-[24px] shadow-2xl overflow-hidden border border-black/10 dark:border-white/10">
-      <div class="p-6 text-center border-b border-black/5 dark:border-white/5">
-        <div class="mx-auto w-16 h-16 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full grid place-items-center mb-3"><i class="fa-solid fa-shirt text-2xl"></i></div>
-        <h1 class="text-xl font-semibold tracking-tight">Uniform Management</h1>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">System Lifecycle & Task Queue</p>
+    <div class="bg-white rounded-[24px] shadow-2xl overflow-hidden border border-white/20">
+      <div class="bg-gradient-to-b from-gray-900 to-black p-8 text-white text-center">
+        <div class="mx-auto w-16 h-16 bg-white/10 rounded-full grid place-items-center mb-4 backdrop-blur-md"><i class="fa-solid fa-shirt text-2xl text-blue-400"></i></div>
+        <h1 class="text-2xl font-bold tracking-tight">Uniform Management</h1>
+        <p class="text-xs text-gray-400 mt-1 font-medium">System Lifecycle & Task Queue</p>
       </div>
-      <div class="p-6 md:p-7">
-        <h2 class="font-semibold text-gray-900 dark:text-white mb-1">Login Required</h2>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-5">Masukkan User ID yang dibuat Admin device ini</p>
+      <div class="p-6 md:p-8">
+        <h2 class="font-bold text-slate-800 text-lg mb-1">Login Required</h2>
+        <p class="text-xs text-slate-500 mb-6">Masukkan User ID yang dibuat Admin device ini</p>
         <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
           <div>
-            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1.5">User ID</label>
-            <input type="text" id="login-user-id" required placeholder="ADMIN / QC01" class="w-full px-4 py-3 border border-gray-300 dark:border-zinc-700 bg-white/50 dark:bg-zinc-800/50 rounded-xl text-sm font-semibold uppercase focus:ring-2 focus:ring-blue-500 outline-none transition">
+            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1.5 tracking-wider">User ID</label>
+            <input type="text" id="login-user-id" required placeholder="ADMIN / QC01" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm font-semibold uppercase focus:ring-2 focus:ring-blue-500 outline-none">
           </div>
           <div>
-            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1.5">Password</label>
+            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1.5 tracking-wider">Password</label>
             <div class="relative">
-              <input type="password" id="login-password" required placeholder="Password" class="w-full px-4 py-3 border border-gray-300 dark:border-zinc-700 bg-white/50 dark:bg-zinc-800/50 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none pr-10 transition">
-              <button type="button" onclick="toggleLoginPass()" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 grid place-items-center text-gray-400"><i id="eye-icon" class="fa-solid fa-eye"></i></button>
+              <input type="password" id="login-password" required placeholder="Password" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none pr-10">
+              <button type="button" onclick="toggleLoginPass()" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 grid place-items-center text-slate-400"><i id="eye-icon" class="fa-solid fa-eye"></i></button>
             </div>
           </div>
-          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 rounded-xl text-sm shadow-sm transition btn-animate-click">Login</button>
-          <div id="login-error" class="hidden p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/50 text-red-600 dark:text-red-400 text-xs rounded-xl"></div>
+          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 rounded-full text-sm shadow-md transition-all">Login</button>
+          <div id="login-error" class="hidden p-3 bg-red-50 border border-red-200 text-red-600 text-xs rounded-xl"></div>
         </form>
-        <div class="mt-6 p-3 bg-gray-100 dark:bg-zinc-800/50 border border-gray-200 dark:border-zinc-700/50 rounded-xl">
-          <p class="text-[11px] font-medium text-gray-600 dark:text-gray-400 text-center">Default Admin: ADMIN / admin123</p>
+        <div class="mt-6 p-4 bg-gray-50 border border-gray-200/60 rounded-xl">
+          <p class="text-[11px] font-semibold text-gray-600">Default Admin: ADMIN / admin123</p>
         </div>
       </div>
     </div>
@@ -377,76 +388,76 @@ html, body { pointer-events: auto !important; }
 </div>
 
 <div id="user-management-modal" class="fixed inset-0 z-[9000] bg-black/40 backdrop-blur-md hidden items-center justify-center p-4">
-  <div class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col border border-black/10 dark:border-white/10">
-    <div class="p-5 border-b border-black/5 dark:border-white/5 flex items-center justify-between bg-gray-50/50 dark:bg-zinc-800/50 gap-2">
-      <h3 class="font-semibold text-gray-900 dark:text-white"><i class="fa-solid fa-users-gear mr-2 text-blue-500"></i>User Management</h3>
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col border border-gray-100">
+    <div class="p-5 border-b flex items-center justify-between bg-gray-50/50 gap-2">
+      <h3 class="font-bold text-slate-800"><i class="fa-solid fa-users-gear mr-2 text-blue-600"></i>User Management</h3>
       <div class="flex gap-2">
-        <button onclick="handleChangeAdminPassword()" class="bg-amber-500 hover:bg-amber-600 text-white text-[11px] font-medium px-3 py-1.5 rounded-full transition">Ganti Pass ADMIN</button>
-        <button onclick="closeUserManagement()" class="w-8 h-8 grid place-items-center bg-gray-200 dark:bg-zinc-700 rounded-full"><i class="fa-solid fa-xmark"></i></button>
+        <button onclick="handleChangeAdminPassword()" class="bg-amber-500 hover:bg-amber-600 text-white text-[11px] font-semibold px-3 py-1.5 rounded-full">Ganti Pass ADMIN</button>
+        <button onclick="closeUserManagement()" class="w-8 h-8 grid place-items-center bg-gray-200/60 rounded-full"><i class="fa-solid fa-xmark"></i></button>
       </div>
     </div>
     <div class="p-5 space-y-5 overflow-y-auto">
-      <div class="bg-blue-50/50 dark:bg-blue-950/30 border border-blue-200/50 dark:border-blue-800/30 rounded-xl p-4">
-        <h4 class="text-xs font-semibold uppercase tracking-wider text-blue-900 dark:text-blue-300 mb-3">Buat User Baru (ID Tidak Bisa Diubah)</h4>
+      <div class="bg-blue-50/50 border border-blue-100 rounded-2xl p-4">
+        <h4 class="text-xs font-bold uppercase text-blue-900 mb-3 tracking-wider">Buat User Baru (ID Tidak Bisa Diubah)</h4>
         <form id="create-user-form" onsubmit="handleCreateUser(event)" class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <input type="text" id="new-user-id" required placeholder="USER ID" class="px-3 py-2 border rounded-lg text-sm font-semibold uppercase bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700">
-          <input type="text" id="new-user-pass" required placeholder="Password Awal" class="px-3 py-2 border rounded-lg text-sm bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700">
-          <button type="submit" class="bg-blue-600 text-white font-medium rounded-lg text-sm btn-animate-click">Buat User</button>
+          <input type="text" id="new-user-id" required placeholder="USER ID" class="px-3 py-2 border rounded-xl text-sm font-bold uppercase">
+          <input type="text" id="new-user-pass" required placeholder="Password Awal" class="px-3 py-2 border rounded-xl text-sm">
+          <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full text-sm">Buat User</button>
         </form>
       </div>
       <div class="flex flex-wrap gap-2">
-        <button onclick="exportUsers()" class="flex-1 min-w-[120px] bg-gray-900 dark:bg-zinc-800 text-white text-xs font-medium py-2.5 rounded-lg btn-animate-click">Export JSON</button>
-        <label class="flex-1 min-w-[120px] bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 text-xs font-medium py-2.5 rounded-lg text-center cursor-pointer">Import (Merge)<input type="file" id="import-users-file" accept=".json" class="hidden" onchange="importUsers(event)"></label>
-        <button onclick="importUsersOverwrite()" class="flex-1 min-w-[120px] bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/30 text-amber-800 dark:text-amber-300 text-xs font-medium py-2.5 rounded-lg">Overwrite</button>
+        <button onclick="exportUsers()" class="flex-1 min-w-[120px] bg-slate-800 text-white text-xs font-semibold py-2.5 rounded-full">Export JSON</button>
+        <label class="flex-1 min-w-[120px] bg-white border text-xs font-semibold py-2.5 rounded-full text-center cursor-pointer">Import (Merge)<input type="file" id="import-users-file" accept=".json" class="hidden" onchange="importUsers(event)"></label>
+        <button onclick="importUsersOverwrite()" class="flex-1 min-w-[120px] bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold py-2.5 rounded-full">Overwrite</button>
       </div>
       <div>
-        <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Daftar User (<span id="user-count">0</span>)</h4>
-        <div class="border border-black/5 dark:border-white/5 rounded-xl overflow-hidden"><table class="w-full text-sm"><thead class="bg-gray-50 dark:bg-zinc-800 text-[11px] uppercase text-gray-500"><tr><th class="text-left p-2.5">User ID</th><th class="text-left p-2.5">Role</th><th class="text-left p-2.5">Dibuat</th><th class="text-right p-2.5">Aksi</th></tr></thead><tbody id="user-list-body"></tbody></table></div>
+        <h4 class="text-xs font-bold uppercase text-slate-500 mb-2 tracking-wider">Daftar User (<span id="user-count">0</span>)</h4>
+        <div class="border rounded-2xl overflow-hidden"><table class="w-full text-sm"><thead class="bg-gray-50 text-[11px] uppercase text-slate-500"><tr><th class="text-left p-2.5">User ID</th><th class="text-left p-2.5">Role</th><th class="text-left p-2.5">Dibuat</th><th class="text-right p-2.5">Aksi</th></tr></thead><tbody id="user-list-body"></tbody></table></div>
       </div>
     </div>
   </div>
 </div>
 
 <div id="change-pass-modal" class="fixed inset-0 z-[9000] bg-black/40 backdrop-blur-md hidden items-center justify-center p-4">
-  <div class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl rounded-2xl shadow-2xl w-full max-w-sm p-5 border border-black/10 dark:border-white/10">
-    <h3 class="font-semibold mb-4">Ganti Password</h3>
-    <form id="change-pass-form" onsubmit="handleChangePassword(event)" class="space-y-3">
-      <div><label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Password Lama</label><input type="password" id="old-password" required class="w-full px-3 py-2 border rounded-lg text-sm bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700"></div>
-      <div><label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Password Baru</label><input type="password" id="new-password" required minlength="4" class="w-full px-3 py-2 border rounded-lg text-sm bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700"></div>
-      <div class="flex gap-2 pt-2"><button type="button" onclick="closeChangePass()" class="flex-1 bg-gray-100 dark:bg-zinc-800 py-2 rounded-lg text-sm font-medium">Batal</button><button type="submit" class="flex-1 bg-blue-600 text-white py-2 rounded-lg text-sm font-medium btn-animate-click">Simpan</button></div>
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6">
+    <h3 class="font-bold mb-4 text-gray-900 text-lg">Ganti Password</h3>
+    <form id="change-pass-form" onsubmit="handleChangePassword(event)" class="space-y-4">
+      <div><label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Password Lama</label><input type="password" id="old-password" required class="w-full px-3 py-2 border rounded-xl text-sm"></div>
+      <div><label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Password Baru</label><input type="password" id="new-password" required minlength="4" class="w-full px-3 py-2 border rounded-xl text-sm"></div>
+      <div class="flex gap-2 pt-2"><button type="button" onclick="closeChangePass()" class="flex-1 bg-gray-100 py-2.5 rounded-full text-sm font-semibold">Batal</button><button type="submit" class="flex-1 bg-blue-600 text-white py-2.5 rounded-full text-sm font-semibold">Simpan</button></div>
     </form>
   </div>
 </div>
 
 
-<header class="ud-header text-gray-900 dark:text-white shadow-sm sticky top-0 z-50">
+<header class="ud-header sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
       <div class="flex items-center space-x-3">
-        <div class="bg-blue-600/10 text-blue-600 dark:text-blue-400 p-2 rounded-xl">
+        <div class="bg-blue-600 p-2 rounded-xl text-white">
           <i class="fa-solid font-bold text-xl fa-shirt"></i>
         </div>
         <div>
-          <h1 class="font-semibold text-lg leading-tight tracking-tight">Uniform Management</h1>
-          <p class="text-xs text-gray-500 dark:text-gray-400">System Lifecycle & Task Queue</p>
+          <h1 class="font-bold text-lg leading-tight tracking-tight">Uniform Management</h1>
+          <p class="text-xs text-gray-500">System Lifecycle & Task Queue</p>
         </div>
       </div>
       <div class="flex items-center gap-2 md:hidden">
-        <button id="theme-toggle-mobile" onclick="toggleTheme()" class="p-2.5 rounded-full bg-gray-100 dark:bg-zinc-800 border border-black/5 dark:border-white/5" title="Mode">
+        <button id="theme-toggle-mobile" onclick="toggleTheme()" class="p-2.5 rounded-full bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700" title="Mode">
           <i id="theme-icon-mobile" class="fa-solid fa-moon text-sm"></i>
         </button>
       </div>
       <nav class="hidden md:flex items-center space-x-1">
-        <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="nav-btn px-4 py-2 rounded-full text-sm font-medium transition text-white bg-blue-600">
+        <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="nav-btn px-4 py-2 rounded-full text-sm font-medium transition bg-gray-100 text-gray-900">
           <i class="fa-solid fa-chart-pie mr-1.5"></i> Dashboard
         </button>
-        <button onclick="switchTab('uniform')" id="tab-btn-uniform" class="nav-btn px-4 py-2 rounded-full text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/5 transition">
+        <button onclick="switchTab('uniform')" id="tab-btn-uniform" class="nav-btn px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition text-gray-600">
           <i class="fa-solid fa-file-pen mr-1.5"></i> Uniform Module
         </button>
-        <button onclick="switchTab('tailor')" id="tab-btn-tailor" class="nav-btn px-4 py-2 rounded-full text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/5 transition">
+        <button onclick="switchTab('tailor')" id="tab-btn-tailor" class="nav-btn px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition text-gray-600">
           <i class="fa-solid fa-scissors mr-1.5"></i> Tailor Queue
         </button>
-        <button id="theme-toggle-desktop" onclick="toggleTheme()" class="ml-2 px-3 py-2 rounded-full text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5 transition border border-black/10 dark:border-white/10" title="Ganti Mode">
+        <button id="theme-toggle-desktop" onclick="toggleTheme()" class="ml-2 px-3 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition bg-gray-100/80 dark:bg-zinc-800 border border-gray-200/60 dark:border-zinc-700" title="Ganti Mode">
           <i id="theme-icon-desktop" class="fa-solid fa-moon"></i>
           <span class="ml-1.5 hidden lg:inline" id="theme-label-desktop">Gelap</span>
         </button>
@@ -472,7 +483,7 @@ html, body { pointer-events: auto !important; }
   <section id="view-dashboard" class="tab-content active space-y-6">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h2 class="text-2xl font-semibold tracking-tight text-gray-900">Operational Dashboard</h2>
+        <h2 class="text-2xl font-bold text-gray-900 tracking-tight">Operational Dashboard</h2>
         <p class="text-sm text-gray-500">Activity Summary & Real-time Google Sheets Sync.</p>
       </div>
       
@@ -480,7 +491,7 @@ html, body { pointer-events: auto !important; }
 
     <!-- FILTER RANGE TANGGAL DASHBOARD -->
     
-    <div class="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-4">
+    <div class="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-4">
       <!-- PRESET TANGGAL ELEGAN -->
       <div class="flex flex-wrap gap-1.5 mb-3">
         <button onclick="setDatePreset('today')" class="preset-btn">Today</button>
@@ -493,22 +504,22 @@ html, body { pointer-events: auto !important; }
       <div class="flex flex-col md:flex-row md:items-end gap-3">
         <div id="filter-section-date-grid" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-[11px] font-semibold uppercase tracking-wider text-gray-500 mb-1"><i class="fa-regular fa-calendar mr-1"></i> Tanggal Mulai</label>
-            <input type="date" id="filter-start-date" class="w-full border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+            <label class="block text-[11px] font-semibold uppercase text-gray-500 mb-1"><i class="fa-regular fa-calendar mr-1"></i> Tanggal Mulai</label>
+            <input type="date" id="filter-start-date" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
           <div>
-            <label class="block text-[11px] font-semibold uppercase tracking-wider text-gray-500 mb-1"><i class="fa-regular fa-calendar mr-1"></i> Tanggal Akhir</label>
-            <input type="date" id="filter-end-date" class="w-full border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+            <label class="block text-[11px] font-semibold uppercase text-gray-500 mb-1"><i class="fa-regular fa-calendar mr-1"></i> Tanggal Akhir</label>
+            <input type="date" id="filter-end-date" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
         </div>
         <div class="flex gap-2">
-          <button onclick="applyDashboardDateFilter()" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-xl shadow-sm btn-animate-click">
+          <button onclick="applyDashboardDateFilter()" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-full shadow-sm btn-animate-click">
             <i class="fa-solid fa-filter mr-2"></i> Filter
           </button>
-          <button onclick="resetDashboardDateFilter()" class="inline-flex items-center px-4 py-2 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-xl shadow-sm btn-animate-click">
+          <button onclick="resetDashboardDateFilter()" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-semibold rounded-full shadow-sm btn-animate-click">
             <i class="fa-solid fa-rotate-left mr-2"></i> Reset
           </button>
-          <button onclick="refreshData()" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-xl shadow-sm btn-animate-click">
+          <button onclick="refreshData()" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-full shadow-sm btn-animate-click">
             <i class="fa-solid fa-rotate mr-2"></i> Refresh Data
           </button>
         </div>
@@ -520,45 +531,45 @@ html, body { pointer-events: auto !important; }
 
     <!-- METRICS CARD (DIPERBARUI - TAMBAH IN PROGRESS) -->
     <div id="metrics-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-4">
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm ud-section-card ud-metric">
+      <div class="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-sm ud-section-card ud-metric">
         <div class="ud-metric-icon text-blue-600"><i class="fa-solid fa-triangle-exclamation"></i></div>
-        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Total Defects</div>
+        <div class="text-xs font-semibold uppercase text-gray-400">Total Defects</div>
         <div class="text-2xl font-bold text-gray-800 mt-1" id="stat-today">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-regular fa-clock mr-1"></i> Total Defect Reports</div>
       </div>
 
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-amber-500 ud-section-card ud-metric">
+      <div class="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-sm border-l-4 border-l-amber-500 ud-section-card ud-metric">
         <div class="ud-metric-icon text-amber-600"><i class="fa-solid fa-hourglass-start"></i></div>
-        <div class="text-xs font-semibold uppercase tracking-wider text-amber-600">Open Tasks</div>
+        <div class="text-xs font-semibold uppercase text-amber-600">Open Tasks</div>
         <div class="text-2xl font-bold text-amber-600 mt-1" id="stat-open">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-hourglass-start mr-1"></i> Waiting for Tailor</div>
       </div>
 
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-blue-500 ud-section-card ud-metric">
+      <div class="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-sm border-l-4 border-l-blue-500 ud-section-card ud-metric">
         <div class="ud-metric-icon text-blue-600"><i class="fa-solid fa-spinner"></i></div>
-        <div class="text-xs font-semibold uppercase tracking-wider text-blue-600">In Progress</div>
+        <div class="text-xs font-semibold uppercase text-blue-600">In Progress</div>
         <div class="text-2xl font-bold text-blue-600 mt-1" id="stat-inprogress">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-person-digging mr-1"></i> On Tailor Work</div>
       </div>
 
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-emerald-500 ud-section-card ud-metric">
+      <div class="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-sm border-l-4 border-l-emerald-500 ud-section-card ud-metric">
         <div class="ud-metric-icon text-emerald-600"><i class="fa-solid fa-check-double"></i></div>
-        <div class="text-xs font-semibold uppercase tracking-wider text-emerald-600">Completed</div>
+        <div class="text-xs font-semibold uppercase text-emerald-600">Completed</div>
         <div class="text-2xl font-bold text-emerald-600 mt-1" id="stat-completed">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-check-double mr-1"></i> Repaired Tasks</div>
       </div>
 
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-purple-500 ud-section-card ud-metric">
+      <div class="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-sm border-l-4 border-l-purple-500 ud-section-card ud-metric">
         <div class="ud-metric-icon text-purple-600"><i class="fa-solid fa-award"></i></div>
-        <div class="text-xs font-semibold uppercase tracking-wider text-purple-600">Total Credits</div>
+        <div class="text-xs font-semibold uppercase text-purple-600">Total Credits</div>
         <div class="text-2xl font-bold text-purple-600 mt-1" id="stat-credits">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-award mr-1"></i> Tailor Workload</div>
       </div>
 
       <!-- METRIC BARU: TOTAL RECEIVED -->
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-blue-500 ud-section-card ud-metric">
+      <div class="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-sm border-l-4 border-l-blue-500 ud-section-card ud-metric">
         <div class="ud-metric-icon text-blue-600"><i class="fa-solid fa-box-open"></i></div>
-        <div class="text-xs font-semibold uppercase tracking-wider text-blue-600">Total Received</div>
+        <div class="text-xs font-semibold uppercase text-blue-600">Total Received</div>
         <div class="text-2xl font-bold text-blue-600 mt-1" id="stat-received-items">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-truck-ramp-box mr-1"></i> Total Received Items</div>
       </div>
@@ -569,17 +580,17 @@ html, body { pointer-events: auto !important; }
     
     <!-- ADDED: DASHBOARD ANALYTICS -->
     <div id="dashboard-analytics-section" class="space-y-5">
-      <div class="flex justify-between items-center"><h3 class="font-semibold text-sm tracking-tight"><i class="fa-solid fa-chart-line text-blue-600 mr-2"></i>Graphic Analysis (Sesuai Filter Tanggal)</h3></div>
+      <div class="flex justify-between items-center"><h3 class="font-bold text-sm tracking-tight"><i class="fa-solid fa-chart-line text-blue-600 mr-2"></i>Graphic Analysis (Sesuai Filter Tanggal)</h3></div>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <div class="analytics-card" id="card-inputter"><div class="analytics-title"><span>a. Jumlah Penginput per Nama</span><span id="inputter-total-label" class="text-[10px] text-gray-400"></span></div><div class="chart-wrap"><canvas id="chartInputter"></canvas></div><div id="inputter-summary" class="mt-2 text-[11px] text-gray-500 bg-gray-50 dark:bg-zinc-800 p-2 rounded-xl"></div></div>
-        <div class="analytics-card" id="card-defect"><div class="analytics-title"><span>b. Defect Paling Banyak</span><span id="defect-total-label" class="text-[10px] text-gray-400"></span></div><div class="chart-wrap"><canvas id="chartDefect"></canvas></div><div id="defect-summary" class="mt-2 text-[11px] text-gray-500 bg-gray-50 dark:bg-zinc-800 p-2 rounded-xl"></div></div>
+        <div class="analytics-card" id="card-inputter"><div class="analytics-title"><span>a. Jumlah Penginput per Nama</span><span id="inputter-total-label" class="text-[10px] text-gray-400"></span></div><div class="chart-wrap"><canvas id="chartInputter"></canvas></div><div id="inputter-summary" class="mt-2 text-[11px] text-gray-500 bg-gray-50 p-2 rounded-xl"></div></div>
+        <div class="analytics-card" id="card-defect"><div class="analytics-title"><span>b. Defect Paling Banyak</span><span id="defect-total-label" class="text-[10px] text-gray-400"></span></div><div class="chart-wrap"><canvas id="chartDefect"></canvas></div><div id="defect-summary" class="mt-2 text-[11px] text-gray-500 bg-gray-50 p-2 rounded-xl"></div></div>
       </div>
     </div>
 
 
     <!-- MOVED: TAILOR PERFORMANCE + RANKING BULANAN KE DASHBOARD ATAS RECENT LOG -->
-    <div id="received-analytics-section" class="mt-8 pt-6 border-t border-black/5 dark:border-white/5 space-y-4">
-        <h3 class="font-semibold text-sm tracking-tight"><i class="fa-solid fa-boxes-stacked mr-2 text-blue-600"></i>Analisis Received - Per Jenis & Departemen (Sesuai Filter)</h3>
+    <div id="received-analytics-section" class="mt-8 pt-6 border-t space-y-4">
+        <h3 class="font-bold text-sm tracking-tight"><i class="fa-solid fa-boxes-stacked mr-2 text-blue-600"></i>Analisis Received - Per Jenis & Departemen (Sesuai Filter)</h3>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
           <div class="analytics-card lg:col-span-2"><div class="analytics-title">Per Jenis Uniform</div><div class="chart-wrap tall"><canvas id="chartReceivedByType"></canvas></div></div>
           <div class="analytics-card"><div class="analytics-title">Per Departemen</div><div class="chart-wrap tall"><canvas id="chartReceivedByDept"></canvas></div></div>
@@ -590,7 +601,7 @@ html, body { pointer-events: auto !important; }
 
     <!-- MOVED RECEIVED ABOVE TAILOR -->
     <div id="tailor-performance-section" class="mt-8 space-y-5">
-      <div class="flex justify-between items-center"><h3 class="font-semibold text-sm tracking-tight"><i class="fa-solid fa-award mr-2 text-amber-500"></i>Tailor Performance + Ranking Bulanan</h3><div class="flex gap-2 items-center"><label class="flex items-center gap-1 text-[11px] bg-white dark:bg-zinc-800 border border-black/5 dark:border-white/5 px-3 py-1.5 rounded-full"><input type="checkbox" id="auto-refresh-toggle" onchange="toggleAutoRefresh(this.checked)"> Auto 30s <span id="auto-refresh-countdown" class="text-[10px] text-gray-400"></span></label></div></div>
+      <div class="flex justify-between items-center"><h3 class="font-bold text-sm tracking-tight"><i class="fa-solid fa-award mr-2 text-amber-600"></i>Tailor Performance + Ranking Bulanan</h3><div class="flex gap-2 items-center"><label class="flex items-center gap-1 text-[11px] bg-white border px-3 py-1 rounded-full"><input type="checkbox" id="auto-refresh-toggle" onchange="toggleAutoRefresh(this.checked)"> Auto 30s <span id="auto-refresh-countdown" class="text-[10px] text-gray-400"></span></label></div></div>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
         
           <div class="analytics-card lg:col-span-2"><div class="analytics-title">Credit per Bulan</div><div class="chart-wrap tall"><canvas id="chartMonthlyCredit"></canvas></div></div>
@@ -602,18 +613,18 @@ html, body { pointer-events: auto !important; }
     
     <!-- ADDED: UNIFORM PRODUCTION ANALYTICS DI DASHBOARD BAWAH TAILOR PERFORMANCE -->
     <div id="dashboard-production-analytics" class="space-y-5 mt-6">
-      <h3 class="font-semibold text-sm tracking-tight text-gray-900 dark:text-white"><i class="fa-solid fa-industry mr-2 text-emerald-600"></i>Analisis Uniform Production - Semua Product (Dashboard View)</h3>
-      <div class="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-4 mt-3 mb-4" id="matrix-filter-section">
+      <h3 class="font-bold text-sm text-slate-800 tracking-tight"><i class="fa-solid fa-industry mr-2 text-emerald-600"></i>Analisis Uniform Production - Semua Product (Dashboard View)</h3>
+      <div class="bg-white rounded-2xl border border-emerald-200 shadow-sm p-4 mt-3 mb-4" id="matrix-filter-section">
         <div class="flex flex-col md:flex-row md:items-end gap-3">
           <div class="flex-1">
-            <label class="block text-[11px] font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1">FILTER DEPARTEMEN KHUSUS MATRIX PRODUCTION</label>
-            <select id="filter-matrix-department" class="w-full border border-emerald-200 dark:border-emerald-800/50 rounded-xl px-3 py-2 text-sm bg-emerald-50/50 dark:bg-emerald-950/20">
+            <label class="block text-[11px] font-bold uppercase text-emerald-700 mb-1">FILTER DEPARTEMEN KHUSUS MATRIX PRODUCTION</label>
+            <select id="filter-matrix-department" class="w-full border border-emerald-200 rounded-xl px-3 py-2 text-sm bg-emerald-50/50">
               <option value="">Semua Department</option>
             </select>
             <p class="text-[10px] text-gray-500 mt-1" id="matrix-info">Klik Refresh Data jika daftar department masih kosong</p>
           </div>
           <div>
-            <button type="button" id="btnMatrixDownload" onclick="downloadProductionMatrixExcel()" class="inline-flex items-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-xl btn-animate-click">
+            <button type="button" id="btnMatrixDownload" onclick="downloadProductionMatrixExcel()" class="inline-flex items-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-full transition-all">
               <i class="fa-solid fa-file-excel mr-2"></i> Download Excel Matrix
             </button>
           </div>
@@ -643,7 +654,7 @@ html, body { pointer-events: auto !important; }
         <div class="analytics-card">
           <div class="analytics-title">Distribusi Product (Polar Area - Menarik)</div>
           <div class="chart-wrap"><canvas id="chartDashProdDonut"></canvas></div>
-          <div id="dash-prod-summary" class="mt-2 text-[11px] bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-800/30 p-2 rounded-xl"></div>
+          <div id="dash-prod-summary" class="mt-2 text-[11px] bg-emerald-50 border border-emerald-100 p-2.5 rounded-xl"></div>
         </div>
       </div>
       <div class="grid grid-cols-2 md:grid-cols-5 gap-3" id="dash-production-kpi"></div>
@@ -657,8 +668,8 @@ html, body { pointer-events: auto !important; }
   <!-- UNIFORM MODULE VIEW -->
   <section id="view-uniform" class="tab-content space-y-6">
     <div>
-      <h2 class="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Uniform Management</h2>
-      <p class="text-xs text-gray-500 mt-1">Defect, received delivery, and production tracking</p>
+      <h2 class="text-xl font-bold text-slate-800 tracking-tight">Uniform Management</h2>
+      <p class="text-xs text-slate-500 mt-1">Defect, received delivery, and production tracking</p>
     </div>
     <div class="uniform-binder" role="tablist">
       <button type="button" class="uniform-binder-tab active" data-ut="defect" onclick="switchUniformTab('defect')"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Report Defects</button>
@@ -667,37 +678,37 @@ html, body { pointer-events: auto !important; }
     </div>
 
     <!-- SUB-PANEL 1: DEFECTS -->
-    <section id="uniform-panel-defect" class="uniform-binder-panel p-0">
+    <section id="uniform-panel-defect" class="uniform-binder-panel active p-0">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4 md:p-5">
-        <div class="bg-white/80 dark:bg-zinc-900/80 p-6 rounded-2xl border border-black/5 dark:border-white/5 shadow-sm space-y-5">
-          <div class="border-b border-black/5 dark:border-white/5 pb-3">
-            <h3 class="text-lg font-semibold tracking-tight text-gray-800 dark:text-white flex items-center gap-2">
+        <div class="bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm space-y-5">
+          <div class="border-b border-gray-100 pb-3">
+            <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2 tracking-tight">
               <i class="fa-solid fa-pen-to-square text-blue-600"></i> Report Defects
             </h3>
             <p class="text-xs text-gray-500">Uniform staff entry form</p>
           </div>
           <form id="form-new-defect" onsubmit="handleCreateSubmission(event)" class="space-y-4">
                         <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 mb-1">Input By (Otomatis dari Login)</label>
-              <div class="w-full px-3 py-2.5 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/30 rounded-xl text-sm font-semibold text-blue-900 dark:text-blue-300 flex items-center gap-2">
+              <label class="block text-xs font-semibold uppercase text-blue-900 mb-1">Input By (Otomatis dari Login)</label>
+              <div class="w-full px-3 py-2.5 bg-blue-50/50 border border-blue-200 rounded-xl text-sm font-bold text-blue-900 flex items-center gap-2">
                 <i class="fa-solid fa-user-check text-blue-600"></i><span id="defect-input-by-badge">-</span>
                 <input type="hidden" id="inp-reporting-staff" value="">
               </div>
             </div>
 
             <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">
                 Staff Name (Uniform Owner) <span class="text-red-500">*</span>
               </label>
               <input type="text" id="inp-staff-name" required placeholder="e.g. Budi Santoso"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white dark:bg-zinc-800">
+                class="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
             </div>
 
             <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">
                 Department (Uniform Owner) <span class="text-red-500">*</span>
               </label>
-              <select id="inp-department" required class="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white dark:bg-zinc-800">
+              <select id="inp-department" required class="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
                 <option value="">-- Choose Department --</option>
                 <option value="Front Office">Front Office</option>
                 <option value="GRE">GRE</option>
@@ -727,10 +738,10 @@ html, body { pointer-events: auto !important; }
             </div>
 
             <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">
                 Uniform Item <span class="text-red-500">*</span>
               </label>
-              <select id="inp-item" required onchange="autoFillCredit()" class="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white dark:bg-zinc-800">
+              <select id="inp-item" required onchange="autoFillCredit()" class="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
                 <option value="">-- Choose Uniform/Linen Type --</option>
                 <option value="Trousers">Trousers</option>
                 <option value="Shirt">Shirt</option>
@@ -749,10 +760,10 @@ html, body { pointer-events: auto !important; }
             </div>
 
             <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">
                 Defect Type <span class="text-red-500">*</span>
               </label>
-              <select id="inp-defect" required onchange="autoFillCredit()" class="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white dark:bg-zinc-800">
+              <select id="inp-defect" required onchange="autoFillCredit()" class="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
                 <option value="">-- Choose Defect Type --</option>
                 <option value="Missing/Loose/Broken Button">Missing/Loose/Broken Button</option>
                 <option value="Missing/Loose/Hook">Missing/Loose/Hook</option>
@@ -767,46 +778,46 @@ html, body { pointer-events: auto !important; }
 
             <div class="grid grid-cols-2 gap-3">
               <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Quantity</label>
+                <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Quantity</label>
                 <input type="number" id="inp-quantity" min="1" value="1" required oninput="autoFillCredit()"
-                  class="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                  class="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
               </div>
               <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Credit / Unit</label>
+                <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Credit / Unit</label>
                 <input type="number" id="inp-credit" min="1" value="1" readonly
-                  class="w-full px-3 py-2 bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-xl text-sm font-bold text-blue-600 outline-none">
+                  class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-xl text-sm font-bold text-blue-700 outline-none">
               </div>
             </div>
 
-            <div class="flex items-center justify-between bg-purple-50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-800/30 rounded-xl px-3 py-2">
-              <span class="text-xs font-semibold uppercase tracking-wider text-purple-700 dark:text-purple-300">Total Credit (Unit &times; Qty)</span>
-              <span id="inp-total-credit-display" class="text-lg font-bold text-purple-700 dark:text-purple-300">1</span>
+            <div class="flex items-center justify-between bg-purple-50 border border-purple-100 rounded-xl px-3 py-2.5">
+              <span class="text-xs font-semibold uppercase text-purple-700">Total Credit (Unit &times; Qty)</span>
+              <span id="inp-total-credit-display" class="text-lg font-bold text-purple-700">1</span>
             </div>
 
             <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Remark / Notes</label>
+              <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Remark / Notes</label>
               <textarea id="inp-remarks" rows="2" placeholder="Detail of tear location, button size, etc..."
-                class="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                class="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
             </div>
 
-            <button type="submit" id="btn-submit-defect" class="btn-animate-click w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-xl shadow flex items-center justify-center gap-2">
+            <button type="submit" id="btn-submit-defect" class="btn-animate-click w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full shadow-md flex items-center justify-center gap-2">
               <i class="fa-solid fa-paper-plane"></i> Submit & Generate ID
             </button>
           </form>
         </div>
 
-        <div class="lg:col-span-2 bg-white/80 dark:bg-zinc-900/80 p-6 rounded-2xl border border-black/5 dark:border-white/5 shadow-sm space-y-4">
-          <div class="flex justify-between items-center border-b border-black/5 dark:border-white/5 pb-3">
+        <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm space-y-4">
+          <div class="flex justify-between items-center border-b border-gray-100 pb-3">
             <div>
-              <h3 class="text-lg font-semibold tracking-tight text-gray-800 dark:text-white">My Submissions Log</h3>
+              <h3 class="text-lg font-bold text-gray-800 tracking-tight">My Submissions Log</h3>
               <p class="text-xs text-gray-500">List of submitted defect report</p>
             </div>
             <input type="text" id="search-uniform-log" onkeyup="filterUniformTable()" placeholder="Search ID / Name / Dept..."
-              class="px-3 py-1.5 border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500">
+              class="px-3 py-1.5 border border-gray-300 rounded-xl text-xs outline-none focus:ring-1 focus:ring-blue-500">
           </div>
           <div class="overflow-x-auto max-h-[500px]">
             <table class="w-full text-left border-collapse text-sm">
-              <thead class="bg-gray-50 dark:bg-zinc-800 text-gray-500 text-xs uppercase font-semibold sticky top-0">
+              <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-semibold sticky top-0">
                 <tr>
                   <th class="py-2.5 px-3">Unique ID</th>
                   <th class="py-2.5 px-3">Input By</th>
@@ -815,7 +826,7 @@ html, body { pointer-events: auto !important; }
                   <th class="py-2.5 px-3">Status</th>
                 </tr>
               </thead>
-              <tbody id="uniform-submissions-table" class="divide-y divide-gray-100 dark:divide-zinc-800"></tbody>
+              <tbody id="uniform-submissions-table" class="divide-y divide-gray-100"></tbody>
             </table>
           </div>
         </div>
@@ -824,11 +835,11 @@ html, body { pointer-events: auto !important; }
 
     <!-- SUB-PANEL 2: RECEIVED -->
     <section id="uniform-panel-received" class="uniform-binder-panel p-4 md:p-5">
-      <div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 grid place-items-center"><i class="fa-solid fa-box-open"></i></div><div><h3 class="text-lg font-semibold tracking-tight text-gray-900 dark:text-white">Uniform Received</h3><p class="text-xs text-gray-500">Record every supplier delivery, including partial PO delivery.</p></div></div>
+      <div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 grid place-items-center"><i class="fa-solid fa-box-open"></i></div><div><h3 class="text-lg font-bold text-slate-800 tracking-tight">Uniform Received</h3><p class="text-xs text-slate-500">Record every supplier delivery, including partial PO delivery.</p></div></div>
       <div class="uniform-form-note mb-4"><i class="fa-solid fa-circle-info mr-1"></i> Satu PO boleh memiliki banyak transaksi karena supplier dapat melakukan partial delivery.</div>
       <form id="uniform-received-form" onsubmit="submitUniformReceived(event)">
         <div class="uniform-form-grid">
-          <div class="uniform-field"><label>Input By (Auto)</label><div class="w-full min-h-[44px] px-3 py-2.5 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/30 rounded-xl text-sm font-semibold text-blue-900 dark:text-blue-300 flex items-center gap-2"><i class="fa-solid fa-user-check text-blue-600"></i><span id="received-input-by-badge">-</span></div><input type="hidden" name="inputBy" id="received-input-by-hidden" value=""></div>
+          <div class="uniform-field"><label>Input By (Auto)</label><div class="w-full min-h-[44px] px-3 py-2.5 bg-blue-50/50 border border-blue-200 rounded-xl text-sm font-bold text-blue-900 flex items-center gap-2"><i class="fa-solid fa-user-check text-blue-600"></i><span id="received-input-by-badge">-</span></div><input type="hidden" name="inputBy" id="received-input-by-hidden" value=""></div>
           <div class="uniform-field"><label>Uniform Owner</label><input name="uniformOwner" required placeholder="Staff / New Joiner / Stock"></div>
           <div class="uniform-field"><label>Department</label><select name="department" required><option value="">-- Choose Department --</option>
               <option value="Front Office">Front Office</option>
@@ -860,82 +871,82 @@ html, body { pointer-events: auto !important; }
         </div>
 
         <div class="mt-2 mb-4">
-          <label class="block font-semibold text-xs uppercase tracking-wider text-gray-500 mb-2">What Received (isi minimal 1 item)</label>
+          <label class="block font-semibold text-xs uppercase text-slate-500 mb-2 tracking-wider">What Received (isi minimal 1 item)</label>
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Trousers</span>
-              <input type="number" name="Trousers" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Trousers</span>
+              <input type="number" name="Trousers" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Skirt</span>
-              <input type="number" name="Skirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Skirt</span>
+              <input type="number" name="Skirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Shirt</span>
-              <input type="number" name="Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Shirt</span>
+              <input type="number" name="Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Blouse</span>
-              <input type="number" name="Blouse" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Blouse</span>
+              <input type="number" name="Blouse" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Jacket</span>
-              <input type="number" name="Jacket" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Jacket</span>
+              <input type="number" name="Jacket" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Cook Jacket</span>
-              <input type="number" name="Cook Jacket" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Cook Jacket</span>
+              <input type="number" name="Cook Jacket" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">T-Shirt</span>
-              <input type="number" name="T-Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">T-Shirt</span>
+              <input type="number" name="T-Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Polo Shirt</span>
-              <input type="number" name="Polo Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Polo Shirt</span>
+              <input type="number" name="Polo Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Apron</span>
-              <input type="number" name="Apron" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Apron</span>
+              <input type="number" name="Apron" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Hat</span>
-              <input type="number" name="Hat" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Hat</span>
+              <input type="number" name="Hat" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Dress</span>
-              <input type="number" name="Dress" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Dress</span>
+              <input type="number" name="Dress" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Vest</span>
-              <input type="number" name="Vest" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Vest</span>
+              <input type="number" name="Vest" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Kitchen Cloth</span>
-              <input type="number" name="Kitchen Cloth" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Kitchen Cloth</span>
+              <input type="number" name="Kitchen Cloth" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Table Cloth</span>
-              <input type="number" name="Table Cloth" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Table Cloth</span>
+              <input type="number" name="Table Cloth" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Napkin</span>
-              <input type="number" name="Napkin" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Napkin</span>
+              <input type="number" name="Napkin" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
           </div>
         </div>
 
         <div class="mt-5 flex justify-end">
-          <button type="submit" id="btn-save-received" class="btn-animate-click px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm shadow">
+          <button type="submit" id="btn-save-received" class="btn-animate-click px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-md">
             <i class="fa-solid fa-floppy-disk mr-2"></i> Save Received
           </button>
         </div>
       </form>
       <div class="mt-6">
-        <h4 class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2"><i class="fa-solid fa-list"></i> Recent Received (50)</h4>
-        <div class="ud-table-wrap overflow-x-auto border border-gray-200 dark:border-zinc-700 rounded-xl">
+        <h4 class="font-bold text-sm text-slate-700 mb-2 flex items-center gap-2 tracking-tight"><i class="fa-solid fa-list"></i> Recent Received (50)</h4>
+        <div class="ud-table-wrap overflow-x-auto border border-slate-200/80 rounded-2xl">
           <table class="w-full text-left">
-            <thead class="bg-gray-50 dark:bg-zinc-800 text-[11px] uppercase font-bold text-gray-500">
+            <thead class="bg-slate-50 text-[11px] uppercase font-semibold text-slate-500">
               <tr><th class="py-2.5 px-3">ID</th><th class="py-2.5 px-3">Date</th><th class="py-2.5 px-3">Input By</th><th class="py-2.5 px-3">Owner / Dept</th><th class="py-2.5 px-3">Item</th><th class="py-2.5 px-3">PO</th><th class="py-2.5 px-3">Supplier</th></tr>
             </thead>
             <tbody id="uniform-received-table-body" class="text-xs"></tbody>
@@ -950,20 +961,20 @@ html, body { pointer-events: auto !important; }
     <!-- SUB-PANEL 3: PRODUCTION -->
     <section id="uniform-panel-production" class="uniform-binder-panel p-4 md:p-5">
       <div class="flex items-center gap-3 mb-4">
-        <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 grid place-items-center">
+        <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 grid place-items-center">
           <i class="fa-solid fa-shirt"></i>
         </div>
         <div>
-          <h3 class="text-lg font-semibold tracking-tight text-gray-900 dark:text-white">Uniform Production</h3>
-          <p class="text-xs text-gray-500">Record uniform production entries</p>
+          <h3 class="text-lg font-bold text-slate-800 tracking-tight">Uniform Production</h3>
+          <p class="text-xs text-slate-500">Record uniform production entries</p>
         </div>
       </div>
 
       <form id="uniform-production-form" onsubmit="submitUniformProduction(event)">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-gray-50 dark:bg-zinc-800/50 p-4 rounded-xl border border-gray-200 dark:border-zinc-700">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-slate-50/50 p-4 rounded-2xl border border-slate-200/80">
                     <div class="uniform-field">
             <label>Input By (Auto) <span class="text-red-500">*</span></label>
-            <div class="w-full min-h-[44px] px-3 py-2.5 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/30 rounded-xl text-sm font-semibold text-blue-900 dark:text-blue-300 flex items-center gap-2"><i class="fa-solid fa-user-check text-blue-600"></i><span id="production-input-by-badge">-</span></div>
+            <div class="w-full min-h-[44px] px-3 py-2.5 bg-blue-50/50 border border-blue-200 rounded-xl text-sm font-bold text-blue-900 flex items-center gap-2"><i class="fa-solid fa-user-check text-blue-600"></i><span id="production-input-by-badge">-</span></div>
             <input type="hidden" name="inputBy" id="production-input-by-hidden" value="">
           </div>
           <div class="uniform-field">
@@ -999,82 +1010,82 @@ html, body { pointer-events: auto !important; }
         </div>
 
         <div class="mb-4">
-          <label class="block font-semibold text-xs uppercase tracking-wider text-gray-500 mb-2">Uniform Items & Quantity (Minimal Isi 1 Item)</label>
+          <label class="block font-semibold text-xs uppercase text-slate-500 mb-2 tracking-wider">Uniform Items & Quantity (Minimal Isi 1 Item)</label>
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Trousers</span>
-              <input type="number" name="Trousers" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Trousers</span>
+              <input type="number" name="Trousers" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Skirt</span>
-              <input type="number" name="Skirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Skirt</span>
+              <input type="number" name="Skirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Shirt</span>
-              <input type="number" name="Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Shirt</span>
+              <input type="number" name="Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Blouse</span>
-              <input type="number" name="Blouse" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Blouse</span>
+              <input type="number" name="Blouse" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Jacket</span>
-              <input type="number" name="Jacket" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Jacket</span>
+              <input type="number" name="Jacket" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Cook Jacket</span>
-              <input type="number" name="Cook Jacket" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Cook Jacket</span>
+              <input type="number" name="Cook Jacket" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">T-Shirt</span>
-              <input type="number" name="T-Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">T-Shirt</span>
+              <input type="number" name="T-Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Polo Shirt</span>
-              <input type="number" name="Polo Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Polo Shirt</span>
+              <input type="number" name="Polo Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Apron</span>
-              <input type="number" name="Apron" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Apron</span>
+              <input type="number" name="Apron" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Hat</span>
-              <input type="number" name="Hat" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Hat</span>
+              <input type="number" name="Hat" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Dress</span>
-              <input type="number" name="Dress" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Dress</span>
+              <input type="number" name="Dress" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Vest</span>
-              <input type="number" name="Vest" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Vest</span>
+              <input type="number" name="Vest" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Kitchen Cloth</span>
-              <input type="number" name="Kitchen Cloth" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Kitchen Cloth</span>
+              <input type="number" name="Kitchen Cloth" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Table Cloth</span>
-              <input type="number" name="Table Cloth" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Table Cloth</span>
+              <input type="number" name="Table Cloth" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
-            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Napkin</span>
-              <input type="number" name="Napkin" min="0" placeholder="0" class="w-20 px-2 py-1 border border-gray-300 dark:border-zinc-600 rounded-lg text-right text-sm outline-none focus:border-blue-500">
+            <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+              <span class="text-sm font-medium text-slate-700">Napkin</span>
+              <input type="number" name="Napkin" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded-lg text-right text-sm outline-none focus:border-blue-500">
             </div>
           </div>
         </div>
 
         <div class="mt-5 flex justify-end">
-          <button type="submit" id="btn-save-production" class="btn-animate-click px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm shadow">
+          <button type="submit" id="btn-save-production" class="btn-animate-click px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-md">
             <i class="fa-solid fa-floppy-disk mr-2"></i> Save Production
           </button>
         </div>
       </form>
       <div class="mt-6">
-        <h4 class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2"><i class="fa-solid fa-list"></i> Recent Production (50)</h4>
-        <div class="ud-table-wrap overflow-x-auto border border-gray-200 dark:border-zinc-700 rounded-xl">
+        <h4 class="font-bold text-sm text-slate-700 mb-2 flex items-center gap-2 tracking-tight"><i class="fa-solid fa-list"></i> Recent Production (50)</h4>
+        <div class="ud-table-wrap overflow-x-auto border border-slate-200/80 rounded-2xl">
           <table class="w-full text-left">
-            <thead class="bg-gray-50 dark:bg-zinc-800 text-[11px] uppercase font-bold text-gray-500">
+            <thead class="bg-slate-50 text-[11px] uppercase font-semibold text-slate-500">
               <tr><th class="py-2.5 px-3">ID</th><th class="py-2.5 px-3">Date</th><th class="py-2.5 px-3">Input By</th><th class="py-2.5 px-3">Item</th><th class="py-2.5 px-3">Dept</th></tr>
             </thead>
             <tbody id="uniform-production-table-body" class="text-xs"></tbody>
@@ -1089,15 +1100,15 @@ html, body { pointer-events: auto !important; }
 
   <!-- TAILOR QUEUE VIEW -->
   <section id="view-tailor" class="tab-content space-y-6">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white/80 dark:bg-zinc-900/80 p-5 rounded-2xl border border-black/5 dark:border-white/5 shadow-sm">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-5 rounded-2xl border border-gray-200/80 shadow-sm">
       <div>
-        <h2 class="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Tailor Workstation & Task Queue</h2>
+        <h2 class="text-xl font-bold text-gray-900 tracking-tight">Tailor Workstation & Task Queue</h2>
         <p class="text-xs text-gray-500">Manage and track uniform repair progress.</p>
       </div>
       <div class="flex flex-col items-start gap-1">
                 <div class="flex items-center gap-3">
-          <label class="text-xs font-semibold text-gray-600 dark:text-gray-400">Active Tailor Name (Auto):</label>
-          <div class="px-3 py-1.5 border border-blue-200 dark:border-blue-800/30 rounded-xl text-sm font-semibold text-blue-900 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/30 flex items-center gap-2">
+          <label class="text-xs font-semibold text-gray-600">Active Tailor Name (Auto):</label>
+          <div class="px-4 py-1.5 border border-blue-200 rounded-full text-sm font-bold text-blue-900 bg-blue-50/50 flex items-center gap-2">
             <i class="fa-solid fa-user-check text-blue-600"></i><span id="active-tailor-display">-</span>
           </div>
           <input type="hidden" id="active-tailor-name" value="">
@@ -1109,17 +1120,17 @@ html, body { pointer-events: auto !important; }
     </div>
 
     <!-- FILTER TABS -->
-    <div class="flex space-x-2 border-b border-black/5 dark:border-white/5 pb-2 overflow-x-auto">
+    <div class="flex space-x-2 border-b border-gray-200 pb-2 overflow-x-auto">
       <button onclick="filterTailorQueue('ALL')" id="tailor-filter-ALL" class="tailor-filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-blue-600 text-white">
         All Tasks
       </button>
-      <button onclick="filterTailorQueue('OPEN')" id="tailor-filter-OPEN" class="tailor-filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700">
+      <button onclick="filterTailorQueue('OPEN')" id="tailor-filter-OPEN" class="tailor-filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200">
         OPEN (Queue)
       </button>
-      <button onclick="filterTailorQueue('IN_PROGRESS')" id="tailor-filter-IN_PROGRESS" class="tailor-filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700">
+      <button onclick="filterTailorQueue('IN_PROGRESS')" id="tailor-filter-IN_PROGRESS" class="tailor-filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200">
         IN PROGRESS
       </button>
-      <button onclick="filterTailorQueue('COMPLETED')" id="tailor-filter-COMPLETED" class="tailor-filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700">
+      <button onclick="filterTailorQueue('COMPLETED')" id="tailor-filter-COMPLETED" class="tailor-filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200">
         COMPLETED
       </button>
     </div>
@@ -1129,32 +1140,32 @@ html, body { pointer-events: auto !important; }
 
       </section>
 
-  <div class="mt-5 text-center text-[10px] text-gray-400 tracking-wide">
+  <div class="mt-8 text-center text-[10px] text-slate-400 tracking-wider uppercase font-semibold">
     UNIFORM MANAGEMENT • Simple • Fast • Paperless
   </div>
 </main>
 
 <!-- MODAL POPUP -->
 <div id="task-modal" class="fixed inset-0 bg-black/40 backdrop-blur-md hidden items-center justify-center p-4 z-50">
-  <div class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-black/10 dark:border-white/10">
-    <div class="flex justify-between items-center border-b border-black/5 dark:border-white/5 pb-3">
-      <h3 class="font-semibold text-gray-800 dark:text-white text-lg" id="modal-task-id">UD-000000</h3>
-      <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"><i class="fa-solid fa-xmark text-lg"></i></button>
+  <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-gray-100">
+    <div class="flex justify-between items-center border-b pb-3">
+      <h3 class="font-bold text-gray-800 text-lg tracking-tight" id="modal-task-id">UD-000000</h3>
+      <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 w-8 h-8 rounded-full grid place-items-center bg-gray-100"><i class="fa-solid fa-xmark text-lg"></i></button>
     </div>
-    <div class="space-y-2 text-sm bg-gray-50 dark:bg-zinc-800/50 p-3 rounded-xl border border-black/5 dark:border-white/5">
+    <div class="space-y-2 text-sm bg-gray-50/50 p-4 rounded-xl border border-gray-100">
       <p><strong>Input By (Uniform):</strong> <span id="modal-reporting-staff">-</span></p>
       <p><strong>Owner & Dept:</strong> <span id="modal-staff-dept">-</span></p>
       <p><strong>Items / Defect:</strong> <span id="modal-item-defect">-</span></p>
       <p><strong>Total Credit Weight:</strong> <span id="modal-credit" class="font-bold text-blue-600">1</span></p>
-      <p><strong>Incoming Remark:</strong> <span id="modal-remarks" class="italic text-gray-600 dark:text-gray-400">-</span></p>
+      <p><strong>Incoming Remark:</strong> <span id="modal-remarks" class="italic text-gray-600">-</span></p>
     </div>
-    <form id="form-modal-action" onsubmit="handleModalSubmit(event)" class="space-y-3">
+    <form id="form-modal-action" onsubmit="handleModalSubmit(event)" class="space-y-4">
       <input type="hidden" id="modal-hidden-id">
       <input type="hidden" id="modal-hidden-target-status">
       <div id="modal-completion-fields" class="space-y-3 hidden">
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Repair Result</label>
-          <select id="modal-repair-result" class="w-full px-3 py-2 border rounded-xl text-sm bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700">
+          <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Repair Result</label>
+          <select id="modal-repair-result" class="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm bg-white">
             <option value="Stitching Fixed">Stitching Fixed</option>
             <option value="Button Replaced">Button Replaced</option>
             <option value="Zipper Replaced">Zipper Replaced</option>
@@ -1163,13 +1174,13 @@ html, body { pointer-events: auto !important; }
           </select>
         </div>
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Tailor Notes</label>
-          <textarea id="modal-tailor-remarks" rows="2" placeholder="Optional notes from the tailor..." class="w-full px-3 py-2 border rounded-xl text-sm bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700"></textarea>
+          <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Tailor Notes</label>
+          <textarea id="modal-tailor-remarks" rows="2" placeholder="Optional notes from the tailor..." class="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm"></textarea>
         </div>
       </div>
-      <div class="flex justify-end space-x-2 pt-2 border-t border-black/5 dark:border-white/5">
-        <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800">Cancel</button>
-        <button type="submit" id="modal-submit-btn" class="btn-animate-click px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-500">
+      <div class="flex justify-end space-x-2 pt-2 border-t">
+        <button type="button" onclick="closeModal()" class="px-5 py-2.5 border border-gray-300 rounded-full text-sm font-semibold text-gray-600 hover:bg-gray-100">Cancel</button>
+        <button type="submit" id="modal-submit-btn" class="btn-animate-click px-5 py-2.5 bg-blue-600 text-white rounded-full text-sm font-semibold hover:bg-blue-700">
           Process Task
         </button>
       </div>
@@ -1260,6 +1271,7 @@ function parseDataDate(str){
     d = new Date(y, mo, da);
     if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
   }
+  return null;
 }
 </script>
 </body>
