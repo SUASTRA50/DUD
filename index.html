@@ -1,101 +1,396 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DIGITAL UNIFORM PLATFORM - V4 APPLE LEFT + UMX</title>
+<meta name="theme-color" content="#fbfbfd">
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<title>Uniform Management</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root{--apple-bg:#f5f5f7; --apple-card:#ffffff; --apple-text:#1d1d1f; --apple-sub:#6e6e73; --apple-blue:#0071e3; --apple-border:rgba(0,0,0,.08); --apple-font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;}
-*{-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
-body{font-family:var(--apple-font); background:var(--apple-bg); color:var(--apple-text); letter-spacing:-0.022em; overflow-x:hidden;}
-.apple-bg{position:fixed; inset:0; z-index:-1; background:var(--apple-bg);}
-.apple-mesh{position:absolute; inset:0; background:radial-gradient(900px 600px at 50% -10%, #ffffff 0%, #e8e8ed 35%, transparent 70%);}
-.apple-card{background:var(--apple-card); border:1px solid var(--apple-border); border-radius:20px; box-shadow:0 4px 16px rgba(0,0,0,.06);}
-.apple-glass{background:rgba(255,255,255,.82); backdrop-filter:blur(20px) saturate(180%); border-bottom:1px solid rgba(0,0,0,.06);}
-.apple-glass-strong{background:rgba(255,255,255,.96); backdrop-filter:blur(28px) saturate(180%); border-right:1px solid rgba(0,0,0,.08);}
-.sidebar{transform:translateX(-110%); transition:transform .6s cubic-bezier(.16,1,.3,1);}
-.sidebar.open{transform:translateX(0);}
-.menu-item{border-radius:12px; transition:.2s;}
-.menu-item:hover{background:#f5f5f7;}
-.menu-item.active{background:#1d1d1f; color:#fff;}
-.tab-content{display:none; animation:appleFade .5s ease;}
-.tab-content.active{display:block;}
-@keyframes appleFade{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)}}
-.title-apple{font-weight:700; font-size:clamp(56px,10vw,120px); line-height:.88; letter-spacing:-0.06em; text-align:center;}
-.bg-white{background:#fff !important;}
-.preset-btn{padding:7px 14px; border-radius:9999px; font-size:12px; background:#fff; border:1px solid rgba(0,0,0,.08); cursor:pointer;}
-.preset-btn.active{background:#1d1d1f; color:#fff;}
-</style>
-</head>
-<body class="min-h-screen">
-<div class="apple-bg"><div class="apple-mesh"></div></div>
+<!-- Apple SF Pro System Font - no external font needed -->
 
-<header class="fixed top-0 inset-x-0 z-40 h-[52px] apple-glass flex items-center justify-between px-6 md:px-8">
-  <div class="flex items-center gap-4">
-    <button id="hamburger" class="w-8 h-8 flex flex-col items-center justify-center gap-[5px]">
-      <span class="w-[18px] h-[1.6px] bg-[#1d1d1f] block"></span>
-      <span class="w-[18px] h-[1.6px] bg-[#1d1d1f] block"></span>
-      <span class="w-[18px] h-[1.6px] bg-[#1d1d1f] block"></span>
-    </button>
-    <div class="flex items-center gap-2">
-      <div class="w-7 h-7 rounded-[8px] bg-[#1d1d1f] text-white flex items-center justify-center font-bold text-[10px]">DU</div>
-      <span class="text-[12px] font-medium hidden md:block">Digital Uniform</span>
+<style>
+  :root { 
+    --ud-navy:#1d1d1f; 
+    --ud-blue:#0071e3; 
+    --ud-bg:#f5f5f7; 
+    --ud-card:#ffffff;
+    --ud-border:#d2d2d7; 
+    --ud-text:#1d1d1f;
+    --ud-secondary:#86868b;
+    --ud-hover:#f5f5f7;
+  }
+  * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { 
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+    background: var(--ud-bg); 
+    color: var(--ud-text);
+    -webkit-tap-highlight-color:transparent;
+    letter-spacing: -0.022em;
+    line-height: 1.47059;
+    font-weight: 400;
+  }
+  
+  /* Typography Apple.com */
+  h1, h2, h3 { 
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    letter-spacing: -0.022em; 
+    font-weight: 600;
+    color: #1d1d1f;
+  }
+  h1 { font-size: 40px; line-height: 1.1; font-weight: 600; letter-spacing: -0.003em; }
+  h2 { font-size: 28px; line-height: 1.14; letter-spacing: 0.007em; }
+  h3 { font-size: 21px; line-height: 1.19; letter-spacing: 0.011em; }
+
+  .tab-content { display:none; }
+  .tab-content.active { display:block; animation: appleFade .4s ease; }
+  @keyframes appleFade { from { opacity:0; transform: translateY(8px);} to { opacity:1; transform: translateY(0);} }
+  
+  .badge-open { background:#f5f5f7; color:#1d1d1f; border:1px solid #d2d2d7; border-radius: 12px; font-size:11px; font-weight:600; letter-spacing:-0.01em; padding:4px 10px; }
+  .badge-progress { background:#e8f2ff; color:#0071e3; border-radius: 12px; font-size:11px; font-weight:600; padding:4px 10px; }
+  .badge-completed { background:#e8f5e9; color:#1d8127; border-radius: 12px; font-size:11px; font-weight:600; padding:4px 10px; }
+  
+  button,select,input,textarea { min-height:44px; font-family: inherit; }
+  button { touch-action:manipulation; }
+  
+  /* Apple Header - translucent white like apple.com */
+  .ud-header { 
+    background: rgba(255,255,255,0.8) !important; 
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    color: #1d1d1f !important;
+  }
+  .ud-header * { color: #1d1d1f !important; }
+  .ud-header .text-white { color: #1d1d1f !important; }
+  .ud-header .text-white\/70, .ud-header .text-white\/60 { color: #86868b !important; }
+  
+  .ud-section-card { 
+    border-radius:18px !important;
+    border: 1px solid rgba(0,0,0,0.04) !important;
+    background: #fff !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.02) !important; 
+  }
+  .ud-metric { position:relative;overflow:hidden;min-height:112px; background:#fff; border-radius:18px; border: 1px solid rgba(0,0,0,0.04); }
+  .ud-metric-icon { position:absolute;right:14px;top:14px;width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:#f5f5f7; color:#1d1d1f; }
+  .ud-table-wrap { scrollbar-width:thin; }
+  
+  /* Apple Buttons */
+  button, .btn-animate-click {
+    border-radius: 980px !important;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .bg-blue-600, .bg-indigo-600, .bg-slate-900 { background-color:#0071e3 !important; }
+  .bg-blue-600:hover, .bg-indigo-600:hover, .bg-slate-900:hover { background-color:#0077ed !important; }
+  .hover\:bg-blue-700:hover { background-color:#0077ed !important; }
+  
+  .btn-animate-click:hover {
+    transform: none;
+    box-shadow: none;
+    opacity: 0.9;
+  }
+  .btn-animate-click:active {
+    transform: scale(0.96);
+    opacity: 0.8;
+  }
+
+  /* Uniform binder Apple style */
+  .uniform-binder{display:flex;gap:8px;overflow-x:auto;padding:8px 4px 0;scrollbar-width:none}
+  .uniform-binder::-webkit-scrollbar{display:none}
+  .uniform-binder-tab{
+    flex:1 0 auto;min-width:112px;min-height:40px;padding:9px 18px;
+    border:1px solid transparent;border-radius:980px;
+    background:#e8e8ed;color:#1d1d1f;font-size:12px;font-weight:500;letter-spacing:-0.01em;line-height:1.1;
+    transition: all .2s ease;
+  }
+  .uniform-binder-tab.active{background:#1d1d1f;color:#fff;box-shadow:none;}
+  .uniform-binder-panel{display:none;background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:18px;box-shadow:0 4px 24px rgba(0,0,0,0.04); margin-top:12px; padding:24px;}
+  .uniform-binder-panel.active{display:block}
+  .uniform-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+  .uniform-field label{display:block;margin-bottom:8px;font-size:12px;font-weight:500;color:#1d1d1f; letter-spacing:-0.01em;}
+  .uniform-field input,.uniform-field select{
+    width:100%;min-height:44px;border:1px solid #d2d2d7;border-radius:12px;padding:10px 14px;
+    background:#fff;color:#1d1d1f;outline:none; font-size:15px;
+    transition: all .2s ease;
+  }
+  .uniform-field input:focus,.uniform-field select:focus{border-color:#0071e3;box-shadow:0 0 0 4px rgba(0,125,250,0.15)}
+  .uniform-form-note{padding:12px 14px;border-radius:12px;background:#f5f5f7;color:#1d1d1f;font-size:12px;line-height:1.4; border:1px solid rgba(0,0,0,0.04);}
+  
+  /* Dashboard tabs Apple */
+  .dash-tab-btn {
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 980px;
+    transition: all 0.2s;
+    color: #86868b;
+    background: #e8e8ed;
+    letter-spacing: -0.01em;
+  }
+  .dash-tab-btn.active {
+    background-color: #1d1d1f;
+    color: #ffffff;
+  }
+
+  /* Bottom dock Apple style */
+  #bottom-dock {
+    background: rgba(255,255,255,0.8) !important;
+    backdrop-filter: saturate(180%) blur(20px);
+    border-top: 1px solid rgba(0,0,0,0.08) !important;
+  }
+  .dock-btn {
+    border-radius: 980px !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.01em !important;
+    color: #86868b !important;
+  }
+  .dock-btn.active { background:#1d1d1f !important; color:#fff !important; }
+  .dock-user-badge { background:#f5f5f7 !important; color:#1d1d1f !important; border-radius:980px !important; border:1px solid rgba(0,0,0,0.06) !important; }
+
+  @media (max-width:767px) {
+    body { padding-bottom:92px; background:#fbfbfd; }
+    .ud-mobile-nav {
+      position:fixed; left:50%; bottom:calc(14px + env(safe-area-inset-bottom));
+      transform:translateX(-50%); z-index:60;
+      display:flex; align-items:center; gap:4px;
+      padding:6px; border-radius:9999px;
+      background:rgba(255,255,255,0.9);
+      border:1px solid rgba(0,0,0,0.08);
+      backdrop-filter:blur(20px) saturate(180%); -webkit-backdrop-filter:blur(20px) saturate(180%);
+      box-shadow:0 8px 24px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04);
+    }
+    .ud-mobile-nav button {
+      display:flex; align-items:center; gap:6px;
+      padding:10px 16px; border-radius:9999px;
+      font-size:12px; font-weight:500; color:#86868b;
+      min-height:auto; white-space:nowrap; border:0; background:transparent;
+      transition:background .2s ease, color .2s ease;
+    }
+    .ud-mobile-nav button i { font-size:13px; }
+    .ud-mobile-nav button.active { background:#1d1d1f; color:#fff; box-shadow:none; }
+    main { padding-top:16px !important;padding-left:16px !important;padding-right:16px !important; }
+    .ud-table-wrap table { min-width:760px; }
+    #task-modal { align-items:flex-end; }
+    #task-modal > div { max-height:92vh;overflow-y:auto;border-radius:24px 24px 0 0;padding:20px; background:#fbfbfd !important; }
+    .uniform-form-grid{grid-template-columns:1fr;gap:16px}.uniform-binder-panel{border-radius:18px}
+  }
+
+  /* === DARK / LIGHT MODE Apple === */
+  body.dark { background:#000; color:#f5f5f7; }
+  body.dark .ud-header { background:rgba(29,29,31,0.8) !important; border-bottom-color: rgba(255,255,255,0.08); }
+  body.dark .ud-header * { color:#f5f5f7 !important; }
+  body.dark .bg-white { background-color:#1d1d1f !important; }
+  body.dark .text-gray-900 { color:#f5f5f7 !important; }
+  body.dark .text-gray-800 { color:#e8e8ed !important; }
+  body.dark .text-gray-700 { color:#a1a1a6 !important; }
+  body.dark .text-gray-600 { color:#86868b !important; }
+  body.dark .text-gray-500 { color:#86868b !important; }
+  body.dark .text-gray-400 { color:#6e6e73 !important; }
+  body.dark .border-gray-200 { border-color:#2c2c2e !important; }
+  body.dark .border { border-color:#2c2c2e !important; }
+  body.dark .bg-gray-50 { background-color:#000 !important; }
+  body.dark .bg-slate-100 { background-color:#000 !important; }
+  body.dark .bg-indigo-50 { background-color:#1c1c1e !important; }
+  body.dark table thead { background-color:#1c1c1e !important; }
+  body.dark .ud-section-card { background:#1c1c1e !important; border-color: rgba(255,255,255,0.08) !important; }
+  body.dark .uniform-binder-tab { background:#2c2c2e; color:#a1a1a6; }
+  body.dark .uniform-binder-tab.active { background:#f5f5f7; color:#000; }
+  body.dark .uniform-binder-panel { background:#1c1c1e; border-color: rgba(255,255,255,0.08); }
+
+</style>
+
+<style id="fix-pointer-final">
+html, body { pointer-events: auto !important; }
+#matrix-filter-section, #matrix-filter-section *, #filter-matrix-department, #btnMatrixDownload { pointer-events: auto !important; }
+
+  /* BOTTOM DOCK - same as header ribbon */
+  #bottom-dock {
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:linear-gradient(135deg,#172554 0%,#1e3a8a 100%);
+    border-top:1px solid rgba(255,255,255,.1);
+    box-shadow:0 -4px 20px rgba(15,23,42,.25);
+    padding:8px 12px;
+    padding-bottom:calc(8px + env(safe-area-inset-bottom));
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+  }
+  #bottom-dock .dock-left { display:flex; align-items:center; gap:4px; }
+  #bottom-dock .dock-right { display:flex; align-items:center; gap:6px; }
+  #bottom-dock .dock-btn {
+    display:flex; align-items:center; gap:6px;
+    padding:9px 14px; border-radius:9999px;
+    font-size:12px; font-weight:600; color:#cbd5e1;
+    border:0; background:rgba(255,255,255,.08);
+    transition:all .15s ease;
+  }
+  #bottom-dock .dock-btn.active { background:#4f46e5; color:#fff; box-shadow:0 4px 12px rgba(79,70,229,.45); }
+  #bottom-dock .dock-btn i { font-size:13px; }
+  #bottom-dock .dock-icon-btn {
+    width:36px; height:36px; display:grid; place-items:center;
+    border-radius:9999px; border:0;
+    background:rgba(255,255,255,.12); color:#fff;
+    transition:all .15s ease;
+  }
+  #bottom-dock .dock-icon-btn.amber { background:#f59e0b; }
+  #bottom-dock .dock-icon-btn.red { background:rgba(239,68,68,.9); }
+  #bottom-dock .dock-user-badge {
+    display:flex; align-items:center; gap:6px;
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.1);
+    padding:6px 10px; border-radius:9999px; color:#fff; font-size:11px; font-weight:700;
+  }
+  body { padding-bottom:78px; }
+  @media (max-width:767px){
+    .ud-mobile-nav { display:none !important; } /* hide old floating */
+    body { padding-bottom:78px; }
+  }
+  @media (min-width:768px){
+    #bottom-dock { padding:10px 24px; }
+    #bottom-dock .dock-btn { padding:8px 16px; font-size:13px; }
+  }
+
+</style>
+
+</head>
+<body class="text-gray-800">
+
+<!-- AUTH OVERLAY -->
+<div id="auth-overlay" class="fixed inset-0 z-[9999] bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <div class="bg-white rounded-[20px] shadow-2xl overflow-hidden">
+      <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 p-6 text-white text-center">
+        <div class="mx-auto w-16 h-16 bg-white/20 rounded-2xl grid place-items-center mb-3"><i class="fa-solid fa-shirt text-2xl"></i></div>
+        <h1 class="text-xl font-bold">Uniform Management</h1>
+        <p class="text-xs text-indigo-200 mt-1">System Lifecycle & Task Queue</p>
+      </div>
+      <div class="p-6 md:p-7">
+        <h2 class="font-bold text-slate-800 mb-1">Login Required</h2>
+        <p class="text-xs text-slate-500 mb-5">Masukkan User ID yang dibuat Admin device ini</p>
+        <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1.5">User ID</label>
+            <input type="text" id="login-user-id" required placeholder="ADMIN / QC01" class="w-full px-4 py-3 border border-slate-300 rounded-xl text-sm font-bold uppercase focus:ring-2 focus:ring-indigo-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1.5">Password</label>
+            <div class="relative">
+              <input type="password" id="login-password" required placeholder="Password" class="w-full px-4 py-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none pr-10">
+              <button type="button" onclick="toggleLoginPass()" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 grid place-items-center text-slate-400"><i id="eye-icon" class="fa-solid fa-eye"></i></button>
+            </div>
+          </div>
+          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-sm shadow">Login</button>
+          <div id="login-error" class="hidden p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl"></div>
+        </form>
+        <div class="mt-6 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+          <p class="text-[11px] font-bold text-amber-800">Default Admin: ADMIN / admin123</p>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="h-7 px-3 rounded-full bg-[#1d1d1f] text-white flex items-center gap-2 text-[10px] font-semibold"><i class="fa-solid fa-circle-user"></i><span id="dock-user-id">MS</span></div>
+</div>
+
+<div id="user-management-modal" class="fixed inset-0 z-[9000] bg-slate-900/60 hidden items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+    <div class="p-5 border-b flex items-center justify-between bg-slate-50 gap-2">
+      <h3 class="font-bold text-slate-800"><i class="fa-solid fa-users-gear mr-2 text-indigo-600"></i>User Management</h3>
+      <div class="flex gap-2">
+        <button onclick="handleChangeAdminPassword()" class="bg-amber-500 hover:bg-amber-600 text-white text-[11px] font-bold px-3 py-1.5 rounded-full">Ganti Pass ADMIN</button>
+        <button onclick="closeUserManagement()" class="w-8 h-8 grid place-items-center bg-slate-200 rounded-full"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+    <div class="p-5 space-y-5 overflow-y-auto">
+      <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+        <h4 class="text-xs font-bold uppercase text-indigo-900 mb-3">Buat User Baru (ID Tidak Bisa Diubah)</h4>
+        <form id="create-user-form" onsubmit="handleCreateUser(event)" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <input type="text" id="new-user-id" required placeholder="USER ID" class="px-3 py-2 border rounded-lg text-sm font-bold uppercase">
+          <input type="text" id="new-user-pass" required placeholder="Password Awal" class="px-3 py-2 border rounded-lg text-sm">
+          <button type="submit" class="bg-indigo-600 text-white font-bold rounded-lg text-sm">Buat User</button>
+        </form>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="exportUsers()" class="flex-1 min-w-[120px] bg-slate-800 text-white text-xs font-bold py-2.5 rounded-lg">Export JSON</button>
+        <label class="flex-1 min-w-[120px] bg-white border text-xs font-bold py-2.5 rounded-lg text-center cursor-pointer">Import (Merge)<input type="file" id="import-users-file" accept=".json" class="hidden" onchange="importUsers(event)"></label>
+        <button onclick="importUsersOverwrite()" class="flex-1 min-w-[120px] bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold py-2.5 rounded-lg">Overwrite</button>
+      </div>
+      <div>
+        <h4 class="text-xs font-bold uppercase text-slate-600 mb-2">Daftar User (<span id="user-count">0</span>)</h4>
+        <div class="border rounded-xl overflow-hidden"><table class="w-full text-sm"><thead class="bg-slate-50 text-[11px] uppercase text-slate-500"><tr><th class="text-left p-2.5">User ID</th><th class="text-left p-2.5">Role</th><th class="text-left p-2.5">Dibuat</th><th class="text-right p-2.5">Aksi</th></tr></thead><tbody id="user-list-body"></tbody></table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="change-pass-modal" class="fixed inset-0 z-[9000] bg-slate-900/50 hidden items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-5">
+    <h3 class="font-bold mb-4">Ganti Password</h3>
+    <form id="change-pass-form" onsubmit="handleChangePassword(event)" class="space-y-3">
+      <div><label class="block text-xs font-bold uppercase text-slate-600 mb-1">Password Lama</label><input type="password" id="old-password" required class="w-full px-3 py-2 border rounded-lg text-sm"></div>
+      <div><label class="block text-xs font-bold uppercase text-slate-600 mb-1">Password Baru</label><input type="password" id="new-password" required minlength="4" class="w-full px-3 py-2 border rounded-lg text-sm"></div>
+      <div class="flex gap-2 pt-2"><button type="button" onclick="closeChangePass()" class="flex-1 bg-slate-100 py-2 rounded-lg text-sm font-bold">Batal</button><button type="submit" class="flex-1 bg-indigo-600 text-white py-2 rounded-lg text-sm font-bold">Simpan</button></div>
+    </form>
+  </div>
+</div>
+
+
+<header class="ud-header text-white shadow-lg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center space-x-3">
+        <div class="bg-indigo-600 p-2 rounded-lg">
+          <i class="fa-solid font-bold text-xl fa-shirt"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight">Uniform Management</h1>
+          <p class="text-xs text-indigo-200">System Lifecycle & Task Queue</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 md:hidden">
+        <button id="theme-toggle-mobile" onclick="toggleTheme()" class="p-2.5 rounded-full bg-indigo-700/60 border border-white/10" title="Mode">
+          <i id="theme-icon-mobile" class="fa-solid fa-moon text-sm"></i>
+        </button>
+      </div>
+      <nav class="hidden md:flex items-center space-x-1">
+        <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition bg-indigo-800">
+          <i class="fa-solid fa-chart-pie mr-1.5"></i> Dashboard
+        </button>
+        <button onclick="switchTab('uniform')" id="tab-btn-uniform" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition">
+          <i class="fa-solid fa-file-pen mr-1.5"></i> Uniform Module
+        </button>
+        <button onclick="switchTab('tailor')" id="tab-btn-tailor" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition">
+          <i class="fa-solid fa-scissors mr-1.5"></i> Tailor Queue
+        </button>
+        <button id="theme-toggle-desktop" onclick="toggleTheme()" class="ml-2 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-800 transition bg-indigo-700/50 border border-white/10" title="Ganti Mode">
+          <i id="theme-icon-desktop" class="fa-solid fa-moon"></i>
+          <span class="ml-1.5 hidden lg:inline" id="theme-label-desktop">Gelap</span>
+        </button>
+      </nav>
+    </div>
+  </div>
+  <div class="md:hidden ud-mobile-nav">
+    <button onclick="switchTab('dashboard')" class="active">
+      <i class="fa-solid fa-chart-pie"></i> Dashboard
+    </button>
+    <button onclick="switchTab('uniform')">
+      <i class="fa-solid fa-file-pen"></i> Uniform
+    </button>
+    <button onclick="switchTab('tailor')">
+      <i class="fa-solid fa-scissors"></i> Tailor
+    </button>
+  </div>
 </header>
 
-<div id="sidebarOverlay" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition"></div>
-<aside id="sidebar" class="sidebar fixed top-0 left-0 h-full w-[86%] max-w-[320px] z-[60] apple-glass-strong flex flex-col rounded-r-[24px] shadow-[20px_0_60px_rgba(0,0,0,.15)]">
-  <div class="h-[52px] px-6 flex items-center justify-between border-b border-black/5">
-    <div class="flex items-center gap-2"><div class="w-6 h-6 rounded-[7px] bg-[#1d1d1f] text-white flex items-center justify-center font-bold text-[10px]">DU</div><span class="text-[13px] font-semibold">Menu</span></div>
-    <button id="closeSidebar" class="w-7 h-7 rounded-full bg-[#f5f5f7] flex items-center justify-center"><i class="fa-solid fa-xmark text-[11px]"></i></button>
-  </div>
-  <div class="flex-1 overflow-y-auto px-3 py-5">
-    <nav class="space-y-1">
-      <button onclick="switchTab('landing')" data-tab="landing" class="menu-item active w-full text-left px-3.5 py-2.5 flex items-center gap-3 text-[13px] font-medium"><i class="fa-solid fa-house w-5 text-[11px] opacity-60"></i> Landing Page</button>
-      <div class="h-4"></div>
-      <div class="px-3.5 pb-2 text-[11px] font-semibold tracking-widest opacity-30 uppercase">Main</div>
-      <button onclick="switchTab('dashboard')" data-tab="dashboard" class="menu-item w-full text-left px-3.5 py-2.5 flex items-center gap-3 text-[13px]"><i class="fa-solid fa-chart-simple w-5 text-[11px] opacity-60"></i> DASHBOARD</button>
-      <div class="pl-10 text-[10px] opacity-40 py-1">Today • Yesterday • This Week • Last Week • This Month • Last Month<br>Range tanggal dropdown</div>
-      <button onclick="switchTab('uniform')" data-tab="uniform" class="menu-item w-full text-left px-3.5 py-2.5 flex items-center gap-3 text-[13px]"><i class="fa-solid fa-shirt w-5 text-[11px] opacity-60"></i> UNIFORM</button>
-      <div class="pl-10 flex gap-1 py-1"><span class="text-[9px] px-2 py-0.5 rounded-full bg-[#f5f5f7] border">Defect</span><span class="text-[9px] px-2 py-0.5 rounded-full bg-[#f5f5f7] border">Received</span><span class="text-[9px] px-2 py-0.5 rounded-full bg-[#f5f5f7] border">Prod</span></div>
-      <button onclick="switchTab('tailor')" data-tab="tailor" class="menu-item w-full text-left px-3.5 py-2.5 flex items-center gap-3 text-[13px]"><i class="fa-solid fa-scissors w-5 text-[11px] opacity-60"></i> TAILOR</button>
-      <button onclick="switchTab('profile')" data-tab="profile" class="menu-item w-full text-left px-3.5 py-2.5 flex items-center gap-3 text-[13px]"><i class="fa-regular fa-user w-5 text-[11px] opacity-60"></i> PROFILE AKUN</button>
-      <div class="h-4"></div>
-      <div class="px-3.5 pb-2 text-[11px] font-semibold tracking-widest opacity-30 uppercase">System</div>
-      <button onclick="switchTab('setting')" data-tab="setting" class="menu-item w-full text-left px-3.5 py-2.5 flex items-center gap-3 text-[13px]"><i class="fa-solid fa-gear w-5 text-[11px] opacity-60"></i> SETTING</button>
-      <div class="pl-10 text-[11px] opacity-40 leading-5">Dark / Light<br>User • Management<br>Ganti Password • Log Out</div>
-    </nav>
-  </div>
-  <div class="p-3 border-t border-black/5">
-    <div class="apple-card p-3 flex items-center gap-3">
-      <div class="w-8 h-8 rounded-full bg-[#1d1d1f] text-white flex items-center justify-center font-semibold text-[11px]">MS</div>
-      <div class="flex-1"><div class="text-[12px] font-medium">ADMIN</div><div class="text-[10px] opacity-50">Sidoarjo • Online</div></div>
-      <div class="w-2 h-2 rounded-full bg-[#30d158]"></div>
-    </div>
-  </div>
-</aside>
-
-<main class="relative z-10 pt-[52px]">
-  <section id="view-landing" class="tab-content active min-h-[92vh] flex flex-col items-center justify-center px-6 text-center">
-    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1d1d1f] text-white text-[11px] font-medium mb-8"><span class="w-1.5 h-1.5 rounded-full bg-[#30d158] animate-pulse"></span> DIGITAL UNIFORM • NEW</div>
-    <h1 class="title-apple">DIGITAL<br>UNIFORM<br>PLATFORM</h1>
-    <p class="mt-6 text-[17px] text-[#6e6e73] max-w-[520px]">Sebuah sistem yang dirancang dengan presisi Apple. Sederhana, mewah, dan ikonik.</p>
-    <div class="mt-8 flex gap-3">
-      <button onclick="switchTab('dashboard')" class="h-11 px-7 rounded-full bg-[#0071e3] text-white text-[14px]">Buka Dashboard</button>
-      <button onclick="switchTab('uniform')" class="h-11 px-7 rounded-full bg-[#e8e8ed] text-[#1d1d1f] text-[14px]">Lihat Uniform</button>
-    </div>
-  </section>
-
-  <div id="umx-root" class="px-4 md:px-8 pb-24">
-    
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
   <!-- DASHBOARD VIEW -->
   <section id="view-dashboard" class="tab-content active space-y-6">
@@ -761,11 +1056,7 @@ body{font-family:var(--apple-font); background:var(--apple-bg); color:var(--appl
   <div class="mt-5 text-center text-[10px] text-slate-400 tracking-wide">
     UNIFORM MANAGEMENT • Simple • Fast • Paperless
   </div>
-
-  </div>
 </main>
-
-
 
 <!-- MODAL POPUP -->
 <div id="task-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
@@ -2081,7 +2372,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 
 <!-- BOTTOM DOCK - same style as header ribbon -->
-<div id="bottom-dock-orig" style="display:none">
+<div id="bottom-dock">
   <div class="dock-left">
     <button onclick="switchTab('dashboard')" id="dock-btn-dashboard" class="dock-btn active"><i class="fa-solid fa-chart-pie"></i> Dashboard</button>
     <button onclick="switchTab('uniform')" id="dock-btn-uniform" class="dock-btn"><i class="fa-solid fa-file-pen"></i> Uniform</button>
@@ -2112,43 +2403,5 @@ document.addEventListener('DOMContentLoaded', ()=>{
 })();
 </script>
 
-
-
-<script>
-// === FIX HALU: 1x body, 1x switchTab yang bener === //
-const sb=document.getElementById('sidebar');
-const ov=document.getElementById('sidebarOverlay');
-function openMenu(){ sb.classList.add('open'); ov.classList.remove('pointer-events-none','opacity-0'); }
-function closeMenu(){ sb.classList.remove('open'); ov.classList.add('opacity-0'); setTimeout(()=>ov.classList.add('pointer-events-none'),300); }
-document.getElementById('hamburger').addEventListener('click', openMenu);
-document.getElementById('closeSidebar').addEventListener('click', closeMenu);
-ov.addEventListener('click', closeMenu);
-
-// Simpan switchTab asli UMX
-const _umxSwitchTab = window.switchTab;
-
-window.switchTab = function(tab){
-  // Tutup semua
-  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
-  if(tab==='landing'){
-    document.getElementById('view-landing').classList.add('active');
-  } else {
-    // Panggil UMX
-    if(typeof _umxSwitchTab==='function'){ try{ _umxSwitchTab(tab); }catch(e){} }
-    let el = document.getElementById('view-'+tab);
-    if(el) el.classList.add('active');
-  }
-  document.querySelectorAll('.menu-item').forEach(b=>b.classList.remove('active'));
-  let btn = document.querySelector(`[data-tab="${tab}"]`);
-  if(btn) btn.classList.add('active');
-  closeMenu();
-};
-
-document.addEventListener('DOMContentLoaded', ()=>{
-  setTimeout(()=>{
-    window.switchTab('landing');
-  }, 400);
-});
-</script>
 </body>
 </html>
