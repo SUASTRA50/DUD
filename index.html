@@ -210,6 +210,14 @@
   body.dark .uniform-binder-tab.active { background:#f5f5f7; color:#000; }
   body.dark .uniform-binder-panel { background:#1c1c1e; border-color: rgba(255,255,255,0.08); }
 
+
+  .analytics-card{background:#fff;border-radius:18px;border:1px solid rgba(0,0,0,0.06);padding:20px;box-shadow:0 4px 16px rgba(0,0,0,0.04)}
+  .analytics-title{font-size:13px;font-weight:600;margin-bottom:16px;display:flex;justify-content:space-between}
+  .chart-wrap{position:relative;height:340px !important;min-height:340px !important;width:100%}
+  .chart-wrap.tall{height:400px !important;min-height:400px !important}
+  .chart-wrap canvas{width:100% !important;height:100% !important}
+  @media(max-width:767px){.chart-wrap{height:280px !important;min-height:280px !important}.chart-wrap.tall{height:320px !important;min-height:320px !important}}
+
 </style>
 
 <style id="fix-pointer-final">
@@ -404,15 +412,15 @@ html, body { pointer-events: auto !important; }
 
     <!-- FILTER RANGE TANGGAL DASHBOARD -->
     
-    <div class="bg-white rounded-[18px] border border-black/5 shadow-[0_4px_16px_rgba(0,0,0,0.04)] p-4">
-      <!-- PRESET TANGGAL APPLE PILL BORDER - like Filter/Reset -->
+    <div class="bg-white rounded-[18px] border border-black/[0.06] shadow-sm p-4">
+      <!-- PRESET TANGGAL - Border Shape seperti Filter/Reset -->
       <div class="flex flex-wrap gap-2 mb-4">
-        <button onclick="setDatePreset('today')" class="preset-btn !inline-flex !items-center !px-4 !py-2 !rounded-full !border !border-[#d2d2d7] !bg-white !text-[#1d1d1f] !text-[13px] !font-medium hover:!bg-[#f5f5f7] hover:!border-[#86868b] !min-h-[36px] !shadow-sm">Today</button>
-        <button onclick="setDatePreset('yesterday')" class="preset-btn !inline-flex !items-center !px-4 !py-2 !rounded-full !border !border-[#d2d2d7] !bg-white !text-[#1d1d1f] !text-[13px] !font-medium hover:!bg-[#f5f5f7] hover:!border-[#86868b] !min-h-[36px] !shadow-sm">Yesterday</button>
-        <button onclick="setDatePreset('thisWeek')" class="preset-btn !inline-flex !items-center !px-4 !py-2 !rounded-full !border !border-[#d2d2d7] !bg-white !text-[#1d1d1f] !text-[13px] !font-medium hover:!bg-[#f5f5f7] hover:!border-[#86868b] !min-h-[36px] !shadow-sm">This Week</button>
-        <button onclick="setDatePreset('lastWeek')" class="preset-btn !inline-flex !items-center !px-4 !py-2 !rounded-full !border !border-[#d2d2d7] !bg-white !text-[#1d1d1f] !text-[13px] !font-medium hover:!bg-[#f5f5f7] hover:!border-[#86868b] !min-h-[36px] !shadow-sm">Last Week</button>
-        <button onclick="setDatePreset('thisMonth')" class="preset-btn !inline-flex !items-center !px-4 !py-2 !rounded-full !border !border-[#d2d2d7] !bg-white !text-[#1d1d1f] !text-[13px] !font-medium hover:!bg-[#f5f5f7] hover:!border-[#86868b] !min-h-[36px] !shadow-sm">This Month</button>
-        <button onclick="setDatePreset('lastMonth')" class="preset-btn !inline-flex !items-center !px-4 !py-2 !rounded-full !border !border-[#d2d2d7] !bg-white !text-[#1d1d1f] !text-[13px] !font-medium hover:!bg-[#f5f5f7] hover:!border-[#86868b] !min-h-[36px] !shadow-sm">Last Month</button>
+        <button onclick="setDatePreset('today')" class="preset-btn inline-flex items-center px-4 py-2 rounded-full border border-[#d2d2d7] bg-white text-[#1d1d1f] text-[13px] font-medium hover:bg-[#f5f5f7] min-h-[36px] shadow-sm">Today</button>
+        <button onclick="setDatePreset('yesterday')" class="preset-btn inline-flex items-center px-4 py-2 rounded-full border border-[#d2d2d7] bg-white text-[#1d1d1f] text-[13px] font-medium hover:bg-[#f5f5f7] min-h-[36px] shadow-sm">Yesterday</button>
+        <button onclick="setDatePreset('thisWeek')" class="preset-btn inline-flex items-center px-4 py-2 rounded-full border border-[#d2d2d7] bg-white text-[#1d1d1f] text-[13px] font-medium hover:bg-[#f5f5f7] min-h-[36px] shadow-sm">This Week</button>
+        <button onclick="setDatePreset('lastWeek')" class="preset-btn inline-flex items-center px-4 py-2 rounded-full border border-[#d2d2d7] bg-white text-[#1d1d1f] text-[13px] font-medium hover:bg-[#f5f5f7] min-h-[36px] shadow-sm">Last Week</button>
+        <button onclick="setDatePreset('thisMonth')" class="preset-btn inline-flex items-center px-4 py-2 rounded-full border border-[#d2d2d7] bg-white text-[#1d1d1f] text-[13px] font-medium hover:bg-[#f5f5f7] min-h-[36px] shadow-sm">This Month</button>
+        <button onclick="setDatePreset('lastMonth')" class="preset-btn inline-flex items-center px-4 py-2 rounded-full border border-[#d2d2d7] bg-white text-[#1d1d1f] text-[13px] font-medium hover:bg-[#f5f5f7] min-h-[36px] shadow-sm">Last Month</button>
       </div>
       <div class="flex flex-col md:flex-row md:items-end gap-3">
         <div id="filter-section-date-grid" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -426,13 +434,13 @@ html, body { pointer-events: auto !important; }
           </div>
         </div>
         <div class="flex gap-2">
-          <button onclick="applyDashboardDateFilter()" class="inline-flex items-center px-5 py-2.5 bg-[#0071e3] hover:bg-[#0077ed] text-white text-[13px] font-medium rounded-full shadow-sm btn-animate-click min-h-[44px]">
+          <button onclick="applyDashboardDateFilter()" class="inline-flex items-center px-4 py-2 bg-[#0071e3] hover:bg-[#0077ed] text-white text-[13px] font-medium rounded-full shadow-sm btn-animate-click">
             <i class="fa-solid fa-filter mr-2"></i> Filter
           </button>
-          <button onclick="resetDashboardDateFilter()" class="inline-flex items-center px-5 py-2.5 bg-white border border-[#d2d2d7] hover:bg-[#f5f5f7] text-[#1d1d1f] text-[13px] font-medium rounded-full shadow-sm btn-animate-click min-h-[44px]">
+          <button onclick="resetDashboardDateFilter()" class="inline-flex items-center px-4 py-2 bg-white border border-[#d2d2d7] hover:bg-[#f5f5f7] text-[#1d1d1f] text-[13px] font-medium rounded-full shadow-sm btn-animate-click">
             <i class="fa-solid fa-rotate-left mr-2"></i> Reset
           </button>
-          <button onclick="refreshData()" class="inline-flex items-center px-5 py-2.5 bg-[#0071e3] hover:bg-[#0077ed] text-white text-[13px] font-medium rounded-full shadow-sm btn-animate-click min-h-[44px]">
+          <button onclick="refreshData()" class="inline-flex items-center px-4 py-2 bg-[#0071e3] hover:bg-[#0077ed] text-white text-[13px] font-medium rounded-full shadow-sm btn-animate-click">
             <i class="fa-solid fa-rotate mr-2"></i> Refresh Data
           </button>
         </div>
@@ -443,7 +451,7 @@ html, body { pointer-events: auto !important; }
 
 
     <!-- METRICS CARD (DIPERBARUI - TAMBAH IN PROGRESS) -->
-    <div id="metrics-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-4">
+    <div id="metrics-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm ud-section-card ud-metric">
         <div class="ud-metric-icon text-indigo-600"><i class="fa-solid fa-triangle-exclamation"></i></div>
         <div class="text-xs font-semibold uppercase text-gray-400">Total Defects</div>
