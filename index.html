@@ -210,43 +210,6 @@
   body.dark .uniform-binder-tab.active { background:#f5f5f7; color:#000; }
   body.dark .uniform-binder-panel { background:#1c1c1e; border-color: rgba(255,255,255,0.08); }
 
-
-  /* Analytics Cards Apple - Proportional height fix */
-  .analytics-card { 
-    background:#fff; 
-    border-radius:18px; 
-    border:1px solid rgba(0,0,0,0.06); 
-    padding:20px 20px 16px; 
-    box-shadow: 0 4px 16px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.02);
-  }
-  .analytics-title { 
-    font-size:13px; font-weight:600; letter-spacing:-0.022em; 
-    color:#1d1d1f; margin-bottom:16px; 
-    display:flex; justify-content:space-between; align-items:center;
-  }
-  .chart-wrap { 
-    position:relative; 
-    height:320px !important; 
-    min-height:320px !important; 
-    width:100%;
-  }
-  .chart-wrap.tall { 
-    height:380px !important; 
-    min-height:380px !important; 
-  }
-  .chart-wrap canvas { 
-    width:100% !important; 
-    height:100% !important; 
-  }
-  /* Credit per Bulan specific - make taller */
-  #chartMonthlyCredit { min-height:360px; }
-  #card-monthly-credit, #chartMonthlyCredit { }
-  
-  @media (max-width:767px){
-    .chart-wrap { height:260px !important; min-height:260px !important; }
-    .chart-wrap.tall { height:300px !important; min-height:300px !important; }
-  }
-
 </style>
 
 <style id="fix-pointer-final">
@@ -441,15 +404,15 @@ html, body { pointer-events: auto !important; }
 
     <!-- FILTER RANGE TANGGAL DASHBOARD -->
     
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-      <!-- PRESET TANGGAL ELEGAN -->
-      <div class="flex flex-wrap gap-1.5 mb-3">
-        <button onclick="setDatePreset('today')" class="preset-btn">Today</button>
-        <button onclick="setDatePreset('yesterday')" class="preset-btn">Yesterday</button>
-        <button onclick="setDatePreset('thisWeek')" class="preset-btn">This Week</button>
-        <button onclick="setDatePreset('lastWeek')" class="preset-btn">Last Week</button>
-        <button onclick="setDatePreset('thisMonth')" class="preset-btn">This Month</button>
-        <button onclick="setDatePreset('lastMonth')" class="preset-btn">Last Month</button>
+    <div class="bg-white rounded-[18px] border border-black/5 shadow-[0_4px_16px_rgba(0,0,0,0.04)] p-4">
+      <!-- PRESET TANGGAL APPLE PILL BORDER - like Filter/Reset -->
+      <div class="flex flex-wrap gap-2 mb-4">
+        <button onclick="setDatePreset('today')" class="preset-btn !inline-flex !items-center !px-4 !py-2 !rounded-full !border !border-[#d2d2d7] !bg-white !text-[#1d1d1f] !text-[13px] !font-medium hover:!bg-[#f5f5f7] hover:!border-[#86868b] !min-h-[36px] !shadow-sm">Today</button>
+        <button onclick="setDatePreset('yesterday')" class="preset-btn !inline-flex !items-center !px-4 !py-2 !rounded-full !border !border-[#d2d2d7] !bg-white !text-[#1d1d1f] !text-[13px] !font-medium hover:!bg-[#f5f5f7] hover:!border-[#86868b] !min-h-[36px] !shadow-sm">Yesterday</button>
+        <button onclick="setDatePreset('thisWeek')" class="preset-btn !inline-flex !items-center !px-4 !py-2 !rounded-full !border !border-[#d2d2d7] !bg-white !text-[#1d1d1f] !text-[13px] !font-medium hover:!bg-[#f5f5f7] hover:!border-[#86868b] !min-h-[36px] !shadow-sm">This Week</button>
+        <button onclick="setDatePreset('lastWeek')" class="preset-btn !inline-flex !items-center !px-4 !py-2 !rounded-full !border !border-[#d2d2d7] !bg-white !text-[#1d1d1f] !text-[13px] !font-medium hover:!bg-[#f5f5f7] hover:!border-[#86868b] !min-h-[36px] !shadow-sm">Last Week</button>
+        <button onclick="setDatePreset('thisMonth')" class="preset-btn !inline-flex !items-center !px-4 !py-2 !rounded-full !border !border-[#d2d2d7] !bg-white !text-[#1d1d1f] !text-[13px] !font-medium hover:!bg-[#f5f5f7] hover:!border-[#86868b] !min-h-[36px] !shadow-sm">This Month</button>
+        <button onclick="setDatePreset('lastMonth')" class="preset-btn !inline-flex !items-center !px-4 !py-2 !rounded-full !border !border-[#d2d2d7] !bg-white !text-[#1d1d1f] !text-[13px] !font-medium hover:!bg-[#f5f5f7] hover:!border-[#86868b] !min-h-[36px] !shadow-sm">Last Month</button>
       </div>
       <div class="flex flex-col md:flex-row md:items-end gap-3">
         <div id="filter-section-date-grid" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -463,13 +426,13 @@ html, body { pointer-events: auto !important; }
           </div>
         </div>
         <div class="flex gap-2">
-          <button onclick="applyDashboardDateFilter()" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm btn-animate-click">
+          <button onclick="applyDashboardDateFilter()" class="inline-flex items-center px-5 py-2.5 bg-[#0071e3] hover:bg-[#0077ed] text-white text-[13px] font-medium rounded-full shadow-sm btn-animate-click min-h-[44px]">
             <i class="fa-solid fa-filter mr-2"></i> Filter
           </button>
-          <button onclick="resetDashboardDateFilter()" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-semibold rounded-lg shadow-sm btn-animate-click">
+          <button onclick="resetDashboardDateFilter()" class="inline-flex items-center px-5 py-2.5 bg-white border border-[#d2d2d7] hover:bg-[#f5f5f7] text-[#1d1d1f] text-[13px] font-medium rounded-full shadow-sm btn-animate-click min-h-[44px]">
             <i class="fa-solid fa-rotate-left mr-2"></i> Reset
           </button>
-          <button onclick="refreshData()" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm btn-animate-click">
+          <button onclick="refreshData()" class="inline-flex items-center px-5 py-2.5 bg-[#0071e3] hover:bg-[#0077ed] text-white text-[13px] font-medium rounded-full shadow-sm btn-animate-click min-h-[44px]">
             <i class="fa-solid fa-rotate mr-2"></i> Refresh Data
           </button>
         </div>
@@ -2440,17 +2403,5 @@ document.addEventListener('DOMContentLoaded', ()=>{
 })();
 </script>
 
-
-<script>
-// Apple chart proportion global fix
-if (window.Chart) {
-  Chart.defaults.maintainAspectRatio = false;
-  Chart.defaults.responsive = true;
-  Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif";
-  Chart.defaults.font.size = 11;
-  Chart.defaults.color = "#86868b";
-}
-</script>
 </body>
-
 </html>
