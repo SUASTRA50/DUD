@@ -82,21 +82,7 @@
     background: #fff !important;
     box-shadow: 0 4px 12px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.02) !important; 
   }
-  
-  .ud-metric { 
-    position:relative;overflow:hidden;
-    min-height:128px; 
-    height: 128px;
-    background:#fff; 
-    border-radius:18px; 
-    border: 1px solid rgba(0,0,0,0.06) !important;
-    display:flex; flex-direction:column; justify-content:space-between;
-    padding:16px !important;
-  }
-  .ud-metric .text-2xl { font-size: 28px !important; font-weight: 700 !important; letter-spacing: -0.04em; line-height:1; margin-top:8px !important; }
-  .ud-metric .text-xs.uppercase { font-size:10px !important; letter-spacing:0.06em !important; font-weight:600 !important; }
-  #metrics-grid .border-l-4 { border-left-width:1px !important; border-left-color: rgba(0,0,0,0.06) !important; }
-
+  .ud-metric { position:relative;overflow:hidden;min-height:112px; background:#fff; border-radius:18px; border: 1px solid rgba(0,0,0,0.04); }
   .ud-metric-icon { position:absolute;right:14px;top:14px;width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:#f5f5f7; color:#1d1d1f; }
   .ud-table-wrap { scrollbar-width:thin; }
   
@@ -224,6 +210,43 @@
   body.dark .uniform-binder-tab.active { background:#f5f5f7; color:#000; }
   body.dark .uniform-binder-panel { background:#1c1c1e; border-color: rgba(255,255,255,0.08); }
 
+
+  /* Analytics Cards Apple - Proportional height fix */
+  .analytics-card { 
+    background:#fff; 
+    border-radius:18px; 
+    border:1px solid rgba(0,0,0,0.06); 
+    padding:20px 20px 16px; 
+    box-shadow: 0 4px 16px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.02);
+  }
+  .analytics-title { 
+    font-size:13px; font-weight:600; letter-spacing:-0.022em; 
+    color:#1d1d1f; margin-bottom:16px; 
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .chart-wrap { 
+    position:relative; 
+    height:320px !important; 
+    min-height:320px !important; 
+    width:100%;
+  }
+  .chart-wrap.tall { 
+    height:380px !important; 
+    min-height:380px !important; 
+  }
+  .chart-wrap canvas { 
+    width:100% !important; 
+    height:100% !important; 
+  }
+  /* Credit per Bulan specific - make taller */
+  #chartMonthlyCredit { min-height:360px; }
+  #card-monthly-credit, #chartMonthlyCredit { }
+  
+  @media (max-width:767px){
+    .chart-wrap { height:260px !important; min-height:260px !important; }
+    .chart-wrap.tall { height:300px !important; min-height:300px !important; }
+  }
+
 </style>
 
 <style id="fix-pointer-final">
@@ -233,7 +256,7 @@ html, body { pointer-events: auto !important; }
   /* BOTTOM DOCK - same as header ribbon */
   #bottom-dock {
     position:fixed; left:0; right:0; bottom:0; z-index:60;
-    background: rgba(255,255,255,0.8) !important; backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+    background:linear-gradient(135deg,#172554 0%,#1e3a8a 100%);
     border-top:1px solid rgba(255,255,255,.1);
     box-shadow:0 -4px 20px rgba(15,23,42,.25);
     padding:8px 12px;
@@ -457,7 +480,7 @@ html, body { pointer-events: auto !important; }
 
 
     <!-- METRICS CARD (DIPERBARUI - TAMBAH IN PROGRESS) -->
-    <div id="metrics-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3" style="grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));">
+    <div id="metrics-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-4">
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm ud-section-card ud-metric">
         <div class="ud-metric-icon text-indigo-600"><i class="fa-solid fa-triangle-exclamation"></i></div>
         <div class="text-xs font-semibold uppercase text-gray-400">Total Defects</div>
@@ -465,28 +488,28 @@ html, body { pointer-events: auto !important; }
         <div class="text-xs text-gray-500 mt-2"><i class="fa-regular fa-clock mr-1"></i> Total Defect Reports</div>
       </div>
 
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l ud-section-card ud-metric">
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-amber-500 ud-section-card ud-metric">
         <div class="ud-metric-icon text-amber-600"><i class="fa-solid fa-hourglass-start"></i></div>
         <div class="text-xs font-semibold uppercase text-amber-600">Open Tasks</div>
         <div class="text-2xl font-bold text-amber-600 mt-1" id="stat-open">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-hourglass-start mr-1"></i> Waiting for Tailor</div>
       </div>
 
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l ud-section-card ud-metric">
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-blue-500 ud-section-card ud-metric">
         <div class="ud-metric-icon text-blue-600"><i class="fa-solid fa-spinner"></i></div>
         <div class="text-xs font-semibold uppercase text-blue-600">In Progress</div>
         <div class="text-2xl font-bold text-blue-600 mt-1" id="stat-inprogress">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-person-digging mr-1"></i> On Tailor Work</div>
       </div>
 
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l ud-section-card ud-metric">
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-emerald-500 ud-section-card ud-metric">
         <div class="ud-metric-icon text-emerald-600"><i class="fa-solid fa-check-double"></i></div>
         <div class="text-xs font-semibold uppercase text-emerald-600">Completed</div>
         <div class="text-2xl font-bold text-emerald-600 mt-1" id="stat-completed">0</div>
         <div class="text-xs text-gray-500 mt-2"><i class="fa-solid fa-check-double mr-1"></i> Repaired Tasks</div>
       </div>
 
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l ud-section-card ud-metric">
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-purple-500 ud-section-card ud-metric">
         <div class="ud-metric-icon text-purple-600"><i class="fa-solid fa-award"></i></div>
         <div class="text-xs font-semibold uppercase text-purple-600">Total Credits</div>
         <div class="text-2xl font-bold text-purple-600 mt-1" id="stat-credits">0</div>
@@ -494,7 +517,7 @@ html, body { pointer-events: auto !important; }
       </div>
 
       <!-- METRIC BARU: TOTAL RECEIVED -->
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l ud-section-card ud-metric">
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-blue-500 ud-section-card ud-metric">
         <div class="ud-metric-icon text-blue-600"><i class="fa-solid fa-box-open"></i></div>
         <div class="text-xs font-semibold uppercase text-blue-600">Total Received</div>
         <div class="text-2xl font-bold text-blue-600 mt-1" id="stat-received-items">0</div>
@@ -2417,5 +2440,17 @@ document.addEventListener('DOMContentLoaded', ()=>{
 })();
 </script>
 
+
+<script>
+// Apple chart proportion global fix
+if (window.Chart) {
+  Chart.defaults.maintainAspectRatio = false;
+  Chart.defaults.responsive = true;
+  Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif";
+  Chart.defaults.font.size = 11;
+  Chart.defaults.color = "#86868b";
+}
+</script>
 </body>
+
 </html>
