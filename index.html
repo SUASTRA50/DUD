@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-<title>Uniform Management</title>
+<title>DIGITAL UNIFORM PLATFORM</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
@@ -121,12 +121,12 @@
   .uniform-binder-panel.active{display:block}
   .uniform-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
   .uniform-field label{display:block;margin-bottom:8px;font-size:12px;font-weight:500;color:#1d1d1f; letter-spacing:-0.01em;}
-  .uniform-field input,.uniform-field select{
+  .uniform-field input,.uniform-field select,.uniform-field textarea{
     width:100%;min-height:44px;border:1px solid #d2d2d7;border-radius:12px;padding:10px 14px;
     background:#fff;color:#1d1d1f;outline:none; font-size:15px;
     transition: all .2s ease;
   }
-  .uniform-field input:focus,.uniform-field select:focus{border-color:#0071e3;box-shadow:0 0 0 4px rgba(0,125,250,0.15)}
+  .uniform-field input:focus,.uniform-field select:focus,.uniform-field textarea:focus{border-color:#0071e3;box-shadow:0 0 0 4px rgba(0,125,250,0.15)}
   .uniform-form-note{padding:12px 14px;border-radius:12px;background:#f5f5f7;color:#1d1d1f;font-size:12px;line-height:1.4; border:1px solid rgba(0,0,0,0.04);}
   
   /* Dashboard tabs Apple */
@@ -279,8 +279,8 @@ html, body { pointer-events: auto !important; }
     <div class="bg-white rounded-[20px] shadow-2xl overflow-hidden">
       <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 p-6 text-white text-center">
         <div class="mx-auto w-16 h-16 bg-white/20 rounded-2xl grid place-items-center mb-3"><i class="fa-solid fa-shirt text-2xl"></i></div>
-        <h1 class="text-xl font-bold">Uniform Management</h1>
-        <p class="text-xs text-indigo-200 mt-1">System Lifecycle & Task Queue</p>
+        <h1 class="text-xl font-bold">DIGITAL UNIFORM PLATFORM</h1>
+        <p class="text-xs text-indigo-200 mt-1">Task Queue Record</p>
       </div>
       <div class="p-6 md:p-7">
         <h2 class="font-bold text-slate-800 mb-1">Login Required</h2>
@@ -359,8 +359,8 @@ html, body { pointer-events: auto !important; }
           <i class="fa-solid font-bold text-xl fa-shirt"></i>
         </div>
         <div>
-          <h1 class="font-bold text-lg leading-tight">Uniform Management</h1>
-          <p class="text-xs text-indigo-200">System Lifecycle & Task Queue</p>
+          <h1 class="font-bold text-lg leading-tight">DIGITAL UNIFORM PLATFORM</h1>
+          <p class="text-xs text-indigo-200">Task Queue Record</p>
         </div>
       </div>
       <div class="flex items-center gap-2 md:hidden">
@@ -404,8 +404,8 @@ html, body { pointer-events: auto !important; }
   <section id="view-dashboard" class="tab-content active space-y-6">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h2 class="text-2xl font-bold text-gray-900">Operational Dashboard</h2>
-        <p class="text-sm text-gray-500">Activity Summary & Real-time Google Sheets Sync.</p>
+        <h2 class="text-2xl font-bold text-gray-900">Ops Dashboard</h2>
+        <p class="text-sm text-gray-500">Activity Summary</p>
       </div>
       
     </div>
@@ -445,8 +445,6 @@ html, body { pointer-events: auto !important; }
           </button>
         </div>
       </div>
-    </div>
-
     </div>
 
 
@@ -529,7 +527,6 @@ html, body { pointer-events: auto !important; }
         </div>
         
       </div>
-    </div>
 
     
     <!-- ADDED: UNIFORM PRODUCTION ANALYTICS DI DASHBOARD BAWAH TAILOR PERFORMANCE -->
@@ -551,9 +548,6 @@ html, body { pointer-events: auto !important; }
           </div>
         </div>
       </div>
-
-      <!-- FILTER DEPARTEMEN KHUSUS MATRIX - TARUH DIBAWAH JUDUL Analisis Uniform Production - Semua Product (Dashboard View) - TIDAK UBAH LAINNYA -->
-      
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <div class="analytics-card">
@@ -580,22 +574,20 @@ html, body { pointer-events: auto !important; }
       </div>
       <div class="grid grid-cols-2 md:grid-cols-5 gap-3" id="dash-production-kpi"></div>
     </div>
-
-    <!-- RECENT ACTIVITY TABBED TABLE (DIPERBARUI DENGAN PILIHAN TAB) -->
- (DIPERBARUI DENGAN PILIHAN TAB) -->
-    
   </section>
 
   <!-- UNIFORM MODULE VIEW -->
   <section id="view-uniform" class="tab-content space-y-6">
     <div>
       <h2 class="text-xl font-bold text-slate-800">Uniform Management</h2>
-      <p class="text-xs text-slate-500 mt-1">Defect, received delivery, and production tracking</p>
+      <p class="text-xs text-slate-500 mt-1">Defect, received delivery, production, inventory, and discard tracking</p>
     </div>
     <div class="uniform-binder" role="tablist">
       <button type="button" class="uniform-binder-tab active" data-ut="defect" onclick="switchUniformTab('defect')"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Report Defects</button>
       <button type="button" class="uniform-binder-tab" data-ut="received" onclick="switchUniformTab('received')"><i class="fa-solid fa-box-open mr-1"></i> Uniform Received</button>
       <button type="button" class="uniform-binder-tab" data-ut="production" onclick="switchUniformTab('production')"><i class="fa-solid fa-shirt mr-1"></i> Uniform Production</button>
+      <button type="button" class="uniform-binder-tab" data-ut="inventory" onclick="switchUniformTab('inventory')"><i class="fa-solid fa-boxes-packing mr-1"></i> Inventory</button>
+      <button type="button" class="uniform-binder-tab" data-ut="discard" onclick="switchUniformTab('discard')"><i class="fa-solid fa-trash-can mr-1"></i> Discard</button>
     </div>
 
     <!-- SUB-PANEL 1: DEFECTS -->
@@ -609,7 +601,7 @@ html, body { pointer-events: auto !important; }
             <p class="text-xs text-gray-500">Uniform staff entry form</p>
           </div>
           <form id="form-new-defect" onsubmit="handleCreateSubmission(event)" class="space-y-4">
-                        <div>
+            <div>
               <label class="block text-xs font-bold uppercase text-indigo-900 mb-1">Input By (Otomatis dari Login)</label>
               <div class="w-full px-3 py-2.5 bg-indigo-50 border border-indigo-200 rounded-lg text-sm font-bold text-indigo-900 flex items-center gap-2">
                 <i class="fa-solid fa-user-check text-indigo-600"></i><span id="defect-input-by-badge">-</span>
@@ -874,9 +866,6 @@ html, body { pointer-events: auto !important; }
           </table>
         </div>
       </div>
-
-      
-
     </section>
 
     <!-- SUB-PANEL 3: PRODUCTION -->
@@ -893,7 +882,7 @@ html, body { pointer-events: auto !important; }
 
       <form id="uniform-production-form" onsubmit="submitUniformProduction(event)">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                    <div class="uniform-field">
+          <div class="uniform-field">
             <label>Input By (Auto) <span class="text-red-500">*</span></label>
             <div class="w-full min-h-[44px] px-3 py-2.5 bg-indigo-50 border border-indigo-200 rounded-[10px] text-sm font-bold text-indigo-900 flex items-center gap-2"><i class="fa-solid fa-user-check text-indigo-600"></i><span id="production-input-by-badge">-</span></div>
             <input type="hidden" name="inputBy" id="production-input-by-hidden" value="">
@@ -1013,10 +1002,237 @@ html, body { pointer-events: auto !important; }
           </table>
         </div>
       </div>
-
-      
-
     </section>
+
+    <!-- SUB-PANEL 4: INVENTORY -->
+    <section id="uniform-panel-inventory" class="uniform-binder-panel p-4 md:p-5">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 grid place-items-center">
+          <i class="fa-solid fa-boxes-packing"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-slate-800">Uniform Inventory</h3>
+          <p class="text-xs text-slate-500">Record stock inventory conditions and details</p>
+        </div>
+      </div>
+
+      <form id="uniform-inventory-form" onsubmit="submitUniformInventory(event)">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="uniform-field">
+            <label>Input By (Auto) <span class="text-red-500">*</span></label>
+            <div class="w-full min-h-[44px] px-3 py-2.5 bg-indigo-50 border border-indigo-200 rounded-[10px] text-sm font-bold text-indigo-900 flex items-center gap-2">
+              <i class="fa-solid fa-user-check text-indigo-600"></i><span id="inventory-input-by-badge">-</span>
+            </div>
+            <input type="hidden" name="inputBy" id="inventory-input-by-hidden" value="">
+          </div>
+          <div class="uniform-field">
+            <label>Department <span class="text-red-500">*</span></label>
+            <select name="department" required>
+              <option value="">-- Choose Department --</option>
+              <option value="Front Office">Front Office</option>
+              <option value="GRE">GRE</option>
+              <option value="GSC">GSC</option>
+              <option value="Club">Club</option>
+              <option value="Concierge">Concierge</option>
+              <option value="Housekeeping">Housekeeping</option>
+              <option value="Laundry">Laundry</option>
+              <option value="Cinnamon">Cinnamon</option>
+              <option value="LiFeng">LiFeng</option>
+              <option value="MO Bar">MO Bar</option>
+              <option value="IRD">IRD</option>
+              <option value="Azure">Azure</option>
+              <option value="Banquet">Banquet</option>
+              <option value="Steward">Steward</option>
+              <option value="Kitchen / Culinary">Kitchen / Culinary</option>
+              <option value="IT">IT</option>
+              <option value="Purchasing">Purchasing</option>
+              <option value="Finance">Finance</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Security">Security</option>
+              <option value="P&C">P&C</option>
+              <option value="Wellness">Wellness</option>
+              <option value="Sales & Executive">Sales & Executive</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block font-bold text-xs uppercase text-slate-600 mb-2">Checklist Items (Klik item untuk input Good, Fair, Bad)</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" id="inventory-items-container">
+            <!-- Dynamically populated via JS or static list -->
+          </div>
+        </div>
+
+        <div class="uniform-field mb-4">
+          <label>Remark / Notes</label>
+          <textarea name="remark" rows="2" placeholder="Catatan tambahan..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+        </div>
+
+        <div class="mt-5 flex justify-end">
+          <button type="submit" id="btn-save-inventory" class="btn-animate-click px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow">
+            <i class="fa-solid fa-floppy-disk mr-2"></i> Save Inventory
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-6">
+        <h4 class="font-bold text-sm text-slate-700 mb-2 flex items-center gap-2"><i class="fa-solid fa-list"></i> Recent Inventory (50)</h4>
+        <div class="ud-table-wrap overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-left">
+            <thead class="bg-slate-50 text-[11px] uppercase font-bold text-slate-500">
+              <tr><th class="py-2.5 px-3">ID</th><th class="py-2.5 px-3">Date</th><th class="py-2.5 px-3">Input By</th><th class="py-2.5 px-3">Dept</th><th class="py-2.5 px-3">Items & Conditions</th><th class="py-2.5 px-3">Remark</th></tr>
+            </thead>
+            <tbody id="uniform-inventory-table-body" class="text-xs"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUB-PANEL 5: DISCARD -->
+    <section id="uniform-panel-discard" class="uniform-binder-panel p-4 md:p-5">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-red-50 text-red-600 grid place-items-center">
+          <i class="fa-solid fa-trash-can"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-slate-800">Uniform Discard</h3>
+          <p class="text-xs text-slate-500">Record items to be discarded and their reasons</p>
+        </div>
+      </div>
+
+      <form id="uniform-discard-form" onsubmit="submitUniformDiscard(event)">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="uniform-field">
+            <label>Input By (Auto) <span class="text-red-500">*</span></label>
+            <div class="w-full min-h-[44px] px-3 py-2.5 bg-indigo-50 border border-indigo-200 rounded-[10px] text-sm font-bold text-indigo-900 flex items-center gap-2">
+              <i class="fa-solid fa-user-check text-indigo-600"></i><span id="discard-input-by-badge">-</span>
+            </div>
+            <input type="hidden" name="inputBy" id="discard-input-by-hidden" value="">
+          </div>
+          <div class="uniform-field">
+            <label>Department <span class="text-red-500">*</span></label>
+            <select name="department" required>
+              <option value="">-- Choose Department --</option>
+              <option value="Front Office">Front Office</option>
+              <option value="GRE">GRE</option>
+              <option value="GSC">GSC</option>
+              <option value="Club">Club</option>
+              <option value="Concierge">Concierge</option>
+              <option value="Housekeeping">Housekeeping</option>
+              <option value="Laundry">Laundry</option>
+              <option value="Cinnamon">Cinnamon</option>
+              <option value="LiFeng">LiFeng</option>
+              <option value="MO Bar">MO Bar</option>
+              <option value="IRD">IRD</option>
+              <option value="Azure">Azure</option>
+              <option value="Banquet">Banquet</option>
+              <option value="Steward">Steward</option>
+              <option value="Kitchen / Culinary">Kitchen / Culinary</option>
+              <option value="IT">IT</option>
+              <option value="Purchasing">Purchasing</option>
+              <option value="Finance">Finance</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Security">Security</option>
+              <option value="P&C">P&C</option>
+              <option value="Wellness">Wellness</option>
+              <option value="Sales & Executive">Sales & Executive</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block font-bold text-xs uppercase text-slate-600 mb-2">Discard Items & Quantity (Minimal Isi 1 Item)</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Trousers</span>
+              <input type="number" name="Trousers" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-red-500">
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Skirt</span>
+              <input type="number" name="Skirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-red-500">
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Shirt</span>
+              <input type="number" name="Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-red-500">
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Blouse</span>
+              <input type="number" name="Blouse" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-red-500">
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Jacket</span>
+              <input type="number" name="Jacket" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-red-500">
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Cook Jacket</span>
+              <input type="number" name="Cook Jacket" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-red-500">
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">T-Shirt</span>
+              <input type="number" name="T-Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-red-500">
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Polo Shirt</span>
+              <input type="number" name="Polo Shirt" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-red-500">
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Apron</span>
+              <input type="number" name="Apron" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-red-500">
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Hat</span>
+              <input type="number" name="Hat" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-red-500">
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Dress</span>
+              <input type="number" name="Dress" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-red-500">
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Vest</span>
+              <input type="number" name="Vest" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-red-500">
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Kitchen Cloth</span>
+              <input type="number" name="Kitchen Cloth" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-red-500">
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Table Cloth</span>
+              <input type="number" name="Table Cloth" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-red-500">
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
+              <span class="text-sm font-medium text-slate-700">Napkin</span>
+              <input type="number" name="Napkin" min="0" placeholder="0" class="w-20 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-red-500">
+            </div>
+          </div>
+        </div>
+
+        <div class="uniform-field mb-4">
+          <label>Reason <span class="text-red-500">*</span></label>
+          <textarea name="reason" required rows="2" placeholder="Alasan pembuangan/discard..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none"></textarea>
+        </div>
+
+        <div class="mt-5 flex justify-end">
+          <button type="submit" id="btn-save-discard" class="btn-animate-click px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow">
+            <i class="fa-solid fa-floppy-disk mr-2"></i> Save Discard
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-6">
+        <h4 class="font-bold text-sm text-slate-700 mb-2 flex items-center gap-2"><i class="fa-solid fa-list"></i> Recent Discard (50)</h4>
+        <div class="ud-table-wrap overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-left">
+            <thead class="bg-slate-50 text-[11px] uppercase font-bold text-slate-500">
+              <tr><th class="py-2.5 px-3">ID</th><th class="py-2.5 px-3">Date</th><th class="py-2.5 px-3">Input By</th><th class="py-2.5 px-3">Dept</th><th class="py-2.5 px-3">Item</th><th class="py-2.5 px-3">Reason</th></tr>
+            </thead>
+            <tbody id="uniform-discard-table-body" class="text-xs"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
   </section>
 
   <!-- TAILOR QUEUE VIEW -->
@@ -1027,7 +1243,7 @@ html, body { pointer-events: auto !important; }
         <p class="text-xs text-gray-500">Manage and track uniform repair progress.</p>
       </div>
       <div class="flex flex-col items-start gap-1">
-                <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3">
           <label class="text-xs font-semibold text-gray-600">Active Tailor Name (Auto):</label>
           <div class="px-3 py-1.5 border border-indigo-300 rounded-lg text-sm font-bold text-indigo-900 bg-indigo-50 flex items-center gap-2">
             <i class="fa-solid fa-user-check text-indigo-600"></i><span id="active-tailor-display">-</span>
@@ -1059,7 +1275,7 @@ html, body { pointer-events: auto !important; }
     <!-- TASK GRID -->
     <div id="tailor-task-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 
-      </section>
+  </section>
 
   <div class="mt-5 text-center text-[10px] text-slate-400 tracking-wide">
     UNIFORM MANAGEMENT • Simple • Fast • Paperless
@@ -1069,1347 +1285,194 @@ html, body { pointer-events: auto !important; }
 <!-- MODAL POPUP -->
 <div id="task-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
   <div class="bg-white rounded-xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
-    <div class="flex justify-between items-center border-b pb-3">
-      <h3 class="font-bold text-gray-800 text-lg" id="modal-task-id">UD-000000</h3>
-      <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-    </div>
-    <div class="space-y-2 text-sm bg-gray-50 p-3 rounded-lg border">
-      <p><strong>Input By (Uniform):</strong> <span id="modal-reporting-staff">-</span></p>
-      <p><strong>Owner & Dept:</strong> <span id="modal-staff-dept">-</span></p>
-      <p><strong>Items / Defect:</strong> <span id="modal-item-defect">-</span></p>
-      <p><strong>Total Credit Weight:</strong> <span id="modal-credit" class="font-bold text-indigo-600">1</span></p>
-      <p><strong>Incoming Remark:</strong> <span id="modal-remarks" class="italic text-gray-600">-</span></p>
-    </div>
-    <form id="form-modal-action" onsubmit="handleModalSubmit(event)" class="space-y-3">
-      <input type="hidden" id="modal-hidden-id">
-      <input type="hidden" id="modal-hidden-target-status">
-      <div id="modal-completion-fields" class="space-y-3 hidden">
-        <div>
-          <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Repair Result</label>
-          <select id="modal-repair-result" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
-            <option value="Stitching Fixed">Stitching Fixed</option>
-            <option value="Button Replaced">Button Replaced</option>
-            <option value="Zipper Replaced">Zipper Replaced</option>
-            <option value="Alteration Completed">Alteration Completed</option>
-            <option value="Replaced / Discarded">Replaced / Discarded</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Tailor Notes</label>
-          <textarea id="modal-tailor-remarks" rows="2" placeholder="Optional notes from the tailor..." class="w-full px-3 py-2 border rounded-lg text-sm"></textarea>
-        </div>
-      </div>
-      <div class="flex justify-end space-x-2 pt-2 border-t">
-        <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded-lg text-sm text-gray-600 hover:bg-gray-100">Cancel</button>
-        <button type="submit" id="modal-submit-btn" class="btn-animate-click px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700">
-          Process Task
-        </button>
-      </div>
-    </form>
+    <!-- Inner content Modal -->
   </div>
 </div>
 
 <script>
-let state = {
-  apiUrl: 'https://script.google.com/macros/s/AKfycbykTM8w-0CIR5x8g4ZD5tI8LtZ_PiExHxIJQioPOD3qmXxSZ84Kxwg9OcZ_zGP3OB0/exec',
-  tasks: [],
-  uniformReceived: [],
-  uniformProduction: [],
-  currentTailorFilter: 'ALL',
-  dashboardDateFilter: { start: null, end: null }
-};
+  // Script pendukung untuk Tab & Form Inventory dan Discard
+  const inventoryItemsList = [
+    "Trousers", "Skirt", "Shirt", "Blouse", "Jacket", "Cook Jacket", 
+    "T-Shirt", "Polo Shirt", "Apron", "Hat", "Dress", "Vest", 
+    "Kitchen Cloth", "Table Cloth", "Napkin"
+  ];
 
-/* === THEME MODE LOGIC === */
-function initTheme(){
-  const saved = localStorage.getItem('um-theme');
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const theme = saved || (prefersDark ? 'dark' : 'light');
-  applyTheme(theme);
-}
-function applyTheme(theme){
-  const isDark = theme === 'dark';
-  document.body.classList.toggle('dark', isDark);
-  const iconD = document.getElementById('theme-icon-desktop');
-  const labelD = document.getElementById('theme-label-desktop');
-  const iconM = document.getElementById('theme-icon-mobile');
-  if(iconD){ iconD.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon'; }
-  if(labelD){ labelD.textContent = isDark ? 'Terang' : 'Gelap'; }
-  if(iconM){ iconM.className = isDark ? 'fa-solid fa-sun text-sm' : 'fa-solid fa-moon text-sm'; }
-  localStorage.setItem('um-theme', theme);
-  const meta = document.querySelector('meta[name="theme-color"]');
-  if(meta) meta.setAttribute('content', isDark ? '#0f172a' : '#172554');
-}
-function toggleTheme(){
-  const isDark = document.body.classList.contains('dark');
-  applyTheme(isDark ? 'light' : 'dark');
-}
+  const inventoryData = [];
+  const discardData = [];
 
-/* === DATE FILTER LOGIC === */
-function parseDateValue(val){
-  if(!val) return null;
-  // val is already YYYY-MM-DD from input date, but data might be various formats
-  // return Date object from input string
-  const d = new Date(val);
-  d.setHours(0,0,0,0);
-  return isNaN(d) ? null : d;
-}
-function parseDataDate(str){
-  if(!str) return null;
-  // If already Date
-  if(str instanceof Date){ 
-    const d = new Date(str); d.setHours(0,0,0,0); return isNaN(d)?null:d; 
-  }
-  // Try direct parse first (ISO, MM/DD/YYYY, etc)
-  let d = new Date(str);
-  if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
-  
-  // Clean string
-  const s = String(str).trim();
-  
-  // Try DD/MM/YYYY or DD-MM-YYYY or MM/DD/YYYY - detect by checking if first part >12
-  const m = s.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
-  if(m){
-    let p1 = parseInt(m[1],10), p2 = parseInt(m[2],10), y = parseInt(m[3],10);
-    if(y<100) y+=2000;
-    // If p1 >12, assume DD/MM, else try MM/DD first then DD/MM
-    let day, month;
-    if(p1>12){ day=p1; month=p2-1; }
-    else if(p2>12){ day=p2; month=p1-1; }
-    else { // ambiguous, try DD/MM as common in ID
-      day=p1; month=p2-1;
-    }
-    d = new Date(y, month, day);
-    if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
-    // Try alternative
-    d = new Date(y, p1-1, p2);
-    if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
-  }
-  
-  // Try YYYY-MM-DD
-  const m2 = s.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
-  if(m2){
-    let y=parseInt(m2[1],10), mo=parseInt(m2[2],10)-1, da=parseInt(m2[3],10);
-    d = new Date(y, mo, da);
-    if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
-  }
-  
-  return null;
-}
-function isWithinDateRange(dataDateStr, start, end){
-  if(!start && !end) return true;
-  if(!dataDateStr) return true;
-  const d = parseDataDate(dataDateStr);
-  if(!d) return true; // if unparseable, show it to avoid data loss
-  if(start && d < start) return false;
-  if(end){
-    const endInclusive = new Date(end); endInclusive.setHours(23,59,59,999);
-    if(d > endInclusive) return false;
-  }
-  return true;
-}
-function getFilteredData(){
-  const start = state.dashboardDateFilter.start;
-  const end = state.dashboardDateFilter.end;
-  if(!start && !end) return { tasks: state.tasks||[], received: state.uniformReceived||[], production: state.uniformProduction||[] };
-  
-  function getDateStr(obj){
-    // Try multiple possible date fields from Sheets
-    return obj.createdAt || obj.date || obj.timestamp || obj.Timestamp || obj.TIMESTAMP || obj.receivedAt || obj.receivedDate || obj.productionDate || obj.prodDate || obj.Date || obj['Created At'] || obj['Tanggal'] || '';
-  }
-  
-  const tasks = (state.tasks||[]).filter(t => isWithinDateRange(getDateStr(t), start, end));
-  const received = (state.uniformReceived||[]).filter(r => isWithinDateRange(getDateStr(r), start, end));
-  const production = (state.uniformProduction||[]).filter(p => isWithinDateRange(getDateStr(p), start, end));
-  return { tasks, received, production };
-}
-function applyDashboardDateFilter(){
-  const sVal = document.getElementById('filter-start-date')?.value || '';
-  const eVal = document.getElementById('filter-end-date')?.value || '';
-  if(sVal && eVal && new Date(sVal) > new Date(eVal)){
-    alert('Tanggal Mulai tidak boleh lebih besar dari Tanggal Akhir');
-    return;
-  }
-  state.dashboardDateFilter.start = sVal ? parseDateValue(sVal) : null;
-  state.dashboardDateFilter.end = eVal ? parseDateValue(eVal) : null;
-  updateFilterInfo();
-  renderDashboard();
-  if(typeof showToast==='function') showToast('Filter tanggal diterapkan');
-}
-function resetDashboardDateFilter(){
-  const sEl = document.getElementById('filter-start-date');
-  const eEl = document.getElementById('filter-end-date');
-  if(sEl) sEl.value = '';
-  if(eEl) eEl.value = '';
-  state.dashboardDateFilter.start = null;
-  state.dashboardDateFilter.end = null;
-  updateFilterInfo();
-  renderDashboard();
-  if(typeof showToast==='function') showToast('Filter direset');
-}
-function updateFilterInfo(){
-  const info = document.getElementById('filter-info');
-  const txt = document.getElementById('filter-info-text');
-  if(!info || !txt) return;
-  const s = state.dashboardDateFilter.start;
-  const e = state.dashboardDateFilter.end;
-  if(!s && !e){ info.classList.add('hidden'); return; }
-  info.classList.remove('hidden');
-  const fmt = (d)=> d ? d.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) : '';
-  if(s && e) txt.textContent = `${fmt(s)} - ${fmt(e)}`;
-  else if(s) txt.textContent = `Dari ${fmt(s)}`;
-  else txt.textContent = `Sampai ${fmt(e)}`;
-}
+  function switchUniformTab(tabName) {
+    document.querySelectorAll('.uniform-binder-tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.uniform-binder-panel').forEach(panel => panel.classList.remove('active'));
 
-document.addEventListener('DOMContentLoaded', () => {
-  initTheme();
-  refreshData();
-});
+    const activeTab = document.querySelector(`.uniform-binder-tab[data-ut="${tabName}"]`);
+    const activePanel = document.getElementById(`uniform-panel-${tabName}`);
 
-function switchTab(tabName) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('bg-indigo-800'));
-  document.getElementById(`view-${tabName}`).classList.add('active');
-  const activeBtn = document.getElementById(`tab-btn-${tabName}`);
-  if (activeBtn) activeBtn.classList.add('bg-indigo-800');
+    if (activeTab) activeTab.classList.add('active');
+    if (activePanel) activePanel.classList.add('active');
 
-  const mobileButtons = document.querySelectorAll('.ud-mobile-nav button');
-  mobileButtons.forEach(btn => btn.classList.remove('active'));
-  const tabIndex = {dashboard:0, uniform:1, tailor:2}[tabName];
-  if (mobileButtons[tabIndex]) mobileButtons[tabIndex].classList.add('active');
-}
-
-// FUNGSI KHUSUS UNTUK MEMINDAHKAN TABEL PADA DASHBOARD
-function switchDashboardTable(tabName) {
-  const dv1=document.getElementById('dash-view-defect'); if(dv1) dv1.classList.add('hidden');
-  const dv2=document.getElementById('dash-view-received'); if(dv2) dv2.classList.add('hidden');
-  const dv3=document.getElementById('dash-view-production'); if(dv3) dv3.classList.add('hidden');
-
-  const dt1=document.getElementById('dash-tab-defect'); if(dt1) dt1.classList.remove('active');
-  const dt2=document.getElementById('dash-tab-received'); if(dt2) dt2.classList.remove('active');
-  const dt3=document.getElementById('dash-tab-production'); if(dt3) dt3.classList.remove('active');
-
-  document.getElementById(`dash-view-${tabName}`).classList.remove('hidden');
-  document.getElementById(`dash-tab-${tabName}`).classList.add('active');
-}
-
-function autoFillCredit() {
-  const defect = document.getElementById('inp-defect').value;
-  const creditInput = document.getElementById('inp-credit');
-  const qtyInput = document.getElementById('inp-quantity');
-  const totalDisplay = document.getElementById('inp-total-credit-display');
-
-  let unitCredit = 1;
-
-  if (defect.includes("Torn Fabric") || defect.includes("Alteration")) {
-    unitCredit = 3;
-  } else if (defect.includes("Zipper") || defect.includes("Cut /Length")) {
-    unitCredit = 2;
-  } else {
-    unitCredit = 1;
-  }
-
-  creditInput.value = unitCredit;
-
-  const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
-  const total = unitCredit * qty;
-  totalDisplay.innerText = total;
-}
-
-async function refreshData() {
-  if (!state.apiUrl) { renderAllViews(); return; }
-  try {
-    const [jsonTasks, jsonRcv, jsonPrd] = await Promise.all([
-      fetch(`${state.apiUrl}?action=getTasks`).then(r=>r.json()).catch(()=>({success:false})),
-      fetch(`${state.apiUrl}?action=getUniformReceived`).then(r=>r.json()).catch(()=>({success:false})),
-      fetch(`${state.apiUrl}?action=getUniformProduction`).then(r=>r.json()).catch(()=>({success:false}))
-    ]);
-    if (jsonTasks.success) state.tasks = jsonTasks.data || [];
-    if (jsonRcv.success) state.uniformReceived = jsonRcv.data || [];
-    if (jsonPrd.success) state.uniformProduction = jsonPrd.data || [];
-  } catch (e) {
-    console.error("API Fetch Error:", e);
-  }
-  renderAllViews();
-}
-
-function renderUniformReceivedTable(){
-  const tbody = document.getElementById('uniform-received-table-body');
-  if(!tbody) return;
-  tbody.innerHTML = '';
-  const list = state.uniformReceived || [];
-  if(list.length===0){
-    tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-xs text-slate-400">Belum ada data Received</td></tr>`;
-    return;
-  }
-  list.slice(0,50).forEach(r=>{
-    const tr = document.createElement('tr');
-    tr.className = 'border-b border-slate-100 hover:bg-slate-50';
-    tr.innerHTML = `
-      <td class="py-2.5 px-3 font-mono text-xs font-bold text-blue-600">${r.uniqueID||'-'}</td>
-      <td class="py-2.5 px-3 text-xs text-slate-500">${r.createdAt||'-'}</td>
-      <td class="py-2.5 px-3 text-xs">${r.inputBy||'-'}</td>
-      <td class="py-2.5 px-3 text-xs font-medium">${r.uniformOwner||'-'}<div class="text-[11px] text-slate-500">${r.department||''}</div></td>
-      <td class="py-2.5 px-3 text-xs"><span class="font-medium">${r.uniformType||'-'}</span> x ${r.quantity||0}</td>
-      <td class="py-2.5 px-3 text-xs">${r.poNumber||'-'}</td>
-      <td class="py-2.5 px-3 text-xs">${r.supplierName||'-'}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-function renderUniformProductionTable(){
-  const tbody = document.getElementById('uniform-production-table-body');
-  if(!tbody) return;
-  tbody.innerHTML = '';
-  const list = state.uniformProduction || [];
-  if(list.length===0){
-    tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-xs text-slate-400">Belum ada data Production</td></tr>`;
-    return;
-  }
-  list.slice(0,50).forEach(r=>{
-    const tr = document.createElement('tr');
-    tr.className = 'border-b border-slate-100 hover:bg-slate-50';
-    tr.innerHTML = `
-      <td class="py-2.5 px-3 font-mono text-xs font-bold text-indigo-600">${r.uniqueID||'-'}</td>
-      <td class="py-2.5 px-3 text-xs text-slate-500">${r.createdAt||'-'}</td>
-      <td class="py-2.5 px-3 text-xs">${r.inputBy||'-'}</td>
-      <td class="py-2.5 px-3 text-xs"><span class="font-medium">${r.uniformType||'-'}</span> x ${r.quantity||0}</td>
-      <td class="py-2.5 px-3 text-xs">${r.department||'-'}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-function showToast(msg){ const t=document.getElementById("toast"); if(!t) return; t.textContent=msg; t.classList.remove("hidden"); t.classList.add("flex"); clearTimeout(window._toastTimer); window._toastTimer=setTimeout(()=>{t.classList.add("hidden");}, 2500); }
-
-function renderAllViews() {
-  renderDashboard();
-  renderUniformTable();
-  renderTailorQueue();
-  renderUniformReceivedTable();
-  renderUniformProductionTable();
-}
-
-/* FUNGSI DASHBOARD UTAMA DENGAN TAMBAHAN DATA RECEIVED DAN PRODUCTION + FILTER TANGGAL + IN_PROGRESS */
-function renderDashboard() {
-  const filtered = getFilteredData();
-  const tasks = filtered.tasks || [];
-  const receivedList = filtered.received || [];
-  const productionList = filtered.production || [];
-
-  // 1. Ringkasan Defect
-  const open = tasks.filter(t => t.status === 'OPEN').length;
-  const inProgress = tasks.filter(t => t.status === 'IN_PROGRESS').length;
-  const completed = tasks.filter(t => t.status === 'COMPLETED').length;
-  const credits = tasks.reduce((acc, curr) => {
-    const qty = Number(curr.quantity) || 1;
-    const totalCredit = curr.totalCredit != null ? Number(curr.totalCredit) : (Number(curr.credit) || 0) * qty;
-    return acc + totalCredit;
-  }, 0);
-
-  // 2. Ringkasan Received Items
-  const totalReceivedItems = receivedList.reduce((acc, r) => acc + (Number(r.quantity) || 0), 0);
-
-  // 3. Ringkasan Production Items
-  const totalProductionItems = productionList.reduce((acc, p) => acc + (Number(p.quantity) || 0), 0);
-
-  // Update KPI Cards UI
-  document.getElementById('stat-today').innerText = tasks.length;
-  document.getElementById('stat-open').innerText = open;
-  const elInProg = document.getElementById('stat-inprogress');
-  if(elInProg) elInProg.innerText = inProgress;
-  document.getElementById('stat-completed').innerText = completed;
-  document.getElementById('stat-credits').innerText = credits;
-  document.getElementById('stat-received-items').innerText = totalReceivedItems;
-  document.getElementById('stat-production-items').innerText = totalProductionItems;
-
-  // Render Tabel 1: Defect Activity Log
-  const tbodyDefect = document.getElementById('dashboard-recent-table');
-  tbodyDefect.innerHTML = '';
-  if(tasks.length === 0) {
-    tbodyDefect.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-xs text-gray-400">Tidak ada data Defect.</td></tr>`;
-  } else {
-    tasks.slice(0, 10).forEach(t => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td class="py-3 px-4 font-mono font-bold text-indigo-600">${t.uniqueID || '-'}</td>
-        <td class="py-3 px-4 text-xs text-gray-500">${t.createdAt || '-'}</td>
-        <td class="py-3 px-4 font-medium text-gray-700">${t.reportingStaff || t.inputBy || '-'}</td>
-        <td class="py-3 px-4 text-xs">
-          <div class="font-bold text-gray-800">${t.staffName || t.staff || '-'}</div>
-          <div class="text-gray-500">${t.department || '-'}</div>
-        </td>
-        <td class="py-3 px-4 text-xs">
-          <span class="font-medium">${t.item || '-'}</span> - <span class="text-rose-500 font-medium">${t.defect || '-'}</span>
-        </td>
-        <td class="py-3 px-4">${getBadgeHtml(t.status)}</td>
-        <td class="py-3 px-4 text-xs text-gray-600">${t.tailor || '-'}</td>
-      `;
-      tbodyDefect.appendChild(tr);
-    });
-  }
-
-  // Render Tabel 2: Uniform Received Log di Dashboard
-  const tbodyReceived = document.getElementById('dashboard-received-table');
-  tbodyReceived.innerHTML = '';
-  if(receivedList.length === 0) {
-    tbodyReceived.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-xs text-gray-400">Tidak ada data Uniform Received.</td></tr>`;
-  } else {
-    receivedList.slice(0, 10).forEach(r => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td class="py-3 px-4 font-mono font-bold text-blue-600">${r.uniqueID || '-'}</td>
-        <td class="py-3 px-4 text-xs text-gray-500">${r.createdAt || '-'}</td>
-        <td class="py-3 px-4 text-xs font-medium">${r.inputBy || '-'}</td>
-        <td class="py-3 px-4 text-xs">
-          <div class="font-bold text-gray-800">${r.uniformOwner || '-'}</div>
-          <div class="text-gray-500">${r.department || '-'}</div>
-        </td>
-        <td class="py-3 px-4 text-xs"><span class="font-semibold">${r.uniformType || '-'}</span> (${r.quantity || 0} Pcs)</td>
-        <td class="py-3 px-4 text-xs font-mono">${r.poNumber || '-'}</td>
-        <td class="py-3 px-4 text-xs text-gray-600">${r.supplierName || '-'}</td>
-      `;
-      tbodyReceived.appendChild(tr);
-    });
-  }
-
-  // Render Tabel 3: Uniform Production Log di Dashboard
-  const tbodyProduction = document.getElementById('dashboard-production-table');
-  tbodyProduction.innerHTML = '';
-  if(productionList.length === 0) {
-    tbodyProduction.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-xs text-gray-400">Tidak ada data Uniform Production.</td></tr>`;
-  } else {
-    productionList.slice(0, 10).forEach(p => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td class="py-3 px-4 font-mono font-bold text-teal-600">${p.uniqueID || '-'}</td>
-        <td class="py-3 px-4 text-xs text-gray-500">${p.createdAt || '-'}</td>
-        <td class="py-3 px-4 text-xs font-medium">${p.inputBy || '-'}</td>
-        <td class="py-3 px-4 text-xs font-bold text-gray-800">${p.department || '-'}</td>
-        <td class="py-3 px-4 text-xs"><span class="font-semibold">${p.uniformType || '-'}</span> (${p.quantity || 0} Pcs)</td>
-      `;
-      tbodyProduction.appendChild(tr);
-    });
-  }
-}
-
-function renderUniformTable() {
-  const tbody = document.getElementById('uniform-submissions-table');
-  tbody.innerHTML = '';
-  state.tasks.forEach(t => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td class="py-2.5 px-3 font-mono font-bold text-indigo-600 text-xs">${t.uniqueID || '-'}</td>
-      <td class="py-2.5 px-3 text-xs font-medium text-gray-700">${t.reportingStaff || t.inputBy || '-'}</td>
-      <td class="py-2.5 px-3 text-xs">
-        <div class="font-bold text-gray-800">${t.staffName || t.staff || '-'}</div>
-        <div class="text-gray-500">${t.department || '-'}</div>
-      </td>
-      <td class="py-2.5 px-3 text-xs">${t.item || '-'} (${t.defect || '-'})</td>
-      <td class="py-2.5 px-3">${getBadgeHtml(t.status)}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-async function handleCreateSubmission(e) {
-  e.preventDefault();
-
-  const unitCredit = Number(document.getElementById('inp-credit').value) || 1;
-  const quantity = Math.max(1, parseInt(document.getElementById('inp-quantity').value, 10) || 1);
-  const totalCredit = unitCredit * quantity;
-
-  const payload = {
-    reportingStaff: document.getElementById('inp-reporting-staff').value,
-    staffName: document.getElementById('inp-staff-name').value,
-    department: document.getElementById('inp-department').value,
-    item: document.getElementById('inp-item').value,
-    defect: document.getElementById('inp-defect').value,
-    quantity: quantity,
-    credit: unitCredit,
-    totalCredit: totalCredit,
-    remarks: document.getElementById('inp-remarks').value
-  };
-
-  const btn = document.getElementById('btn-submit-defect');
-  btn.disabled = true;
-  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Submitting...`;
-
-  if (state.apiUrl) {
-    try {
-      const res = await fetch(state.apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'createSubmission', data: payload })
-      });
-      const textResponse = await res.text();
-      const result = JSON.parse(textResponse);
-      if (result.success) {
-        alert("Report logged! ID: " + result.uniqueID);
-        document.getElementById('form-new-defect').reset();
-        document.getElementById('inp-total-credit-display').innerText = '1';
-        await refreshData();
-      } else {
-        alert("Failed: " + (result.message || "Unknown error"));
-      }
-    } catch (err) {
-      alert("Error submitting: " + err.message);
+    if (tabName === 'inventory') {
+      updateInputByDisplay('inventory-input-by-badge', 'inventory-input-by-hidden');
+    } else if (tabName === 'discard') {
+      updateInputByDisplay('discard-input-by-badge', 'discard-input-by-hidden');
     }
   }
 
-  btn.disabled = false;
-  btn.innerHTML = `<i class="fa-solid fa-paper-plane mr-1"></i> Submit & Generate ID`;
-}
-
-function renderTailorQueue() {
-  const grid = document.getElementById('tailor-task-grid');
-  grid.innerHTML = '';
-
-  const filtered = state.currentTailorFilter === 'ALL'
-    ? state.tasks
-    : state.tasks.filter(t => t.status === state.currentTailorFilter);
-
-  if (filtered.length === 0) {
-    grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400 text-sm bg-white rounded-xl border">No tasks in this status.</div>`;
-    return;
+  function updateInputByDisplay(badgeId, hiddenId) {
+    const user = localStorage.getItem('currentUser') || 'GUEST';
+    const badgeEl = document.getElementById(badgeId);
+    const hiddenEl = document.getElementById(hiddenId);
+    if (badgeEl) badgeEl.innerText = user;
+    if (hiddenEl) hiddenEl.value = user;
   }
 
-  filtered.forEach(t => {
-    const card = document.createElement('div');
-    card.className = "bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-3 flex flex-col justify-between hover:shadow-md transition";
+  function renderInventoryItems() {
+    const container = document.getElementById('inventory-items-container');
+    if (!container) return;
+    container.innerHTML = '';
 
-    let actionButton = '';
-    if (t.status === 'OPEN') {
-      actionButton = `<button onclick="openActionModal('${t.uniqueID}', 'IN_PROGRESS')" class="btn-animate-click w-full py-2 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-lg text-xs transition shadow-sm">
-        <i class="fa-solid fa-play mr-1"></i> Start Task
-      </button>`;
-    } else if (t.status === 'IN_PROGRESS') {
-      actionButton = `<button onclick="openActionModal('${t.uniqueID}', 'COMPLETED')" class="btn-animate-click w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg text-xs transition shadow-sm">
-        <i class="fa-solid fa-check mr-1"></i> Submit Completion
-      </button>`;
-    } else {
-      actionButton = `<div class="text-center py-1.5 bg-emerald-50 text-emerald-700 text-xs rounded-lg font-bold border border-emerald-100"><i class="fa-solid fa-circle-check mr-1"></i> Completed</div>`;
-    }
-
-    const totalCredit = t.totalCredit != null ? t.totalCredit : (Number(t.credit) || 1) * (Number(t.quantity) || 1);
-
-    card.innerHTML = `
-      <div class="space-y-2">
-        <div class="flex justify-between items-start">
-          <span class="font-mono text-sm font-bold text-indigo-600">${t.uniqueID}</span>
-          ${getBadgeHtml(t.status)}
+    inventoryItemsList.forEach((item, index) => {
+      const card = document.createElement('div');
+      card.className = "bg-white border border-slate-200 rounded-lg p-3 cursor-pointer hover:border-indigo-400 transition";
+      card.innerHTML = `
+        <div class="flex items-center justify-between" onclick="toggleInventoryInput(${index})">
+          <span class="text-sm font-medium text-slate-700">${item}</span>
+          <i class="fa-solid fa-chevron-down text-slate-400 text-xs" id="icon-inv-${index}"></i>
         </div>
-        <div class="border-t border-b py-2 space-y-1">
-          <div class="text-xs text-gray-500">Input By: <span class="font-semibold text-gray-700">${t.reportingStaff || t.inputBy || '-'}</span></div>
-          <div class="text-sm font-bold text-gray-800">${t.staffName || t.staff || '-'} <span class="text-xs font-normal text-gray-500">(${t.department || '-'})</span></div>
-          <div class="text-xs font-medium text-indigo-900">${t.item} - ${t.defect}</div>
-          <div class="text-xs font-semibold text-purple-700">Total Credit: ${totalCredit}</div>
-          ${t.remarks ? `<div class="text-xs italic text-gray-500 mt-1 bg-gray-50 p-2 rounded border">"${t.remarks}"</div>` : ''}
+        <div id="inputs-inv-${index}" class="hidden mt-3 grid grid-cols-3 gap-2 border-t pt-2">
+          <div>
+            <label class="block text-[10px] text-gray-500 font-bold">Good</label>
+            <input type="number" min="0" placeholder="Good" name="inv_${item}_good" class="w-full p-1 border rounded text-xs">
+          </div>
+          <div>
+            <label class="block text-[10px] text-gray-500 font-bold">Fair</label>
+            <input type="number" min="0" placeholder="Fair" name="inv_${item}_fair" class="w-full p-1 border rounded text-xs">
+          </div>
+          <div>
+            <label class="block text-[10px] text-gray-500 font-bold">Bad</label>
+            <input type="number" min="0" placeholder="Bad" name="inv_${item}_bad" class="w-full p-1 border rounded text-xs">
+          </div>
         </div>
-      </div>
-      <div class="pt-1">
-        ${actionButton}
-      </div>
-    `;
-    grid.appendChild(card);
-  });
-}
-
-function filterTailorQueue(status) {
-  state.currentTailorFilter = status;
-  document.querySelectorAll('.tailor-filter-btn').forEach(b => {
-    b.classList.remove('bg-indigo-600', 'text-white');
-    b.classList.add('bg-gray-100', 'text-gray-600');
-  });
-  const activeBtn = document.getElementById(`tailor-filter-${status}`);
-  if (activeBtn) {
-    activeBtn.classList.remove('bg-gray-100', 'text-gray-600');
-    activeBtn.classList.add('bg-indigo-600', 'text-white');
-  }
-  renderTailorQueue();
-}
-
-function validateActiveTailor() {
-  const input = document.getElementById('active-tailor-name');
-  const warning = document.getElementById('tailor-name-warning');
-  const isValid = input.value.trim().length > 0;
-  if (isValid) {
-    warning.classList.add('hidden');
-    input.classList.remove('border-red-400');
-  }
-  return isValid;
-}
-
-function openActionModal(id, targetStatus) {
-  const tailorInput = document.getElementById('active-tailor-name');
-  const warning = document.getElementById('tailor-name-warning');
-
-  if (!validateActiveTailor()) {
-    warning.classList.remove('hidden');
-    tailorInput.classList.add('border-red-400');
-    tailorInput.focus();
-    return;
+      `;
+      container.appendChild(card);
+    });
   }
 
-  const task = state.tasks.find(t => t.uniqueID === id);
-  if (!task) return;
-
-  document.getElementById('modal-task-id').innerText = task.uniqueID;
-  document.getElementById('modal-hidden-id').value = task.uniqueID;
-  document.getElementById('modal-hidden-target-status').value = targetStatus;
-  document.getElementById('modal-reporting-staff').innerText = task.reportingStaff || task.inputBy || '-';
-  document.getElementById('modal-staff-dept').innerText = `${task.staffName || task.staff || '-'} (${task.department || '-'})`;
-  document.getElementById('modal-item-defect').innerText = `${task.item} - ${task.defect}`;
-  const totalCredit = task.totalCredit != null ? task.totalCredit : (Number(task.credit) || 1) * (Number(task.quantity) || 1);
-  document.getElementById('modal-credit').innerText = totalCredit;
-  document.getElementById('modal-remarks').innerText = task.remarks || 'None';
-
-  const completionFields = document.getElementById('modal-completion-fields');
-  const submitBtn = document.getElementById('modal-submit-btn');
-
-  if (targetStatus === 'COMPLETED') {
-    completionFields.classList.remove('hidden');
-    submitBtn.innerText = "Submit Completion";
-    submitBtn.className = "btn-animate-click px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700";
-  } else {
-    completionFields.classList.add('hidden');
-    submitBtn.innerText = "Start Task";
-    submitBtn.className = "btn-animate-click px-4 py-2 bg-amber-500 text-white rounded-lg text-sm font-medium hover:bg-amber-600";
-  }
-
-  document.getElementById('task-modal').classList.remove('hidden');
-  document.getElementById('task-modal').classList.add('flex');
-}
-
-function closeModal() {
-  document.getElementById('task-modal').classList.add('hidden');
-  document.getElementById('task-modal').classList.remove('flex');
-}
-
-async function handleModalSubmit(e) {
-  e.preventDefault();
-
-  const tailorInput = document.getElementById('active-tailor-name');
-  if (!validateActiveTailor()) {
-    document.getElementById('tailor-name-warning').classList.remove('hidden');
-    tailorInput.classList.add('border-red-400');
-    tailorInput.focus();
-    return;
-  }
-
-  const uniqueID = document.getElementById('modal-hidden-id').value;
-  const targetStatus = document.getElementById('modal-hidden-target-status').value;
-  const tailorName = tailorInput.value.trim();
-
-  const taskIndex = state.tasks.findIndex(t => t.uniqueID === uniqueID);
-  if (taskIndex !== -1) {
-    state.tasks[taskIndex].status = targetStatus;
-    state.tasks[taskIndex].tailor = tailorName;
-    renderAllViews();
-  }
-  closeModal();
-
-  try {
-    let action = '';
-    let payloadData = {};
-
-    if (targetStatus === 'IN_PROGRESS') {
-      action = 'updateTaskStatus';
-      payloadData = { uniqueID: uniqueID, tailor: tailorName };
-    } else if (targetStatus === 'COMPLETED') {
-      action = 'submitCompletion';
-      const repairResult = document.getElementById('modal-repair-result').value;
-      const tailorRemarks = document.getElementById('modal-tailor-remarks').value;
-      payloadData = { uniqueID: uniqueID, tailor: tailorName, repairResult: repairResult, remarks: tailorRemarks };
-    }
-
-    if (state.apiUrl) {
-      const res = await fetch(state.apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: action, data: payloadData })
-      });
-      const textResponse = await res.text();
-      if (!textResponse.startsWith('<')) {
-        const result = JSON.parse(textResponse);
-        if (!result.success) {
-          refreshData();
-        }
-      } else {
-        refreshData();
+  function toggleInventoryInput(index) {
+    const inputs = document.getElementById(`inputs-inv-${index}`);
+    const icon = document.getElementById(`icon-inv-${index}`);
+    if (inputs) {
+      inputs.classList.toggle('hidden');
+      if (icon) {
+        icon.classList.toggle('fa-chevron-down');
+        icon.classList.toggle('fa-chevron-up');
       }
     }
-  } catch (err) {
-    console.error("Network Error on Sync:", err);
-    refreshData();
   }
-}
 
-function getBadgeHtml(status) {
-  if (status === 'OPEN') return `<span class="badge-open px-2.5 py-1 text-xs font-bold rounded-full">OPEN</span>`;
-  if (status === 'IN_PROGRESS') return `<span class="badge-progress px-2.5 py-1 text-xs font-bold rounded-full">IN PROGRESS</span>`;
-  if (status === 'COMPLETED') return `<span class="badge-completed px-2.5 py-1 text-xs font-bold rounded-full">COMPLETED</span>`;
-  return `<span class="bg-gray-100 text-gray-600 px-2.5 py-1 text-xs font-bold rounded-full">${status}</span>`;
-}
+  function submitUniformInventory(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const inputBy = formData.get('inputBy');
+    const department = formData.get('department');
+    const remark = formData.get('remark');
 
-function filterUniformTable() {
-  const term = document.getElementById('search-uniform-log').value.toLowerCase();
-  const rows = document.querySelectorAll('#uniform-submissions-table tr');
-  rows.forEach(row => {
-    const text = row.innerText.toLowerCase();
-    row.style.display = text.includes(term) ? '' : 'none';
-  });
-}
-
-function switchUniformTab(tabName){
-  document.querySelectorAll('.uniform-binder-tab').forEach(b=>b.classList.toggle('active',b.dataset.ut===tabName));
-  document.querySelectorAll('.uniform-binder-panel').forEach(p=>p.classList.toggle('active',p.id==='uniform-panel-'+tabName));
-}
-
-function uniformFormData(id){
-  const f = document.getElementById(id);
-  const o = {};
-  new FormData(f).forEach((v,k) => o[k] = v);
-  return o;
-}
-
-async function postUniformTransaction(action, data, formId, btnId){
-  const btn = document.getElementById(btnId);
-  if(!btn) return;
-  if(btn.dataset.saving === '1') return;
-  const originalBtnText = btn.innerHTML;
-  btn.dataset.saving = '1';
-  btn.disabled = true;
-  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Saving...`;
-
-  const payload = { 
-    action: action, 
-    data: {
-      ...data,
-      clientTimestamp: new Date().toISOString() 
-    }
-  };
-
-  try{
-    if(!state.apiUrl) throw new Error('API URL belum dikonfigurasi.');
-    const r = await fetch(state.apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
+    let itemsSummary = [];
+    inventoryItemsList.forEach(item => {
+      const good = formData.get(`inv_${item}_good`);
+      const fair = formData.get(`inv_${item}_fair`);
+      const bad = formData.get(`inv_${item}_bad`);
+      if (good || fair || bad) {
+        itemsSummary.push(`${item} (G:${good||0}, F:${fair||0}, B:${bad||0})`);
+      }
     });
+
+    const newRecord = {
+      id: 'INV-' + Date.now().toString().slice(-4),
+      date: new Date().toLocaleDateString(),
+      inputBy,
+      department,
+      items: itemsSummary.join(', ') || 'No Items Added',
+      remark: remark || '-'
+    };
+
+    inventoryData.unshift(newRecord);
+    renderInventoryTable();
+    form.reset();
+    alert('Inventory saved successfully!');
+  }
+
+  function renderInventoryTable() {
+    const tbody = document.getElementById('uniform-inventory-table-body');
+    if (!tbody) return;
+    tbody.innerHTML = inventoryData.map(item => `
+      <tr class="border-b">
+        <td class="py-2 px-3 font-bold">${item.id}</td>
+        <td class="py-2 px-3">${item.date}</td>
+        <td class="py-2 px-3">${item.inputBy}</td>
+        <td class="py-2 px-3">${item.department}</td>
+        <td class="py-2 px-3">${item.items}</td>
+        <td class="py-2 px-3">${item.remark}</td>
+      </tr>
+    `).join('');
+  }
+
+  function submitUniformDiscard(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const inputBy = formData.get('inputBy');
+    const department = formData.get('department');
+    const reason = formData.get('reason');
+
+    let itemsSummary = [];
+    const items = ["Trousers", "Skirt", "Shirt", "Blouse", "Jacket", "Cook Jacket", "T-Shirt", "Polo Shirt", "Apron", "Hat", "Dress", "Vest", "Kitchen Cloth", "Table Cloth", "Napkin"];
     
-    const textResponse = await r.text();
-    let result = {};
-    try {
-      result = JSON.parse(textResponse);
-    } catch(err) {
-      throw new Error("Respon Apps Script tidak valid.");
-    }
-
-    if(result.success === false) throw new Error(result.message || 'Gagal menyimpan transaksi.');
-    
-    document.getElementById(formId).reset(); 
-    if(typeof showToast === 'function'){ showToast('Berhasil disimpan!'); }
-    refreshData(); 
-  } catch(e){
-    console.error("Submit Error:", e);
-    alert('Error submitting: ' + e.message);
-  } finally {
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = originalBtnText;
-      btn.dataset.saving = '0';
-    }
-  }
-}
-
-function submitUniformReceived(e){
-  e.preventDefault();
-  const data = uniformFormData('uniform-received-form');
-  const itemKeys = ['Trousers','Skirt','Shirt','Blouse','Jacket','Cook Jacket','T-Shirt','Polo Shirt','Apron','Hat','Dress','Vest','Kitchen Cloth','Table Cloth','Napkin'];
-  const hasItem = itemKeys.some(k => Number(data[k]) > 0);
-  if(!hasItem){
-    alert('Harap isi minimal satu jumlah item pada "What Received".');
-    return;
-  }
-  postUniformTransaction('createUniformReceived', data, 'uniform-received-form', 'btn-save-received');
-}
-
-function submitUniformProduction(e){
-  e.preventDefault();
-  const data = uniformFormData('uniform-production-form');
-  const itemKeys = ['Trousers','Skirt','Shirt','Blouse','Jacket','Cook Jacket','T-Shirt','Polo Shirt','Apron','Hat','Dress','Vest','Kitchen Cloth','Table Cloth','Napkin'];
-  const hasItem = itemKeys.some(k => Number(data[k]) > 0);
-  if(!hasItem){
-    alert('Harap isi minimal satu jumlah item produksi.');
-    return;
-  }
-  postUniformTransaction('createUniformProduction', data, 'uniform-production-form', 'btn-save-production');
-}
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').then(reg => {
-      console.log('ServiceWorker registered:', reg.scope);
-    }).catch(err => {
-      console.log('ServiceWorker registration failed:', err);
-    });
-  });
-}
-
-/* ===== ADDED ANALYTICS - SAFE HOOK, NO ORIGINAL CODE CHANGED ===== */
-let analyticsCharts={};
-function destroyAnalyticsChart(id){ if(analyticsCharts[id]){ try{analyticsCharts[id].destroy();}catch(e){} delete analyticsCharts[id]; } }
-let _analyticsRunning=false;
-function renderAddedAnalytics(){
-  if(_analyticsRunning) return; _analyticsRunning=true;
-  try{
-    const filtered = typeof getFilteredData==='function' ? getFilteredData() : {tasks: state.tasks||[], received: state.uniformReceived||[], production: state.uniformProduction||[]};
-    const tasks=filtered.tasks||[]; const receivedList=filtered.received||[]; const productionList=filtered.production||[];
-
-    // Inputter
-    const byInputter={}; const byDefect={}; const byInputterDefect={};
-    tasks.forEach(t=>{ const n=(t.reportingStaff||t.inputBy||'Unknown').trim(); byInputter[n]=(byInputter[n]||0)+1; const d=(t.defect||'Unknown').trim(); byDefect[d]=(byDefect[d]||0)+1; if(!byInputterDefect[n]) byInputterDefect[n]={}; byInputterDefect[n][d]=(byInputterDefect[n][d]||0)+1; });
-    const inputLabels=Object.keys(byInputter).sort((a,b)=>byInputter[b]-byInputter[a]);
-    const inputVals=inputLabels.map(k=>byInputter[k]);
-    const elI=document.getElementById('chartInputter'); if(elI){ destroyAnalyticsChart('inputter'); analyticsCharts['inputter']=new Chart(elI,{type:'bar', data:{labels:inputLabels, datasets:[{label:'Input', data:inputVals, backgroundColor:'#4f46e5', borderRadius:6}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}}); }
-    const elD=document.getElementById('chartDefect'); if(elD){ const dLabels=Object.keys(byDefect).sort((a,b)=>byDefect[b]-byDefect[a]).slice(0,8); destroyAnalyticsChart('defect'); analyticsCharts['defect']=new Chart(elD,{type:'doughnut', data:{labels:dLabels, datasets:[{data:dLabels.map(k=>byDefect[k]), backgroundColor:['#ef4444','#f59e0b','#10b981','#3b82f6','#8b5cf6','#ec4899','#06b6d4','#f97316']}]}, options:{responsive:true, maintainAspectRatio:false, cutout:'60%', plugins:{legend:{position:'bottom'}}}}); document.getElementById('defect-summary').innerHTML = dLabels.length? `Terbanyak: <b>${dLabels[0]}</b> (${byDefect[dLabels[0]]}x)` : ''; }
-    document.getElementById('inputter-summary').innerHTML = inputLabels.length? `Top: <b>${inputLabels[0]}</b> (${inputVals[0]}) dari ${inputVals.reduce((a,b)=>a+b,0)}` : '';
-    const itLabel=document.getElementById('inputter-total-label'); if(itLabel) itLabel.textContent=inputVals.reduce((a,b)=>a+b,0)+' total';
-    const defLabel=document.getElementById('defect-total-label'); if(defLabel) defLabel.textContent=Object.values(byDefect).reduce((a,b)=>a+b,0)+' total';
-
-    // Received
-    const recByType={}, recByDept={}, recStack={};
-    receivedList.forEach(r=>{ const dept=r.department||'Unknown'; const type=r.uniformType||r.item||'Unknown'; const q=Number(r.quantity)||0; if(q<=0) return; recByType[type]=(recByType[type]||0)+q; recByDept[dept]=(recByDept[dept]||0)+q; if(!recStack[dept]) recStack[dept]={}; recStack[dept][type]=(recStack[dept][type]||0)+q; });
-    const recLabels=Object.keys(recByType).sort((a,b)=>recByType[b]-recByType[a]);
-    const cRT=document.getElementById('chartReceivedByType'); if(cRT&&recLabels.length){ destroyAnalyticsChart('recType'); analyticsCharts['recType']=new Chart(cRT,{type:'bar', data:{labels:recLabels, datasets:[{data:recLabels.map(k=>recByType[k]), backgroundColor:'#2563eb'}]}, options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}}}); }
-    const cRD=document.getElementById('chartReceivedByDept'); if(cRD&&Object.keys(recByDept).length){ destroyAnalyticsChart('recDept'); analyticsCharts['recDept']=new Chart(cRD,{type:'pie', data:{labels:Object.keys(recByDept), datasets:[{data:Object.values(recByDept), backgroundColor:['#1e3a8a','#2563eb','#60a5fa','#93c5fd']}]}, options:{responsive:true, maintainAspectRatio:false}}); }
-    const cRS=document.getElementById('chartReceivedStacked'); if(cRS){ const depts=Object.keys(recStack); const datasets=recLabels.map((it,i)=>({label:it, data:depts.map(d=>recStack[d][it]||0), backgroundColor:`hsl(${i*30} 70% 55%)`})); destroyAnalyticsChart('recStack'); if(depts.length) analyticsCharts['recStack']=new Chart(cRS,{type:'bar', data:{labels:depts, datasets}, options:{responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true}, y:{stacked:true}}}}); }
-    const recKpi=document.getElementById('received-kpi'); if(recKpi){ const total=Object.values(recByType).reduce((a,b)=>a+b,0); recKpi.innerHTML=Object.entries(recByDept).map(([d,v])=>`<div class="kpi-mini"><div class="text-[10px] font-bold text-blue-600">${d}</div><div class="font-bold">${v}</div></div>`).join('')+`<div class="bg-indigo-500 text-white rounded-xl p-3 shadow-sm border border-indigo-400"><div class="text-[10px] font-bold uppercase tracking-wide">TOTAL RECEIVED</div><div class="font-bold text-lg mt-1">${total}</div></div>`; }
-
-    // Production
-    const prodByType={}, prodByDept={}, prodByMonth={};
-    productionList.forEach(p=>{ const dept=p.department||'General'; const type=p.uniformType||p.item||'Unknown'; const q=Number(p.quantity)||0; if(q<=0) return; prodByType[type]=(prodByType[type]||0)+q; prodByDept[dept]=(prodByDept[dept]||0)+q; const m=(p.createdAt||p.date||'').slice(0,7); if(m){ prodByMonth[m]=(prodByMonth[m]||0)+q; } });
-    const prodLabels=Object.keys(prodByType).sort((a,b)=>prodByType[b]-prodByType[a]);
-    const cPT=document.getElementById('chartProdByType'); if(cPT&&prodLabels.length){ destroyAnalyticsChart('prodType'); analyticsCharts['prodType']=new Chart(cPT,{type:'bar', data:{labels:prodLabels, datasets:[{data:prodLabels.map(k=>prodByType[k]), backgroundColor:'#059669'}]}, options:{responsive:true, maintainAspectRatio:false}}); }
-    const cPTr=document.getElementById('chartProdTrend'); if(cPTr){ const months=Object.keys(prodByMonth).sort(); destroyAnalyticsChart('prodTrend'); if(months.length) analyticsCharts['prodTrend']=new Chart(cPTr,{type:'line', data:{labels:months, datasets:[{label:'Production', data:months.map(m=>prodByMonth[m]), borderColor:'#059669', backgroundColor:'rgba(5,150,105,.15)', fill:true, tension:.4}]}, options:{responsive:true, maintainAspectRatio:false}}); }
-    const cPD=document.getElementById('chartProdByDept'); if(cPD&&Object.keys(prodByDept).length){ destroyAnalyticsChart('prodDept'); analyticsCharts['prodDept']=new Chart(cPD,{type:'doughnut', data:{labels:Object.keys(prodByDept), datasets:[{data:Object.values(prodByDept), backgroundColor:['#065f46','#10b981','#6ee7b7']}]}, options:{responsive:true, maintainAspectRatio:false}}); }
-    const cPDo=document.getElementById('chartProdDonut'); if(cPDo&&prodLabels.length){ destroyAnalyticsChart('prodDonut'); analyticsCharts['prodDonut']=new Chart(cPDo,{type:'polarArea', data:{labels:prodLabels, datasets:[{data:prodLabels.map(k=>prodByType[k]), backgroundColor:prodLabels.map((_,i)=>`hsl(${140+i*20} 65% 55%)`)}]}, options:{responsive:true, maintainAspectRatio:false}}); }
-    const prodKpi=document.getElementById('production-kpi'); if(prodKpi){ const total=Object.values(prodByType).reduce((a,b)=>a+b,0); prodKpi.innerHTML=prodLabels.slice(0,4).map(k=>`<div class="kpi-mini"><div class="text-[10px] font-bold text-emerald-700">${k}</div><div class="font-bold">${prodByType[k]}</div></div>`).join('')+`<div class="bg-emerald-900 text-white rounded-xl p-3"><div class="text-[10px]">TOTAL</div><div class="font-bold">${total}</div></div>`; }
-
-    // Tailor Performance
-    const byTailor={};
-    tasks.forEach(t=>{ const name=(t.tailor||'Unassigned').trim()||'Unassigned'; if(!byTailor[name]) byTailor[name]={open:0,inprog:0,completed:0,credit:0,months:{}}; if(t.status==='OPEN') byTailor[name].open++; else if(t.status==='IN_PROGRESS') byTailor[name].inprog++; else if(t.status==='COMPLETED') byTailor[name].completed++; const cred=t.totalCredit!=null?Number(t.totalCredit):(Number(t.credit)||1)*(Number(t.quantity)||1); byTailor[name].credit+=cred; const m=(t.completedAt||t.createdAt||'').slice(0,7); if(m){ if(!byTailor[name].months[m]) byTailor[name].months[m]=0; if(t.status==='COMPLETED') byTailor[name].months[m]++; } });
-    const tailorNames=Object.keys(byTailor).filter(n=>n!=='Unassigned').sort((a,b)=>byTailor[b].completed - byTailor[a].completed);
-    const ctxTC=document.getElementById('chartTailorCompleted'); if(ctxTC&&tailorNames.length){ destroyAnalyticsChart('tailorCompleted'); analyticsCharts['tailorCompleted']=new Chart(ctxTC,{type:'bar', data:{labels:tailorNames, datasets:[{label:'Completed', data:tailorNames.map(n=>byTailor[n].completed), backgroundColor:'#f59e0b'},{label:'In Prog', data:tailorNames.map(n=>byTailor[n].inprog), backgroundColor:'#3b82f6'},{label:'Open', data:tailorNames.map(n=>byTailor[n].open), backgroundColor:'#e5e7eb'}]}, options:{responsive:true, maintainAspectRatio:false}}); }
-    const ctxCr=document.getElementById('chartTailorCredit'); if(ctxCr&&tailorNames.length){ destroyAnalyticsChart('tailorCredit'); analyticsCharts['tailorCredit']=new Chart(ctxCr,{type:'bar', data:{labels:tailorNames, datasets:[{data:tailorNames.map(n=>byTailor[n].credit), backgroundColor:'#4f46e5'}]}, options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}}}); }
-    const ctxSt=document.getElementById('chartTailorStatus'); if(ctxSt&&tailorNames.length){ destroyAnalyticsChart('tailorStatus'); analyticsCharts['tailorStatus']=new Chart(ctxSt,{type:'doughnut', data:{labels:tailorNames, datasets:[{data:tailorNames.map(n=>byTailor[n].completed), backgroundColor:['#10b981','#f59e0b','#3b82f6']}]}, options:{responsive:true, maintainAspectRatio:false}}); }
-    const lb=document.getElementById('tailor-leaderboard'); if(lb){ lb.innerHTML=tailorNames.slice(0,3).map((n,i)=>{ const medal=['🥇','🥈','🥉'][i]; return `<div class="flex justify-between bg-slate-50 border rounded px-2 py-1 text-[11px]"><span>${medal} ${n}</span><span class="font-bold text-emerald-600">${byTailor[n].credit} cr</span></div>`; }).join(''); }
-    const ctxTr=document.getElementById('chartTailorTrend'); if(ctxTr){ const allMonths=[...new Set(tailorNames.flatMap(n=>Object.keys(byTailor[n].months)))].sort(); if(allMonths.length){ destroyAnalyticsChart('tailorTrend'); const datasets=tailorNames.slice(0,5).map((name,i)=>({label:name, data:allMonths.map(m=>byTailor[name].months[m]||0), borderColor:`hsl(${i*60} 70% 50%)`, tension:.3})); analyticsCharts['tailorTrend']=new Chart(ctxTr,{type:'line', data:{labels:allMonths, datasets}, options:{responsive:true, maintainAspectRatio:false}}); } }
-    const tbody=document.getElementById('tailor-perf-table'); if(tbody){ tbody.innerHTML=tailorNames.map(n=>{ const b=byTailor[n]; const total=b.open+b.inprog+b.completed; const rate=total?Math.round(b.completed/total*100):0; return `<tr class="border-b"><td class="py-1">${n}</td><td class="text-center">${b.open}</td><td class="text-center text-blue-600">${b.inprog}</td><td class="text-center text-emerald-600 font-bold">${b.completed}</td><td class="text-center font-bold">${b.credit}</td><td class="text-center"><span class="px-1.5 py-0.5 rounded-full text-[10px] ${rate>=80?'bg-emerald-100':''}">${rate}%</span></td></tr>`; }).join(''); }
-
-    // Monthly ranking
-    const byMonthTailor={}; tasks.filter(t=>t.status==='COMPLETED').forEach(t=>{ const month=(t.completedAt||t.createdAt||'').slice(0,7); if(!month) return; const tailor=(t.tailor||'Unknown').trim(); if(!byMonthTailor[month]) byMonthTailor[month]={}; if(!byMonthTailor[month][tailor]) byMonthTailor[month][tailor]={completed:0,credit:0}; byMonthTailor[month][tailor].completed++; const cred=t.totalCredit!=null?Number(t.totalCredit):(Number(t.credit)||1)*(Number(t.quantity)||1); byMonthTailor[month][tailor].credit+=cred; });
-    const months=Object.keys(byMonthTailor).sort(); const sel=document.getElementById('ranking-month-filter'); if(sel&&sel.options.length<=1){ months.forEach(m=>{ const o=document.createElement('option'); o.value=m; o.textContent=m; sel.appendChild(o); }); }
-    const selectedMonth=sel?.value||''; const latestMonth=months[months.length-1];
-    const top3Div=document.getElementById('monthly-top3'); if(top3Div&&latestMonth){ const tailors=Object.entries(byMonthTailor[latestMonth]||{}).sort((a,b)=>b[1].credit-a[1].credit).slice(0,3); top3Div.innerHTML=tailors.map(([name,data],i)=>{ const medal=['🥇','🥈','🥉'][i]; return `<div class="flex justify-between bg-yellow-50 border rounded px-2 py-1 text-[11px]"><span>${medal} ${name}</span><span><b>${data.completed}</b> • ${data.credit} cr</span></div>`; }).join(''); }
-    const ctxMR=null; // removed Top 3 chart per request if(ctxMR&&latestMonth){ const tailors=Object.entries(byMonthTailor[latestMonth]||{}).sort((a,b)=>b[1].credit-a[1].credit).slice(0,6); destroyAnalyticsChart('monthlyRanking'); // removed chartMonthlyRanking - analyticsCharts['monthlyRanking']=new Chart(ctxMR,{type:'bar', data:{labels:tailors.map(t=>t[0]), datasets:[{label:'Credit', data:tailors.map(t=>t[1].credit), backgroundColor:'#f59e0b'}]}, options:{responsive:true, maintainAspectRatio:false}}); }
-    const ctxMC=document.getElementById('chartMonthlyCredit'); if(ctxMC&&months.length){ const tailorNamesMonth=[...new Set(months.flatMap(m=>Object.keys(byMonthTailor[m]||{})))].slice(0,5); const datasets=tailorNamesMonth.map((name,i)=>({label:name, data:months.map(m=>byMonthTailor[m]?.[name]?.credit||0), borderColor:`hsl(${i*70} 70% 50%)`, tension:.3})); destroyAnalyticsChart('monthlyCredit'); analyticsCharts['monthlyCredit']=new Chart(ctxMC,{type:'line', data:{labels:months, datasets}, options:{responsive:true, maintainAspectRatio:false}}); }
-    const mBody=document.getElementById('monthly-ranking-table'); if(mBody){ const rows=[]; (selectedMonth?[selectedMonth]:months).forEach(month=>{ const entries=Object.entries(byMonthTailor[month]||{}).sort((a,b)=>b[1].credit-a[1].credit); entries.forEach(([tailor,data],idx)=>{ const rank=idx+1; const bonus=rank===1?100:rank===2?50:rank===3?25:0; rows.push(`<tr class="border-b hover:bg-slate-50"><td class="py-2 px-3 text-[11px] text-slate-600">${month}</td><td class="py-2 px-3 font-medium text-slate-800 truncate">${tailor}</td><td class="text-center py-2 px-3"><span class="bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-0.5 rounded-full font-bold text-[11px]">${data.completed}</span></td></tr>`); }); }); mBody.innerHTML=rows.join('')||'<tr><td colspan=3 class="text-center py-3 text-gray-400">Tidak ada data</td></tr>'; }
-
-  }catch(e){ console.error('Analytics error',e); }
-  finally{ _analyticsRunning=false; }
-}
-
-// Safe wrapper for original functions
-(function(){
-  const origDash = window.renderDashboard;
-  if(origDash){
-    window.renderDashboard = function(){ try{ origDash.apply(this,arguments); }catch(e){ console.error(e);} setTimeout(renderAddedAnalytics,100); };
-  }
-  const origAll = window.renderAllViews;
-  if(origAll){
-    window.renderAllViews = function(){ try{ origAll.apply(this,arguments); }catch(e){} setTimeout(renderAddedAnalytics,150); };
-  }
-  const origTailor = window.renderTailorQueue;
-  if(origTailor){
-    window.renderTailorQueue = function(){ try{ origTailor.apply(this,arguments); }catch(e){} setTimeout(renderAddedAnalytics,100); };
-  }
-})();
-
-let autoRefreshInterval=null;
-function toggleAutoRefresh(enabled){
-  if(autoRefreshInterval) clearInterval(autoRefreshInterval);
-  const label=document.getElementById('auto-refresh-countdown');
-  if(!enabled){ if(label) label.textContent=''; return; }
-  let c=30; if(label) label.textContent='(30s)';
-  autoRefreshInterval=setInterval(()=>{ c--; if(label) label.textContent=`(${c}s)`; if(c<=0){ c=30; if(typeof refreshData==='function') refreshData(); } },1000);
-}
-
-async function exportDashboardPDF(){ const {jsPDF}=window.jspdf; const doc=new jsPDF('p','mm','a4'); doc.text('Dashboard Analytics',10,15); const el=document.getElementById('dashboard-analytics-section'); if(!el) return; const canvas=await html2canvas(el,{scale:2}); const img=canvas.toDataURL('image/png'); doc.addImage(img,'PNG',10,20,190, canvas.height*190/canvas.width); doc.save('Dashboard.pdf'); }
-async function exportTailorPDF(){ const {jsPDF}=window.jspdf; const doc=new jsPDF('l','mm','a4'); doc.text('Tailor Performance',10,15); const el=document.getElementById('tailor-performance-section'); const canvas=await html2canvas(el,{scale:1.2}); const img=canvas.toDataURL('image/png'); doc.addImage(img,'PNG',10,20,277, canvas.height*277/canvas.width); doc.save('Tailor.pdf'); }
-function exportAllExcel(){
-  const wb=XLSX.utils.book_new();
-  const filtered = typeof getFilteredData==='function' ? getFilteredData() : {tasks: state.tasks||[], received: state.uniformReceived||[], production: state.uniformProduction||[]};
-  const tasks=filtered.tasks||[];
-  const byInputter={}; const byDefect={}; tasks.forEach(t=>{ const n=(t.reportingStaff||t.inputBy||'Unknown'); byInputter[n]=(byInputter[n]||0)+1; const d=(t.defect||'Unknown'); byDefect[d]=(byDefect[d]||0)+1; });
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(Object.entries(byInputter).map(([k,v])=>({Nama:k, Jumlah:v}))), 'Inputter');
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(Object.entries(byDefect).map(([k,v])=>({Defect:k, Jumlah:v}))), 'Defect');
-  const recByType={}; (filtered.received||[]).forEach(r=>{ const t=r.uniformType||'Unknown'; const q=Number(r.quantity)||0; recByType[t]=(recByType[t]||0)+q; });
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(Object.entries(recByType).map(([k,v])=>({Jenis:k, Qty:v}))), 'Received');
-  const prodByType={}; (filtered.production||[]).forEach(p=>{ const t=p.uniformType||'Unknown'; const q=Number(p.quantity)||0; prodByType[t]=(prodByType[t]||0)+q; });
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(Object.entries(prodByType).map(([k,v])=>({Product:k, Qty:v}))), 'Production');
-  const byTailor={}; tasks.forEach(t=>{ const tl=t.tailor||'Unassigned'; if(!byTailor[tl]) byTailor[tl]={completed:0,credit:0}; if(t.status==='COMPLETED') byTailor[tl].completed++; const cred=t.totalCredit!=null?Number(t.totalCredit):(Number(t.credit)||1); byTailor[tl].credit+=cred; });
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(Object.entries(byTailor).map(([k,v])=>({Tailor:k, Completed:v.completed, Credit:v.credit}))), 'Tailor');
-  XLSX.writeFile(wb, 'Analytics-'+new Date().toISOString().slice(0,10)+'.xlsx');
-}
-function renderMonthlyRanking(){ renderAddedAnalytics(); }
-function exportTailorMonthlyExcel(){ exportAllExcel(); }
-
-window.addEventListener('load', ()=>{ setTimeout(renderAddedAnalytics, 1000); });
-
-
-/* ADDED DASHBOARD PRODUCTION CHARTS - TYPE MENARIK SESUAI ANALISIS */
-function renderDashboardProduction(){
-  try{
-    const filtered = typeof getFilteredData==='function' ? getFilteredData() : {production: state.uniformProduction||[]};
-    const productionList=filtered.production||[];
-    const prodByType={}, prodByDept={}, prodByMonth={};
-    productionList.forEach(p=>{ const dept=p.department||'General'; const type=p.uniformType||p.item||'Unknown'; const q=Number(p.quantity)||0; if(q<=0) return; prodByType[type]=(prodByType[type]||0)+q; prodByDept[dept]=(prodByDept[dept]||0)+q; const m=(p.createdAt||p.date||'').slice(0,7); if(m) prodByMonth[m]=(prodByMonth[m]||0)+q; });
-    const prodLabels=Object.keys(prodByType).sort((a,b)=>prodByType[b]-prodByType[a]);
-    const c1=document.getElementById('chartDashProdByType'); if(c1&&prodLabels.length){ destroyAnalyticsChart('dashProdType'); analyticsCharts['dashProdType']=new Chart(c1,{type:'bar', data:{labels:prodLabels, datasets:[{label:'Produced', data:prodLabels.map(k=>prodByType[k]), backgroundColor:prodLabels.map((_,i)=>`hsl(${150+i*18} 70% 50%)`), borderRadius:8, borderSkipped:false}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true, grid:{color:'#f1f5f9'}}, x:{grid:{display:false}}}}}); }
-    const c2=document.getElementById('chartDashProdTrend'); if(c2){ const months=Object.keys(prodByMonth).sort(); if(months.length){ destroyAnalyticsChart('dashProdTrend'); analyticsCharts['dashProdTrend']=new Chart(c2,{type:'line', data:{labels:months, datasets:[{label:'Production', data:months.map(m=>prodByMonth[m]), borderColor:'#059669', backgroundColor:'rgba(16,185,129,0.18)', fill:true, tension:0.45, pointRadius:5, pointBackgroundColor:'#059669'}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}}); } }
-    const c3=document.getElementById('chartDashProdByDept'); if(c3&&Object.keys(prodByDept).length){ destroyAnalyticsChart('dashProdDept'); analyticsCharts['dashProdDept']=new Chart(c3,{type:'doughnut', data:{labels:Object.keys(prodByDept), datasets:[{data:Object.values(prodByDept), backgroundColor:['#065f46','#059669','#10b981','#34d399','#6ee7b7','#a7f3d0'], borderWidth:0}]}, options:{responsive:true, maintainAspectRatio:false, cutout:'58%', plugins:{legend:{position:'bottom', labels:{boxWidth:12, font:{size:11}}}}}}); }
-    const c4=document.getElementById('chartDashProdDonut'); if(c4&&prodLabels.length){ destroyAnalyticsChart('dashProdDonut'); analyticsCharts['dashProdDonut']=new Chart(c4,{type:'polarArea', data:{labels:prodLabels, datasets:[{data:prodLabels.map(k=>prodByType[k]), backgroundColor:prodLabels.map((_,i)=>`hsl(${160+i*22} 70% ${55+i%2*5}%)`), borderWidth:0}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:10, font:{size:10}}}}}}); }
-    const kpi=document.getElementById('dash-production-kpi'); if(kpi){ const total=Object.values(prodByType).reduce((a,b)=>a+b,0); kpi.innerHTML=prodLabels.slice(0,4).map(k=>`<div class="kpi-mini border-emerald-100 bg-emerald-50"><div class="text-[10px] font-bold text-emerald-700 uppercase">${k}</div><div class="text-lg font-bold text-slate-800">${prodByType[k]}</div><div class="text-[10px] text-gray-500">${total?Math.round(prodByType[k]/total*100):0}%</div></div>`).join('')+`<div class="bg-emerald-900 text-white rounded-xl p-3"><div class="text-[10px] opacity-70">TOTAL PRODUCED</div><div class="text-lg font-bold">${total}</div><div class="text-[10px] opacity-60">${prodLabels.length} jenis product</div></div>`; }
-    const sum=document.getElementById('dash-prod-summary'); if(sum){ const total=Object.values(prodByType).reduce((a,b)=>a+b,0); sum.innerHTML = prodLabels.length? `Top: <b>${prodLabels[0]}</b> ${prodByType[prodLabels[0]]} pcs (${total?Math.round(prodByType[prodLabels[0]]/total*100):0}% dari total) • Rata-rata ${prodLabels.length?Math.round(total/prodLabels.length):0} pcs/jenis` : 'Tidak ada data'; }
-  }catch(e){ console.error('dash prod error',e); }
-}
-// Hook into main analytics
-const _origRenderAdded2 = window.renderAddedAnalytics;
-window.renderAddedAnalytics = function(){ if(typeof _origRenderAdded2==='function') _origRenderAdded2(); renderDashboardProduction(); };
-
-</script>
-<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-sm px-5 py-2.5 rounded-full shadow-lg hidden z-[100] transition-all">Berhasil</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  const s=document.getElementById('filter-start-date');
-  const e=document.getElementById('filter-end-date');
-  if(s&&e){
-    const ps=s.closest('div'); const pe=e.closest('div');
-    if(ps&&pe&&ps.parentElement&&!document.getElementById('mobile-date-grid')){
-      const w=document.createElement('div'); w.id='mobile-date-grid'; w.className='grid grid-cols-2 gap-2 mb-2';
-      w.style.display='grid'; w.style.gridTemplateColumns='1fr 1fr';
-      ps.parentElement.insertBefore(w, ps); w.appendChild(ps); w.appendChild(pe);
-    }
-  }
-  // TOTAL PRODUCTION card removed per request
-});
-</script>
-
-
-<script>
-function setDatePreset(preset){
-  const startInput = document.getElementById('filter-start-date');
-  const endInput = document.getElementById('filter-end-date');
-  if(!startInput || !endInput) return;
-  
-  const today = new Date();
-  let start = new Date(today);
-  let end = new Date(today);
-  
-  switch(preset){
-    case 'today':
-      break;
-    case 'yesterday':
-      start.setDate(today.getDate()-1);
-      end.setDate(today.getDate()-1);
-      break;
-    case 'thisWeek':
-      const day = today.getDay();
-      const diff = day === 0 ? 6 : day - 1;
-      start.setDate(today.getDate() - diff);
-      break;
-    case 'lastWeek':
-      const d = today.getDay();
-      const diffLast = d === 0 ? 6 : d - 1;
-      end.setDate(today.getDate() - diffLast - 1);
-      start.setDate(today.getDate() - diffLast - 7);
-      break;
-    case 'thisMonth':
-      start.setDate(1);
-      break;
-    case 'lastMonth':
-      start = new Date(today.getFullYear(), today.getMonth()-1, 1);
-      end = new Date(today.getFullYear(), today.getMonth(), 0);
-      break;
-  }
-  
-  const toISO = (date) => date.toISOString().split('T')[0];
-  startInput.value = toISO(start);
-  endInput.value = toISO(end);
-  
-  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
-  if(event && event.target) event.target.classList.add('active');
-  
-  if(typeof applyDashboardDateFilter === 'function'){
-    applyDashboardDateFilter();
-  }
-}
-</script>
-
-
-<!-- MATRIX REPORT EXCEL DOWNLOAD - TAMBAHAN BARU -->
-
-
-
-<script>
-// TAMBAHAN SAJA - TIDAK UBAH CODE LAIN
-function downloadProductionMatrixExcel(){
-  try{
-    let prodByDate = [];
-    try{
-      if(typeof getFilteredData==='function'){
-        const f=getFilteredData();
-        if(f && f.production) prodByDate=f.production;
+    items.forEach(item => {
+      const qty = formData.get(item);
+      if (qty && parseInt(qty) > 0) {
+        itemsSummary.push(`${item}: ${qty}`);
       }
-    }catch(e){}
-    if(!prodByDate.length && typeof state!=='undefined' && state.uniformProduction) prodByDate=state.uniformProduction;
-    if(!prodByDate.length){ alert('Data kosong. Klik Refresh Data dulu.'); return; }
-
-    const deptEl=document.getElementById('filter-matrix-department');
-    const deptMatrix=deptEl?deptEl.value.trim():'';
-    const order=["Trousers","Shirt","Skirt","Blouse","Jacket","Dress","Vest","Polo Shirt","Cook Jacket","Napkin","Kitchen Cloth","Apron","Table Cloth"];
-    function parseDate(s){
-      if(!s) return null;
-      s=s.toString().trim().slice(0,10);
-      if(!s) return null;
-      var isoPat=/^\d{4}-\d{2}-\d{2}$/;
-      if(isoPat.test(s)){ var d=new Date(s); return isNaN(d)?null:d; }
-      var m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
-      if(m){ var day=parseInt(m[1],10), mo=parseInt(m[2],10)-1, yr=parseInt(m[3],10); if(yr<100) yr+=2000; var dd=new Date(yr,mo,day); return isNaN(dd)?null:dd; }
-      var dd=new Date(s); return isNaN(dd)?null:dd;
-    }
-    function toISO(d){ if(!d||isNaN(d)) return null; return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-    function fmt(d){ if(!d||isNaN(d)) return ''; try{ return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'}).replace(/ /g,'-'); }catch(e){ return toISO(d)||''; } }
-
-    var dateMap={};
-    prodByDate.forEach(function(p){
-      var raw=(p.date||p.productionDate||p.createdAt||'').toString();
-      var d=parseDate(raw);
-      if(!d) return;
-      var iso=toISO(d);
-      if(iso) dateMap[iso]=d;
     });
-    var dateEntries=Object.entries(dateMap).sort(function(a,b){ return a[0].localeCompare(b[0]); });
-    var dateList=dateEntries.map(function(e){ return e[1]; });
 
-    var sEl=document.getElementById('filter-start-date');
-    var eEl=document.getElementById('filter-end-date');
-    var startStr=sEl&&sEl.value?sEl.value:'';
-    var endStr=eEl&&eEl.value?eEl.value:'';
-    if(startStr && endStr){
-      var sDate=parseDate(startStr);
-      var eDate=parseDate(endStr);
-      if(sDate && eDate){
-        var cur=new Date(sDate); cur.setHours(0,0,0,0);
-        var end=new Date(eDate); end.setHours(0,0,0,0);
-        dateList=[];
-        while(cur<=end){ dateList.push(new Date(cur)); cur.setDate(cur.getDate()+1); }
-      }
-    }
-    if(!dateList.length){ alert('Tanggal tidak terbaca'); return; }
-
-    var wsData=[];
-    wsData.push(['', ...dateList.map(function(d){ return fmt(d); })]);
-
-    if(!deptMatrix){
-      var allDepts=[...new Set(prodByDate.map(function(p){ return (p.department||p.dept||'').toString().trim(); }).filter(Boolean))].sort(function(a,b){ return a.toLowerCase().localeCompare(b.toLowerCase()); });
-      if(!allDepts.length) allDepts=['Unknown'];
-      allDepts.forEach(function(deptName){
-        var filteredDept = prodByDate.filter(function(p){ return (p.department||p.dept||'').toString().trim().toLowerCase()===deptName.toLowerCase(); });
-        if(!filteredDept.length) return;
-        var typesInData=[...new Set(filteredDept.map(function(p){ return (p.uniformType||p.item||'').trim(); }).filter(Boolean))];
-        var allTypes=[...order.filter(function(t){ return typesInData.includes(t); }), ...typesInData.filter(function(t){ return !order.includes(t); })];
-        var map={}; allTypes.forEach(function(t){ map[t]={}; });
-        filteredDept.forEach(function(p){
-          var t=(p.uniformType||p.item||'').trim();
-          var raw=(p.date||p.productionDate||p.createdAt||'').toString();
-          var d=parseDate(raw);
-          if(!t||!d) return;
-          var iso=toISO(d);
-          if(!map[t]) map[t]={};
-          map[t][iso]=(map[t][iso]||0)+(Number(p.quantity)||0);
-        });
-        wsData.push([deptName]);
-        allTypes.forEach(function(t){
-          var row=[t];
-          dateList.forEach(function(d){ row.push(map[t]?.[toISO(d)]||''); });
-          wsData.push(row);
-        });
-        wsData.push([]);
-      });
-    } else {
-      var filtered = prodByDate.filter(function(p){ return (p.department||p.dept||'').toString().trim().toLowerCase()===deptMatrix.toLowerCase(); });
-      if(!filtered.length){ alert('Tidak ada data dept '+deptMatrix); return; }
-      var typesInData=[...new Set(filtered.map(function(p){ return (p.uniformType||p.item||'').trim(); }).filter(Boolean))];
-      var allTypes=[...order.filter(function(t){ return typesInData.includes(t); }), ...typesInData.filter(function(t){ return !order.includes(t); })];
-      var map={}; allTypes.forEach(function(t){ map[t]={}; });
-      filtered.forEach(function(p){
-        var t=(p.uniformType||p.item||'').trim();
-        var raw=(p.date||p.productionDate||p.createdAt||'').toString();
-        var d=parseDate(raw);
-        if(!t||!d) return;
-        var iso=toISO(d);
-        if(!map[t]) map[t]={};
-        map[t][iso]=(map[t][iso]||0)+(Number(p.quantity)||0);
-      });
-      allTypes.forEach(function(t){
-        var row=[t];
-        dateList.forEach(function(d){ row.push(map[t]?.[toISO(d)]||''); });
-        wsData.push(row);
-      });
-    }
-
-    if(typeof XLSX==='undefined'){ alert('Library XLSX belum load'); return; }
-    var ws=XLSX.utils.aoa_to_sheet(wsData);
-    ws['!cols']=[{wch:18}, ...dateList.map(function(){ return {wch:12}; })];
-    var wb=XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Production Matrix');
-    var fileName='Production_Matrix_'+(startStr||'all')+'_to_'+(endStr||'all')+(deptMatrix?'_'+deptMatrix:'_AllDepts')+'.xlsx';
-    XLSX.writeFile(wb, fileName);
-  }catch(e){
-    console.error(e);
-    alert('Error: '+e.message);
-  }
-}
-
-function populateMatrixDeptFilter(){
-  try{
-    var prod=(typeof state!=='undefined'&&state.uniformProduction)?state.uniformProduction:[];
-    if(!prod||!prod.length){
-      setTimeout(populateMatrixDeptFilter, 1000);
+    if (itemsSummary.length === 0) {
+      alert('Isi minimal 1 item!');
       return;
     }
-    var depts=[...new Set(prod.map(function(p){ return (p.department||p.dept||'').toString().trim(); }).filter(Boolean))].sort(function(a,b){ return a.toLowerCase().localeCompare(b.toLowerCase()); });
-    var sel=document.getElementById('filter-matrix-department');
-    if(!sel) return;
-    var cur=sel.value;
-    sel.innerHTML='<option value="">Semua Department</option>'+depts.map(function(d){ return '<option value="'+d+'">'+d+'</option>'; }).join('');
-    if(cur) sel.value=cur;
-    var info=document.getElementById('matrix-info');
-    if(info) info.textContent='Depts: '+depts.join(', ')+' | Total: '+prod.length;
-    console.log('[Matrix] depts', depts);
-  }catch(e){}
-}
 
-(function(){
-  function fixPointer(){
-    try{
-      if(document.body){
-        document.body.style.setProperty('pointer-events','auto','important');
-        var s=document.body.getAttribute('style')||'';
-        if(s.includes('pointer-events: none')||s.includes('pointer-events:none')){
-          document.body.setAttribute('style', s.replace(/pointer-events\s*:\s*none/gi,'pointer-events: auto'));
-        }
-      }
-      var sel=document.getElementById('filter-matrix-department');
-      if(sel) sel.style.setProperty('pointer-events','auto','important');
-      var btn=document.getElementById('btnMatrixDownload');
-      if(btn) btn.style.setProperty('pointer-events','auto','important');
-    }catch(e){}
+    const newRecord = {
+      id: 'DSC-' + Date.now().toString().slice(-4),
+      date: new Date().toLocaleDateString(),
+      inputBy,
+      department,
+      items: itemsSummary.join(', '),
+      reason
+    };
+
+    discardData.unshift(newRecord);
+    renderDiscardTable();
+    form.reset();
+    alert('Discard saved successfully!');
   }
-  document.addEventListener('DOMContentLoaded', function(){
-    fixPointer();
-    setTimeout(populateMatrixDeptFilter, 800);
-    setTimeout(populateMatrixDeptFilter, 2500);
-    setInterval(fixPointer, 1000);
-    var iv=setInterval(function(){
-      if(populateMatrixDeptFilter()!==false) {}
-      var prod=(typeof state!=='undefined'&&state.uniformProduction)?state.uniformProduction:[];
-      if(prod&&prod.length) clearInterval(iv);
-    }, 1000);
+
+  function renderDiscardTable() {
+    const tbody = document.getElementById('uniform-discard-table-body');
+    if (!tbody) return;
+    tbody.innerHTML = discardData.map(item => `
+      <tr class="border-b">
+        <td class="py-2 px-3 font-bold">${item.id}</td>
+        <td class="py-2 px-3">${item.date}</td>
+        <td class="py-2 px-3">${item.inputBy}</td>
+        <td class="py-2 px-3">${item.department}</td>
+        <td class="py-2 px-3">${item.items}</td>
+        <td class="py-2 px-3">${item.reason}</td>
+      </tr>
+    `).join('');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderInventoryItems();
   });
-  if(typeof window.renderAllViews==='function'){
-    var old=window.renderAllViews;
-    window.renderAllViews=function(){
-      var r=old.apply(this, arguments);
-      setTimeout(function(){ fixPointer(); populateMatrixDeptFilter(); }, 400);
-      return r;
-    };
-  }
-})();
 </script>
-
-
-<script>
-// AUTH - CLEAN VERSION - NO LAYOUT CHANGE
-const AUTH_KEYS={users:'um_users_final_v2',current:'um_current_user_final_v2'};
-function simpleHash(s){ try{ return btoa(unescape(encodeURIComponent(s.split('').reverse().join('')+'|'+s.length))); }catch(e){ let h=0; for(let i=0;i<s.length;i++){ h=((h<<5)-h)+s.charCodeAt(i); h|=0; } return h.toString(); } }
-function loadUsers(){ try{ const r=localStorage.getItem(AUTH_KEYS.users); if(!r){ const a={id:'ADMIN',passHash:simpleHash('admin123'),role:'ADMIN',createdAt:new Date().toISOString(),createdBy:'SYSTEM'}; localStorage.setItem(AUTH_KEYS.users,JSON.stringify([a])); return [a]; } return JSON.parse(r); }catch(e){ return [{id:'ADMIN',passHash:simpleHash('admin123'),role:'ADMIN',createdAt:new Date().toISOString(),createdBy:'SYSTEM'}]; } }
-function saveUsers(u){ localStorage.setItem(AUTH_KEYS.users,JSON.stringify(u)); }
-function getCurrentUser(){ try{ const r=localStorage.getItem(AUTH_KEYS.current); return r?JSON.parse(r):null; }catch(e){ return null; } }
-function setCurrentUser(u){ localStorage.setItem(AUTH_KEYS.current,JSON.stringify(u)); if(window.state) state.currentUser=u; updateAuthUI(); }
-function clearCurrentUser(){ localStorage.removeItem(AUTH_KEYS.current); if(window.state) state.currentUser=null; }
-function toggleLoginPass(){ const i=document.getElementById('login-password'); const e=document.getElementById('eye-icon'); if(!i) return; if(i.type==='password'){ i.type='text'; e.className='fa-solid fa-eye-slash'; } else { i.type='password'; e.className='fa-solid fa-eye'; } }
-function showLogin(){ const o=document.getElementById('auth-overlay'); if(o){ o.classList.remove('hidden'); o.classList.add('flex'); } const hdr=document.querySelector('header.ud-header'); const main=document.querySelector('main'); if(hdr) hdr.style.display='none'; if(main) main.style.display='none'; }
-function hideLogin(){ const o=document.getElementById('auth-overlay'); if(o){ o.classList.add('hidden'); o.classList.remove('flex'); } const hdr=document.querySelector('header.ud-header'); const main=document.querySelector('main'); if(hdr) hdr.style.display=''; if(main) main.style.display=''; updateAuthUI(); }
-function updateAuthUI(){
-  const cur=getCurrentUser()|| (window.state&&state.currentUser);
-  if(!cur) return;
-  const ids={ 'defect-input-by-badge':cur.id, 'received-input-by-badge':cur.id, 'production-input-by-badge':cur.id, 'active-tailor-display':cur.id };
-  Object.entries(ids).forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.textContent=val; });
-  [['inp-reporting-staff',cur.id],['received-input-by-hidden',cur.id],['production-input-by-hidden',cur.id],['active-tailor-name',cur.id]].forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.value=val; });
-  // Update bottom dock instead of header (header stays clean)
-  const dockBadge=document.getElementById('dock-user-badge');
-  const dockUserId=document.getElementById('dock-user-id');
-  const dockRight=document.getElementById('dock-right-auth');
-  if(dockBadge && dockUserId && dockRight){
-    dockBadge.style.display='flex';
-    dockUserId.textContent=cur.id+' • '+cur.role;
-    // clear old icons but keep badge
-    const existing=dockRight.querySelectorAll('.dock-icon-btn');
-    existing.forEach(e=>e.remove());
-    // add buttons
-    const btnKey=document.createElement('button');
-    btnKey.className='dock-icon-btn';
-    btnKey.title='Ganti Password';
-    btnKey.innerHTML='<i class="fa-solid fa-key text-xs"></i>';
-    btnKey.onclick=()=>openChangePass();
-    dockRight.appendChild(btnKey);
-    if(cur.role==='ADMIN'){
-      const btnMg=document.createElement('button');
-      btnMg.className='dock-icon-btn amber';
-      btnMg.title='User Management';
-      btnMg.innerHTML='<i class="fa-solid fa-users-gear text-xs"></i>';
-      btnMg.onclick=()=>openUserManagement();
-      dockRight.appendChild(btnMg);
-    }
-    const btnOut=document.createElement('button');
-    btnOut.className='dock-icon-btn red';
-    btnOut.title='Logout';
-    btnOut.innerHTML='<i class="fa-solid fa-right-from-bracket text-xs"></i>';
-    btnOut.onclick=()=>handleLogout();
-    dockRight.appendChild(btnOut);
-  }
-  // also hide old header info if exists
-  const oldInfo=document.getElementById('auth-header-info');
-  if(oldInfo) oldInfo.style.display='none';
-
-}
-function handleLogin(e){
-  e.preventDefault();
-  const id=document.getElementById('login-user-id').value.trim().toUpperCase().replace(/\s+/g,'');
-  const pass=document.getElementById('login-password').value;
-  const err=document.getElementById('login-error');
-  const users=loadUsers();
-  const user=users.find(u=>u.id===id);
-  if(!user){ err.textContent='User ID tidak ditemukan di device ini.'; err.classList.remove('hidden'); return; }
-  if(user.passHash!==simpleHash(pass)){ err.textContent='Password salah.'; err.classList.remove('hidden'); return; }
-  err.classList.add('hidden');
-  setCurrentUser({id:user.id,role:user.role,loginAt:new Date().toISOString()});
-  hideLogin();
-  // trigger original data load if exists
-  if(typeof refreshData==='function'){ setTimeout(()=>{ try{ refreshData(); }catch(e){} }, 300); }
-}
-function handleLogout(){ if(!confirm('Logout?')) return; clearCurrentUser(); location.reload(); }
-function openUserManagement(){ const cur=getCurrentUser(); if(!cur||cur.role!=='ADMIN'){ alert('Hanya ADMIN'); return; } renderUserList(); const el=document.getElementById('user-management-modal'); el.classList.remove('hidden'); el.classList.add('flex'); }
-function closeUserManagement(){ const el=document.getElementById('user-management-modal'); el.classList.add('hidden'); el.classList.remove('flex'); }
-function renderUserList(){ const users=loadUsers(); const tbody=document.getElementById('user-list-body'); const cnt=document.getElementById('user-count'); if(cnt) cnt.textContent=users.length; if(!tbody) return; tbody.innerHTML=users.map(u=>`<tr class="border-t"><td class="p-2.5 font-bold ${u.role==='ADMIN'?'text-amber-600':''}">${u.id}</td><td class="p-2.5"><span class="text-[10px] px-2 py-0.5 rounded-full ${u.role==='ADMIN'?'bg-amber-100 text-amber-700':'bg-slate-100'}">${u.role}</span></td><td class="p-2.5 text-xs text-slate-500">${new Date(u.createdAt).toLocaleDateString()}</td><td class="p-2.5 text-right"><button onclick="handleResetPass('${u.id}')" class="text-xs bg-slate-100 px-2 py-1 rounded mr-1"><i class="fa-solid fa-rotate"></i></button>${u.id!=='ADMIN'?`<button onclick="handleDeleteUser('${u.id}')" class="text-xs bg-red-50 text-red-600 px-2 py-1 rounded"><i class="fa-solid fa-trash"></i></button>`:''}</td></tr>`).join(''); }
-function handleCreateUser(e){ e.preventDefault(); const id=document.getElementById('new-user-id').value.trim().toUpperCase().replace(/\s+/g,''); const pass=document.getElementById('new-user-pass').value; if(id.length<3){ alert('Min 3'); return; } if(!/^[A-Z0-9_-]+$/.test(id)){ alert('Hanya A-Z 0-9 - _'); return; } const users=loadUsers(); if(users.find(u=>u.id===id)){ alert('Sudah ada'); return; } users.push({id,passHash:simpleHash(pass),role:id==='ADMIN'?'ADMIN':'USER',createdAt:new Date().toISOString(),createdBy:getCurrentUser()?.id||'ADMIN'}); saveUsers(users); e.target.reset(); renderUserList(); }
-function handleResetPass(id){ const np=prompt('Password baru untuk '+id+':'); if(np===null) return; if(np.length<4){ alert('Min 4'); return; } const users=loadUsers(); const u=users.find(x=>x.id===id); u.passHash=simpleHash(np); saveUsers(users); alert('Password '+id+' = '+np); renderUserList(); }
-function handleDeleteUser(id){ if(id==='ADMIN') return; if(!confirm('Hapus '+id+'?')) return; let users=loadUsers(); users=users.filter(u=>u.id!==id); saveUsers(users); renderUserList(); }
-function openChangePass(){ document.getElementById('change-pass-modal').classList.remove('hidden'); document.getElementById('change-pass-modal').classList.add('flex'); }
-function closeChangePass(){ const m=document.getElementById('change-pass-modal'); m.classList.add('hidden'); m.classList.remove('flex'); }
-function handleChangePassword(e){ e.preventDefault(); const oldP=document.getElementById('old-password').value; const newP=document.getElementById('new-password').value; const cur=getCurrentUser(); const users=loadUsers(); const u=users.find(x=>x.id===cur.id); if(u.passHash!==simpleHash(oldP)){ alert('Lama salah'); return; } u.passHash=simpleHash(newP); saveUsers(users); closeChangePass(); alert('Password diganti'); }
-function handleChangeAdminPassword(){ const cur=getCurrentUser(); if(!cur||cur.role!=='ADMIN'){ alert('Hanya ADMIN'); return; } const oldP=prompt('Password ADMIN lama:'); if(oldP===null) return; const users=loadUsers(); const admin=users.find(u=>u.id==='ADMIN'); if(admin.passHash!==simpleHash(oldP)){ alert('Salah'); return; } const newP=prompt('Password ADMIN baru:'); if(!newP||newP.length<4) return; const c=prompt('Konfirmasi:'); if(newP!==c){ alert('Tidak cocok'); return; } admin.passHash=simpleHash(newP); saveUsers(users); alert('Password ADMIN baru: '+newP); }
-function exportUsers(){ const users=loadUsers(); const blob=new Blob([JSON.stringify(users,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='uniform_users_'+new Date().toISOString().slice(0,10)+'.json'; a.click(); URL.revokeObjectURL(url); }
-function importUsers(e){ const file=e.target.files[0]; if(!file) return; const isOverwrite=!!window._importOverwrite; const r=new FileReader(); r.onload=function(ev){ try{ const imp=JSON.parse(ev.target.result); const valid=imp.filter(u=>u.id&&u.passHash); if(isOverwrite){ const map={}; valid.forEach(u=>{ const id=(u.id||'').toString().trim().toUpperCase(); if(id) map[id]={id,passHash:u.passHash,role:u.role||'USER',createdAt:u.createdAt||new Date().toISOString(),createdBy:u.createdBy||'IMPORT'}; }); if(!map['ADMIN']) map['ADMIN']={id:'ADMIN',passHash:simpleHash('admin123'),role:'ADMIN',createdAt:new Date().toISOString(),createdBy:'SYSTEM'}; saveUsers(Object.values(map)); renderUserList(); alert('Overwrite: '+Object.keys(map).length+' user'); } else { const cur=loadUsers(); const map={}; cur.forEach(u=>map[u.id]=u); let a=0,s=0; valid.forEach(u=>{ const id=(u.id||'').toString().trim().toUpperCase(); if(!id) return; if(map[id]) s++; else { map[id]={id,passHash:u.passHash,role:u.role||'USER',createdAt:u.createdAt||new Date().toISOString(),createdBy:u.createdBy||'IMPORT'}; a++; } }); saveUsers(Object.values(map)); renderUserList(); alert(a+' baru, '+s+' skip'); } }catch(err){ alert('Gagal: '+err.message); } finally { e.target.value=''; window._importOverwrite=false; } }; r.readAsText(file); }
-function importUsersOverwrite(){ if(!confirm('Yakin TIMPA semua user?')) return; window._importOverwrite=true; document.getElementById('import-users-file').click(); }
-function initAuthClean(){
-  const users=loadUsers();
-  if(!window.state){ window.state={}; }
-  // preserve apiUrl if already defined
-  if(!state.apiUrl){ state.apiUrl='https://script.google.com/macros/s/AKfycbykTM8w-0CIR5x8g4ZD5tI8LtZ_PiExHxIJQioPOD3qmXxSZ84Kxwg9OcZ_zGP3OB0/exec'; }
-  if(!state.tasks) state.tasks=[];
-  if(!state.uniformReceived) state.uniformReceived=[];
-  if(!state.uniformProduction) state.uniformProduction=[];
-  state.users=users;
-  const cur=getCurrentUser();
-  if(cur && users.find(x=>x.id===cur.id)){ state.currentUser=cur; hideLogin(); } else { clearCurrentUser(); showLogin(); }
-  setTimeout(updateAuthUI, 600);
-}
-// Patch for auto fill without breaking original functions
-(function(){
-  const origUFD = window.uniformFormData;
-  window.uniformFormData = function(id){
-    let o={};
-    try{ if(typeof origUFD==='function' && origUFD!==window.uniformFormData) o=origUFD(id)||{}; else { const f=document.getElementById(id); if(f) new FormData(f).forEach((v,k)=>o[k]=v); } }catch(e){ const f=document.getElementById(id); if(f) new FormData(f).forEach((v,k)=>o[k]=v); }
-    const cur=getCurrentUser()|| (window.state&&state.currentUser);
-    if(cur && (id==='uniform-received-form'||id==='uniform-production-form')) o.inputBy=cur.id;
-    return o;
-  };
-})();
-// Override validateActiveTailor
-window.validateActiveTailor = function(){
-  const cur=getCurrentUser()|| (window.state&&state.currentUser);
-  const inp=document.getElementById('active-tailor-name');
-  const disp=document.getElementById('active-tailor-display');
-  if(cur&&cur.id){ if(inp) inp.value=cur.id; if(disp) disp.textContent=cur.id; const w=document.getElementById('tailor-name-warning'); if(w) w.classList.add('hidden'); return true; }
-  return inp&&inp.value.trim().length>0;
-};
-// Init after DOM
-if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', initAuthClean); } else { initAuthClean(); }
-// Also hook into original handleCreateSubmission to use current user
-document.addEventListener('DOMContentLoaded', ()=>{
-  // Patch handleCreateSubmission if exists
-  const origHCS = window.handleCreateSubmission;
-  if(typeof origHCS==='function'){
-    window.handleCreateSubmission = async function(e){
-      const cur=getCurrentUser();
-      if(cur){
-        const el=document.getElementById('inp-reporting-staff');
-        if(el) el.value=cur.id;
-      }
-      return origHCS.call(this, e);
-    };
-  }
-});
-</script>
-
-
-<!-- BOTTOM DOCK - same style as header ribbon -->
-<div id="bottom-dock">
-  <div class="dock-left">
-    <button onclick="switchTab('dashboard')" id="dock-btn-dashboard" class="dock-btn active"><i class="fa-solid fa-chart-pie"></i> Dashboard</button>
-    <button onclick="switchTab('uniform')" id="dock-btn-uniform" class="dock-btn"><i class="fa-solid fa-file-pen"></i> Uniform</button>
-    <button onclick="switchTab('tailor')" id="dock-btn-tailor" class="dock-btn"><i class="fa-solid fa-scissors"></i> Tailor</button>
-  </div>
-  <div class="dock-right" id="dock-right-auth">
-    <!-- auth icons will be injected here -->
-    <div class="dock-user-badge" id="dock-user-badge" style="display:none;"><i class="fa-solid fa-circle-user"></i><span id="dock-user-id">-</span></div>
-  </div>
-</div>
-
-
-<script>
-// Sync bottom dock active state with tab switching
-(function(){
-  const origSwitchTab = window.switchTab;
-  if(typeof origSwitchTab==='function'){
-    window.switchTab = function(tab){
-      const r = origSwitchTab.apply(this, arguments);
-      document.querySelectorAll('#bottom-dock .dock-btn').forEach(b=>b.classList.remove('active'));
-      const activeBtn=document.getElementById('dock-btn-'+tab);
-      if(activeBtn) activeBtn.classList.add('active');
-      // also sync old mobile nav if exists
-      document.querySelectorAll('.ud-mobile-nav button').forEach(b=>b.classList.remove('active'));
-      return r;
-    };
-  }
-})();
-</script>
-
 </body>
 </html>
