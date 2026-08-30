@@ -1039,6 +1039,8 @@ html, body { pointer-events: auto !important; }
     </section>
   
     <!-- SUB-PANEL 4: INVENTORY - BARU -->
+    
+    <!-- SUB-PANEL 4: INVENTORY - BARU SESUAI SCREENSHOT -->
     <div id="uniform-panel-inventory" class="uniform-binder-panel p-4 md:p-5">
       <div class="flex items-center gap-3 mb-4">
         <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 grid place-items-center">
@@ -1046,24 +1048,20 @@ html, body { pointer-events: auto !important; }
         </div>
         <div>
           <h3 class="text-lg font-bold text-slate-800">Inventory</h3>
-          <p class="text-xs text-slate-500">Record uniform inventory with condition</p>
+          <p class="text-xs text-slate-500">Contoh: Budi punya Trousers 1 Good + 1 Fair → isi Good 1, Fair 1. Hanya item dengan total >0 yang disimpan.</p>
         </div>
       </div>
       <form id="uniform-inventory-form" onsubmit="submitUniformInventory(event)">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
           <div class="uniform-field">
             <label>Input By (Auto) <span class="text-red-500">*</span></label>
             <div class="w-full min-h-[44px] px-3 py-2.5 bg-indigo-50 border border-indigo-200 rounded-[10px] text-sm font-bold text-indigo-900 flex items-center gap-2"><i class="fa-solid fa-user-check text-indigo-600"></i><span id="inventory-input-by-badge">-</span></div>
             <input type="hidden" name="inputBy" id="inventory-input-by-hidden" value="">
           </div>
           <div class="uniform-field">
-            <label>Uniform Owner <span class="text-red-500">*</span></label>
-            <input type="text" name="uniformOwner" required placeholder="Ketik nama owner" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-          </div>
-          <div class="uniform-field">
-            <label>Department <span class="text-red-500">*</span></label>
-            <select name="department" required>
-                              <option value="">-- Choose Department --</option>
+            <label>DEPARTMENT <span class="text-red-500">*</span></label>
+            <select name="department" required class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm">
+              <option value="">Pilih Department</option>
                 <option value="Front Office">Front Office</option>
                 <option value="GRE">GRE</option>
                 <option value="GSC">GSC</option>
@@ -1090,157 +1088,341 @@ html, body { pointer-events: auto !important; }
                 <option value="Other">Other</option>
             </select>
           </div>
-        </div>
-        <div class="mb-4">
-          <label class="block font-bold text-xs uppercase text-slate-600 mb-2">Uniform Items & Condition (Good/Fair/Bad)</label>
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-            
-            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg gap-2">
-              <span class="text-sm font-medium text-slate-700 flex-1">Trousers</span>
-              <input type="number" name="Trousers" min="0" placeholder="0" class="w-14 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
-              <select name="Trousers_condition" class="w-20 px-1 py-1 border border-slate-300 rounded text-xs">
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Bad">Bad</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg gap-2">
-              <span class="text-sm font-medium text-slate-700 flex-1">Skirt</span>
-              <input type="number" name="Skirt" min="0" placeholder="0" class="w-14 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
-              <select name="Skirt_condition" class="w-20 px-1 py-1 border border-slate-300 rounded text-xs">
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Bad">Bad</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg gap-2">
-              <span class="text-sm font-medium text-slate-700 flex-1">Shirt</span>
-              <input type="number" name="Shirt" min="0" placeholder="0" class="w-14 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
-              <select name="Shirt_condition" class="w-20 px-1 py-1 border border-slate-300 rounded text-xs">
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Bad">Bad</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg gap-2">
-              <span class="text-sm font-medium text-slate-700 flex-1">Blouse</span>
-              <input type="number" name="Blouse" min="0" placeholder="0" class="w-14 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
-              <select name="Blouse_condition" class="w-20 px-1 py-1 border border-slate-300 rounded text-xs">
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Bad">Bad</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg gap-2">
-              <span class="text-sm font-medium text-slate-700 flex-1">Jacket</span>
-              <input type="number" name="Jacket" min="0" placeholder="0" class="w-14 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
-              <select name="Jacket_condition" class="w-20 px-1 py-1 border border-slate-300 rounded text-xs">
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Bad">Bad</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg gap-2">
-              <span class="text-sm font-medium text-slate-700 flex-1">Cook Jacket</span>
-              <input type="number" name="Cook Jacket" min="0" placeholder="0" class="w-14 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
-              <select name="Cook Jacket_condition" class="w-20 px-1 py-1 border border-slate-300 rounded text-xs">
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Bad">Bad</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg gap-2">
-              <span class="text-sm font-medium text-slate-700 flex-1">T-Shirt</span>
-              <input type="number" name="T-Shirt" min="0" placeholder="0" class="w-14 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
-              <select name="T-Shirt_condition" class="w-20 px-1 py-1 border border-slate-300 rounded text-xs">
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Bad">Bad</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg gap-2">
-              <span class="text-sm font-medium text-slate-700 flex-1">Polo Shirt</span>
-              <input type="number" name="Polo Shirt" min="0" placeholder="0" class="w-14 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
-              <select name="Polo Shirt_condition" class="w-20 px-1 py-1 border border-slate-300 rounded text-xs">
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Bad">Bad</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg gap-2">
-              <span class="text-sm font-medium text-slate-700 flex-1">Apron</span>
-              <input type="number" name="Apron" min="0" placeholder="0" class="w-14 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
-              <select name="Apron_condition" class="w-20 px-1 py-1 border border-slate-300 rounded text-xs">
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Bad">Bad</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg gap-2">
-              <span class="text-sm font-medium text-slate-700 flex-1">Hat</span>
-              <input type="number" name="Hat" min="0" placeholder="0" class="w-14 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
-              <select name="Hat_condition" class="w-20 px-1 py-1 border border-slate-300 rounded text-xs">
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Bad">Bad</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg gap-2">
-              <span class="text-sm font-medium text-slate-700 flex-1">Dress</span>
-              <input type="number" name="Dress" min="0" placeholder="0" class="w-14 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
-              <select name="Dress_condition" class="w-20 px-1 py-1 border border-slate-300 rounded text-xs">
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Bad">Bad</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg gap-2">
-              <span class="text-sm font-medium text-slate-700 flex-1">Vest</span>
-              <input type="number" name="Vest" min="0" placeholder="0" class="w-14 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
-              <select name="Vest_condition" class="w-20 px-1 py-1 border border-slate-300 rounded text-xs">
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Bad">Bad</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg gap-2">
-              <span class="text-sm font-medium text-slate-700 flex-1">Kitchen Cloth</span>
-              <input type="number" name="Kitchen Cloth" min="0" placeholder="0" class="w-14 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
-              <select name="Kitchen Cloth_condition" class="w-20 px-1 py-1 border border-slate-300 rounded text-xs">
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Bad">Bad</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg gap-2">
-              <span class="text-sm font-medium text-slate-700 flex-1">Table Cloth</span>
-              <input type="number" name="Table Cloth" min="0" placeholder="0" class="w-14 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
-              <select name="Table Cloth_condition" class="w-20 px-1 py-1 border border-slate-300 rounded text-xs">
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Bad">Bad</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg gap-2">
-              <span class="text-sm font-medium text-slate-700 flex-1">Napkin</span>
-              <input type="number" name="Napkin" min="0" placeholder="0" class="w-14 px-2 py-1 border border-slate-300 rounded text-right text-sm outline-none focus:border-indigo-500">
-              <select name="Napkin_condition" class="w-20 px-1 py-1 border border-slate-300 rounded text-xs">
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Bad">Bad</option>
-              </select>
-            </div>
+          <div class="uniform-field">
+            <label>STAFF NAME <span class="text-red-500">*</span></label>
+            <input type="text" name="uniformOwner" required placeholder="Contoh: Budi" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm">
           </div>
         </div>
-        <div class="mb-4 uniform-field">
-          <label>Remarks</label>
-          <textarea name="remarks" rows="2" placeholder="Ketik remarks" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"></textarea>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 text-xs text-blue-800">
+          <i class="fa-solid fa-circle-info mr-1"></i> Contoh: Budi punya Trousers 1 Good + 1 Fair → isi Good 1, Fair 1. Hanya item dengan total >0 yang disimpan.
         </div>
-        <div class="flex justify-end">
+
+        <div class="space-y-3 max-h-[420px] overflow-y-auto pr-1">
+          
+            <div class="bg-white border border-slate-200 rounded-xl p-3">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk_Trousers" data-item="Trousers" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 inventory-chk">
+                <span class="font-bold text-sm text-slate-800">Trousers</span>
+              </label>
+              <div id="group_Trousers" class="grid grid-cols-3 gap-2 mt-3 hidden inventory-group">
+                <div>
+                  <label class="block text-[11px] font-bold text-emerald-700 mb-1">GOOD</label>
+                  <input type="number" name="Trousers_Good" id="Trousers_Good" min="0" value="0" class="w-full px-2 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-amber-700 mb-1">FAIR</label>
+                  <input type="number" name="Trousers_Fair" id="Trousers_Fair" min="0" value="0" class="w-full px-2 py-2 bg-amber-50 border border-amber-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-rose-800 mb-1">BAD</label>
+                  <input type="number" name="Trousers_Bad" id="Trousers_Bad" min="0" value="0" class="w-full px-2 py-2 bg-rose-50 border border-rose-200 rounded-lg text-center text-sm font-bold">
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1 hidden" id="hint_Trousers">Isi Good/Fair/Bad, hanya total >0 yang disimpan.</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-3">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk_Skirt" data-item="Skirt" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 inventory-chk">
+                <span class="font-bold text-sm text-slate-800">Skirt</span>
+              </label>
+              <div id="group_Skirt" class="grid grid-cols-3 gap-2 mt-3 hidden inventory-group">
+                <div>
+                  <label class="block text-[11px] font-bold text-emerald-700 mb-1">GOOD</label>
+                  <input type="number" name="Skirt_Good" id="Skirt_Good" min="0" value="0" class="w-full px-2 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-amber-700 mb-1">FAIR</label>
+                  <input type="number" name="Skirt_Fair" id="Skirt_Fair" min="0" value="0" class="w-full px-2 py-2 bg-amber-50 border border-amber-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-rose-800 mb-1">BAD</label>
+                  <input type="number" name="Skirt_Bad" id="Skirt_Bad" min="0" value="0" class="w-full px-2 py-2 bg-rose-50 border border-rose-200 rounded-lg text-center text-sm font-bold">
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1 hidden" id="hint_Skirt">Isi Good/Fair/Bad, hanya total >0 yang disimpan.</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-3">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk_Shirt" data-item="Shirt" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 inventory-chk">
+                <span class="font-bold text-sm text-slate-800">Shirt</span>
+              </label>
+              <div id="group_Shirt" class="grid grid-cols-3 gap-2 mt-3 hidden inventory-group">
+                <div>
+                  <label class="block text-[11px] font-bold text-emerald-700 mb-1">GOOD</label>
+                  <input type="number" name="Shirt_Good" id="Shirt_Good" min="0" value="0" class="w-full px-2 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-amber-700 mb-1">FAIR</label>
+                  <input type="number" name="Shirt_Fair" id="Shirt_Fair" min="0" value="0" class="w-full px-2 py-2 bg-amber-50 border border-amber-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-rose-800 mb-1">BAD</label>
+                  <input type="number" name="Shirt_Bad" id="Shirt_Bad" min="0" value="0" class="w-full px-2 py-2 bg-rose-50 border border-rose-200 rounded-lg text-center text-sm font-bold">
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1 hidden" id="hint_Shirt">Isi Good/Fair/Bad, hanya total >0 yang disimpan.</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-3">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk_Blouse" data-item="Blouse" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 inventory-chk">
+                <span class="font-bold text-sm text-slate-800">Blouse</span>
+              </label>
+              <div id="group_Blouse" class="grid grid-cols-3 gap-2 mt-3 hidden inventory-group">
+                <div>
+                  <label class="block text-[11px] font-bold text-emerald-700 mb-1">GOOD</label>
+                  <input type="number" name="Blouse_Good" id="Blouse_Good" min="0" value="0" class="w-full px-2 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-amber-700 mb-1">FAIR</label>
+                  <input type="number" name="Blouse_Fair" id="Blouse_Fair" min="0" value="0" class="w-full px-2 py-2 bg-amber-50 border border-amber-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-rose-800 mb-1">BAD</label>
+                  <input type="number" name="Blouse_Bad" id="Blouse_Bad" min="0" value="0" class="w-full px-2 py-2 bg-rose-50 border border-rose-200 rounded-lg text-center text-sm font-bold">
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1 hidden" id="hint_Blouse">Isi Good/Fair/Bad, hanya total >0 yang disimpan.</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-3">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk_Jacket" data-item="Jacket" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 inventory-chk">
+                <span class="font-bold text-sm text-slate-800">Jacket</span>
+              </label>
+              <div id="group_Jacket" class="grid grid-cols-3 gap-2 mt-3 hidden inventory-group">
+                <div>
+                  <label class="block text-[11px] font-bold text-emerald-700 mb-1">GOOD</label>
+                  <input type="number" name="Jacket_Good" id="Jacket_Good" min="0" value="0" class="w-full px-2 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-amber-700 mb-1">FAIR</label>
+                  <input type="number" name="Jacket_Fair" id="Jacket_Fair" min="0" value="0" class="w-full px-2 py-2 bg-amber-50 border border-amber-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-rose-800 mb-1">BAD</label>
+                  <input type="number" name="Jacket_Bad" id="Jacket_Bad" min="0" value="0" class="w-full px-2 py-2 bg-rose-50 border border-rose-200 rounded-lg text-center text-sm font-bold">
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1 hidden" id="hint_Jacket">Isi Good/Fair/Bad, hanya total >0 yang disimpan.</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-3">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk_Cook_Jacket" data-item="Cook Jacket" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 inventory-chk">
+                <span class="font-bold text-sm text-slate-800">Cook Jacket</span>
+              </label>
+              <div id="group_Cook_Jacket" class="grid grid-cols-3 gap-2 mt-3 hidden inventory-group">
+                <div>
+                  <label class="block text-[11px] font-bold text-emerald-700 mb-1">GOOD</label>
+                  <input type="number" name="Cook Jacket_Good" id="Cook_Jacket_Good" min="0" value="0" class="w-full px-2 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-amber-700 mb-1">FAIR</label>
+                  <input type="number" name="Cook Jacket_Fair" id="Cook_Jacket_Fair" min="0" value="0" class="w-full px-2 py-2 bg-amber-50 border border-amber-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-rose-800 mb-1">BAD</label>
+                  <input type="number" name="Cook Jacket_Bad" id="Cook_Jacket_Bad" min="0" value="0" class="w-full px-2 py-2 bg-rose-50 border border-rose-200 rounded-lg text-center text-sm font-bold">
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1 hidden" id="hint_Cook_Jacket">Isi Good/Fair/Bad, hanya total >0 yang disimpan.</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-3">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk_T-Shirt" data-item="T-Shirt" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 inventory-chk">
+                <span class="font-bold text-sm text-slate-800">T-Shirt</span>
+              </label>
+              <div id="group_T-Shirt" class="grid grid-cols-3 gap-2 mt-3 hidden inventory-group">
+                <div>
+                  <label class="block text-[11px] font-bold text-emerald-700 mb-1">GOOD</label>
+                  <input type="number" name="T-Shirt_Good" id="T-Shirt_Good" min="0" value="0" class="w-full px-2 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-amber-700 mb-1">FAIR</label>
+                  <input type="number" name="T-Shirt_Fair" id="T-Shirt_Fair" min="0" value="0" class="w-full px-2 py-2 bg-amber-50 border border-amber-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-rose-800 mb-1">BAD</label>
+                  <input type="number" name="T-Shirt_Bad" id="T-Shirt_Bad" min="0" value="0" class="w-full px-2 py-2 bg-rose-50 border border-rose-200 rounded-lg text-center text-sm font-bold">
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1 hidden" id="hint_T-Shirt">Isi Good/Fair/Bad, hanya total >0 yang disimpan.</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-3">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk_Polo_Shirt" data-item="Polo Shirt" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 inventory-chk">
+                <span class="font-bold text-sm text-slate-800">Polo Shirt</span>
+              </label>
+              <div id="group_Polo_Shirt" class="grid grid-cols-3 gap-2 mt-3 hidden inventory-group">
+                <div>
+                  <label class="block text-[11px] font-bold text-emerald-700 mb-1">GOOD</label>
+                  <input type="number" name="Polo Shirt_Good" id="Polo_Shirt_Good" min="0" value="0" class="w-full px-2 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-amber-700 mb-1">FAIR</label>
+                  <input type="number" name="Polo Shirt_Fair" id="Polo_Shirt_Fair" min="0" value="0" class="w-full px-2 py-2 bg-amber-50 border border-amber-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-rose-800 mb-1">BAD</label>
+                  <input type="number" name="Polo Shirt_Bad" id="Polo_Shirt_Bad" min="0" value="0" class="w-full px-2 py-2 bg-rose-50 border border-rose-200 rounded-lg text-center text-sm font-bold">
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1 hidden" id="hint_Polo_Shirt">Isi Good/Fair/Bad, hanya total >0 yang disimpan.</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-3">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk_Apron" data-item="Apron" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 inventory-chk">
+                <span class="font-bold text-sm text-slate-800">Apron</span>
+              </label>
+              <div id="group_Apron" class="grid grid-cols-3 gap-2 mt-3 hidden inventory-group">
+                <div>
+                  <label class="block text-[11px] font-bold text-emerald-700 mb-1">GOOD</label>
+                  <input type="number" name="Apron_Good" id="Apron_Good" min="0" value="0" class="w-full px-2 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-amber-700 mb-1">FAIR</label>
+                  <input type="number" name="Apron_Fair" id="Apron_Fair" min="0" value="0" class="w-full px-2 py-2 bg-amber-50 border border-amber-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-rose-800 mb-1">BAD</label>
+                  <input type="number" name="Apron_Bad" id="Apron_Bad" min="0" value="0" class="w-full px-2 py-2 bg-rose-50 border border-rose-200 rounded-lg text-center text-sm font-bold">
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1 hidden" id="hint_Apron">Isi Good/Fair/Bad, hanya total >0 yang disimpan.</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-3">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk_Hat" data-item="Hat" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 inventory-chk">
+                <span class="font-bold text-sm text-slate-800">Hat</span>
+              </label>
+              <div id="group_Hat" class="grid grid-cols-3 gap-2 mt-3 hidden inventory-group">
+                <div>
+                  <label class="block text-[11px] font-bold text-emerald-700 mb-1">GOOD</label>
+                  <input type="number" name="Hat_Good" id="Hat_Good" min="0" value="0" class="w-full px-2 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-amber-700 mb-1">FAIR</label>
+                  <input type="number" name="Hat_Fair" id="Hat_Fair" min="0" value="0" class="w-full px-2 py-2 bg-amber-50 border border-amber-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-rose-800 mb-1">BAD</label>
+                  <input type="number" name="Hat_Bad" id="Hat_Bad" min="0" value="0" class="w-full px-2 py-2 bg-rose-50 border border-rose-200 rounded-lg text-center text-sm font-bold">
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1 hidden" id="hint_Hat">Isi Good/Fair/Bad, hanya total >0 yang disimpan.</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-3">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk_Dress" data-item="Dress" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 inventory-chk">
+                <span class="font-bold text-sm text-slate-800">Dress</span>
+              </label>
+              <div id="group_Dress" class="grid grid-cols-3 gap-2 mt-3 hidden inventory-group">
+                <div>
+                  <label class="block text-[11px] font-bold text-emerald-700 mb-1">GOOD</label>
+                  <input type="number" name="Dress_Good" id="Dress_Good" min="0" value="0" class="w-full px-2 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-amber-700 mb-1">FAIR</label>
+                  <input type="number" name="Dress_Fair" id="Dress_Fair" min="0" value="0" class="w-full px-2 py-2 bg-amber-50 border border-amber-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-rose-800 mb-1">BAD</label>
+                  <input type="number" name="Dress_Bad" id="Dress_Bad" min="0" value="0" class="w-full px-2 py-2 bg-rose-50 border border-rose-200 rounded-lg text-center text-sm font-bold">
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1 hidden" id="hint_Dress">Isi Good/Fair/Bad, hanya total >0 yang disimpan.</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-3">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk_Vest" data-item="Vest" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 inventory-chk">
+                <span class="font-bold text-sm text-slate-800">Vest</span>
+              </label>
+              <div id="group_Vest" class="grid grid-cols-3 gap-2 mt-3 hidden inventory-group">
+                <div>
+                  <label class="block text-[11px] font-bold text-emerald-700 mb-1">GOOD</label>
+                  <input type="number" name="Vest_Good" id="Vest_Good" min="0" value="0" class="w-full px-2 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-amber-700 mb-1">FAIR</label>
+                  <input type="number" name="Vest_Fair" id="Vest_Fair" min="0" value="0" class="w-full px-2 py-2 bg-amber-50 border border-amber-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-rose-800 mb-1">BAD</label>
+                  <input type="number" name="Vest_Bad" id="Vest_Bad" min="0" value="0" class="w-full px-2 py-2 bg-rose-50 border border-rose-200 rounded-lg text-center text-sm font-bold">
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1 hidden" id="hint_Vest">Isi Good/Fair/Bad, hanya total >0 yang disimpan.</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-3">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk_Kitchen_Cloth" data-item="Kitchen Cloth" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 inventory-chk">
+                <span class="font-bold text-sm text-slate-800">Kitchen Cloth</span>
+              </label>
+              <div id="group_Kitchen_Cloth" class="grid grid-cols-3 gap-2 mt-3 hidden inventory-group">
+                <div>
+                  <label class="block text-[11px] font-bold text-emerald-700 mb-1">GOOD</label>
+                  <input type="number" name="Kitchen Cloth_Good" id="Kitchen_Cloth_Good" min="0" value="0" class="w-full px-2 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-amber-700 mb-1">FAIR</label>
+                  <input type="number" name="Kitchen Cloth_Fair" id="Kitchen_Cloth_Fair" min="0" value="0" class="w-full px-2 py-2 bg-amber-50 border border-amber-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-rose-800 mb-1">BAD</label>
+                  <input type="number" name="Kitchen Cloth_Bad" id="Kitchen_Cloth_Bad" min="0" value="0" class="w-full px-2 py-2 bg-rose-50 border border-rose-200 rounded-lg text-center text-sm font-bold">
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1 hidden" id="hint_Kitchen_Cloth">Isi Good/Fair/Bad, hanya total >0 yang disimpan.</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-3">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk_Table_Cloth" data-item="Table Cloth" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 inventory-chk">
+                <span class="font-bold text-sm text-slate-800">Table Cloth</span>
+              </label>
+              <div id="group_Table_Cloth" class="grid grid-cols-3 gap-2 mt-3 hidden inventory-group">
+                <div>
+                  <label class="block text-[11px] font-bold text-emerald-700 mb-1">GOOD</label>
+                  <input type="number" name="Table Cloth_Good" id="Table_Cloth_Good" min="0" value="0" class="w-full px-2 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-amber-700 mb-1">FAIR</label>
+                  <input type="number" name="Table Cloth_Fair" id="Table_Cloth_Fair" min="0" value="0" class="w-full px-2 py-2 bg-amber-50 border border-amber-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-rose-800 mb-1">BAD</label>
+                  <input type="number" name="Table Cloth_Bad" id="Table_Cloth_Bad" min="0" value="0" class="w-full px-2 py-2 bg-rose-50 border border-rose-200 rounded-lg text-center text-sm font-bold">
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1 hidden" id="hint_Table_Cloth">Isi Good/Fair/Bad, hanya total >0 yang disimpan.</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-3">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk_Napkin" data-item="Napkin" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 inventory-chk">
+                <span class="font-bold text-sm text-slate-800">Napkin</span>
+              </label>
+              <div id="group_Napkin" class="grid grid-cols-3 gap-2 mt-3 hidden inventory-group">
+                <div>
+                  <label class="block text-[11px] font-bold text-emerald-700 mb-1">GOOD</label>
+                  <input type="number" name="Napkin_Good" id="Napkin_Good" min="0" value="0" class="w-full px-2 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-amber-700 mb-1">FAIR</label>
+                  <input type="number" name="Napkin_Fair" id="Napkin_Fair" min="0" value="0" class="w-full px-2 py-2 bg-amber-50 border border-amber-200 rounded-lg text-center text-sm font-bold">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-rose-800 mb-1">BAD</label>
+                  <input type="number" name="Napkin_Bad" id="Napkin_Bad" min="0" value="0" class="w-full px-2 py-2 bg-rose-50 border border-rose-200 rounded-lg text-center text-sm font-bold">
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1 hidden" id="hint_Napkin">Isi Good/Fair/Bad, hanya total >0 yang disimpan.</p>
+            </div>
+        </div>
+
+        <div class="mt-4 flex justify-end">
           <button type="submit" id="btn-save-inventory" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg"><i class="fa-solid fa-floppy-disk mr-2"></i> Save Inventory</button>
         </div>
       </form>
     </div>
+
 
     <!-- SUB-PANEL 5: DISCARD - BARU -->
     <div id="uniform-panel-discard" class="uniform-binder-panel p-4 md:p-5">
@@ -1466,7 +1648,7 @@ html, body { pointer-events: auto !important; }
 
 <script>
 let state = {
-  apiUrl: 'https://script.google.com/macros/s/AKfycbxOIbfvdz5RnycKiychfTlqA6D-ucpXPNAwH9kWlZS-WqqsXNvTzHIOp63I9uATQSlELQ/exec',
+  apiUrl: 'https://script.google.com/macros/s/AKfycbyubkb5KChqXeNGiIpotb8nS2CRp71Jg6wVGfDtSQCZttEz0RhWIl6OYbYc4IBwc9jhSg/exec',
   tasks: [],
   uniformReceived: [],
   uniformProduction: [],
@@ -2243,22 +2425,66 @@ function submitUniformProduction(e){
   postUniformTransaction('createUniformProduction', data, 'uniform-production-form', 'btn-save-production');
 }
 
+
 function submitUniformInventory(e){
   e.preventDefault();
+  const form = document.getElementById('uniform-inventory-form');
   const data = uniformFormData('uniform-inventory-form');
-  const itemKeys = ['Trousers','Skirt','Shirt','Blouse','Jacket','Cook Jacket','T-Shirt','Polo Shirt','Apron','Hat','Dress','Vest','Kitchen Cloth','Table Cloth','Napkin'];
-  const hasItem = itemKeys.some(k => Number(data[k]) > 0);
-  if(!hasItem){
-    alert('Harap isi minimal satu jumlah item inventory.');
+  const itemKeys = ["Trousers","Skirt","Shirt","Blouse","Jacket","Cook Jacket","T-Shirt","Polo Shirt","Apron","Hat","Dress","Vest","Kitchen Cloth","Table Cloth","Napkin"];
+  // Build list of items where checkbox checked and total>0
+  const payloadList = [];
+  itemKeys.forEach(item=>{
+    const safe = item.replace(/ /g,"_").replace(/\//g,"_");
+    const chk = document.getElementById('chk_'+safe);
+    if(!chk || !chk.checked) return;
+    const g = Number(document.getElementById(safe+'_Good')?.value)||0;
+    const f = Number(document.getElementById(safe+'_Fair')?.value)||0;
+    const b = Number(document.getElementById(safe+'_Bad')?.value)||0;
+    const total = g+f+b;
+    if(total<=0) return;
+    payloadList.push({item, good:g, fair:f, bad:b, total});
+  });
+  if(payloadList.length===0){
+    alert('Centang minimal 1 item dan isi Good/Fair/Bad >0');
     return;
   }
-  let totalQty=0; itemKeys.forEach(k=>{ totalQty+=Number(data[k])||0; });
-  data.quantity = totalQty;
-  const firstItem = itemKeys.find(k=>Number(data[k])>0) || 'Mixed';
-  data.uniformType = firstItem;
-  data.condition = data[firstItem+'_condition'] || 'Good';
-  postUniformTransaction('createUniformInventory', data, 'uniform-inventory-form', 'btn-save-inventory');
+  // Send as one transaction with array, backend will create multiple rows
+  const finalData = {
+    inputBy: data.inputBy||'',
+    department: data.department||'',
+    uniformOwner: data.uniformOwner||'',
+    staffName: data.uniformOwner||'',
+    items: payloadList
+  };
+  // For compatibility also fill flat fields Good/Fair/Bad
+  payloadList.forEach(it=>{
+    finalData[it.item+'_Good']=it.good;
+    finalData[it.item+'_Fair']=it.fair;
+    finalData[it.item+'_Bad']=it.bad;
+    finalData[it.item]=it.total;
+  });
+  postUniformTransaction('createUniformInventory', finalData, 'uniform-inventory-form', 'btn-save-inventory');
 }
+
+// Inventory checkbox toggle
+document.addEventListener('change', function(ev){
+  if(ev.target.classList.contains('inventory-chk')){
+    const item = ev.target.dataset.item;
+    const safe = item.replace(/ /g,"_").replace(/\//g,"_");
+    const group = document.getElementById('group_'+safe);
+    const hint = document.getElementById('hint_'+safe);
+    if(ev.target.checked){
+      group.classList.remove('hidden'); hint.classList.remove('hidden');
+    } else {
+      group.classList.add('hidden'); hint.classList.add('hidden');
+      // reset values
+      const g=document.getElementById(safe+'_Good'); if(g) g.value=0;
+      const f=document.getElementById(safe+'_Fair'); if(f) f.value=0;
+      const b=document.getElementById(safe+'_Bad'); if(b) b.value=0;
+    }
+  }
+});
+
 
 function submitUniformDiscard(e){
   e.preventDefault();
