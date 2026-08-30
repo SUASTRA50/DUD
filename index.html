@@ -21,6 +21,13 @@
 <!-- Apple SF Pro System Font - no external font needed -->
 
 <style>
+.uniform-binder{display:flex;gap:6px;overflow-x:auto;padding:8px 6px 0;white-space:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch;align-items:flex-end;border-bottom:1px solid #d2d2d7;}
+.uniform-binder::-webkit-scrollbar{display:none}
+.uniform-binder-tab{flex:0 0 auto;min-width:76px;min-height:38px;padding:8px 12px;border:1px solid #d2d2d7;border-bottom:none;border-radius:10px 10px 0 0;background:#f5f5f7;color:#1d1d1f;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s;position:relative;z-index:1;}
+.uniform-binder-tab.active{background:#1d1d1f;color:#fff;border-color:#1d1d1f;z-index:2;}
+.uniform-binder-panel{display:none;background:#fff;border:1px solid rgba(0,0,0,0.06);border-top:none;border-radius:0 12px 12px 12px;padding:16px;margin-top:0;}
+.uniform-binder-panel.active{display:block}
+
   :root { 
     --ud-navy:#1d1d1f; 
     --ud-blue:#0071e3; 
@@ -108,17 +115,12 @@
   }
 
   /* Uniform binder Apple style */
-  .uniform-binder{display:flex;gap:8px;overflow-x:auto;padding:8px 4px 0;scrollbar-width:none}
-  .uniform-binder::-webkit-scrollbar{display:none}
-  .uniform-binder-tab{
-    flex:1 0 auto;min-width:112px;min-height:40px;padding:9px 18px;
-    border:1px solid transparent;border-radius:980px;
-    background:#e8e8ed;color:#1d1d1f;font-size:12px;font-weight:500;letter-spacing:-0.01em;line-height:1.1;
-    transition: all .2s ease;
-  }
-  .uniform-binder-tab.active{background:#1d1d1f;color:#fff;box-shadow:none;}
-  .uniform-binder-panel{display:none;background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:18px;box-shadow:0 4px 24px rgba(0,0,0,0.04); margin-top:12px; padding:24px;}
-  .uniform-binder-panel.active{display:block}
+  
+  
+  
+  
+  
+  
   .uniform-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
   .uniform-field label{display:block;margin-bottom:8px;font-size:12px;font-weight:500;color:#1d1d1f; letter-spacing:-0.01em;}
   .uniform-field input,.uniform-field select{
@@ -185,7 +187,7 @@
     .ud-table-wrap table { min-width:760px; }
     #task-modal { align-items:flex-end; }
     #task-modal > div { max-height:92vh;overflow-y:auto;border-radius:24px 24px 0 0;padding:20px; background:#fbfbfd !important; }
-    .uniform-form-grid{grid-template-columns:1fr;gap:16px}.uniform-binder-panel{border-radius:18px}
+    .uniform-form-grid{grid-template-columns:1fr;gap:16px}
   }
 
   /* === DARK / LIGHT MODE Apple === */
@@ -270,11 +272,16 @@ html, body { pointer-events: auto !important; }
 
 </style>
 
-</head>
+<script>
+function switchUniformTab(tabName){
+  document.querySelectorAll('.uniform-binder-tab').forEach(function(b){ b.classList.toggle('active', b.dataset.ut===tabName); });
+  document.querySelectorAll('.uniform-binder-panel').forEach(function(p){ p.classList.toggle('active', p.id==='uniform-panel-'+tabName); });
+}
+</script><style>body{pointer-events:auto !important;} .uniform-binder,.uniform-binder-tab{pointer-events:auto !important;}</style><script>(function(){function fix(){if(document.body&&document.body.style.pointerEvents==='none'){document.body.style.pointerEvents='auto';}} setInterval(fix,800);})();</script></head>
 <body class="text-gray-800">
 
 <!-- AUTH OVERLAY -->
-<div id="auth-overlay" class="fixed inset-0 z-[9999] bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4">
+<div id="auth-overlay" style="display:none !important; pointer-events:none !important;" class="fixed inset-0 z-[9999] bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4">
   <div class="w-full max-w-md">
     <div class="bg-white rounded-[20px] shadow-2xl overflow-hidden">
       <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 p-6 text-white text-center">
@@ -552,7 +559,7 @@ html, body { pointer-events: auto !important; }
     
     <!-- ADDED: UNIFORM PRODUCTION ANALYTICS DI DASHBOARD BAWAH TAILOR PERFORMANCE -->
     <div id="dashboard-production-analytics" class="space-y-5 mt-6">
-      <h3 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-industry mr-2 text-emerald-600"></i>Analisis Uniform Production - Semua Product (Dashboard View)</h3>
+      <h3 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-industry mr-2 text-emerald-600"></i>Analisis Productivity - Semua Product (Dashboard View)</h3>
       <div class="bg-white rounded-xl border border-emerald-200 shadow-sm p-4 mt-3 mb-4" id="matrix-filter-section">
         <div class="flex flex-col md:flex-row md:items-end gap-3">
           <div class="flex-1">
@@ -564,13 +571,14 @@ html, body { pointer-events: auto !important; }
           </div>
           <div>
             <button type="button" id="btnMatrixDownload" onclick="downloadProductionMatrixExcel()" class="inline-flex items-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-lg">
-              <i class="fa-solid fa-file-excel mr-2"></i> Download Excel Matrix
+              <i class="fa-solid fa-file-excel mr-2"></i> Excel Production
             </button>
+            <button type="button" id="btnInventoryMatrixDownload" onclick="downloadInventoryMatrixExcel()" class="inline-flex items-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg"><i class="fa-solid fa-file-excel mr-2"></i> Excel Inventory</button>
           </div>
         </div>
       </div>
 
-      <!-- FILTER DEPARTEMEN KHUSUS MATRIX - TARUH DIBAWAH JUDUL Analisis Uniform Production - Semua Product (Dashboard View) - TIDAK UBAH LAINNYA -->
+      <!-- FILTER DEPARTEMEN KHUSUS MATRIX - TARUH DIBAWAH JUDUL Analisis Productivity - Semua Product (Dashboard View) - TIDAK UBAH LAINNYA -->
       
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -611,9 +619,9 @@ html, body { pointer-events: auto !important; }
       <p class="text-xs text-slate-500 mt-1">Defect, received delivery, and production tracking</p>
     </div>
     <div class="uniform-binder" role="tablist">
-      <button type="button" class="uniform-binder-tab active" data-ut="defect" onclick="switchUniformTab('defect')"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Report Defects</button>
-      <button type="button" class="uniform-binder-tab" data-ut="received" onclick="switchUniformTab('received')"><i class="fa-solid fa-box-open mr-1"></i> Uniform Received</button>
-      <button type="button" class="uniform-binder-tab" data-ut="production" onclick="switchUniformTab('production')"><i class="fa-solid fa-shirt mr-1"></i> Uniform Production</button>
+      <button type="button" class="uniform-binder-tab active" data-ut="defect" onclick="switchUniformTab('defect')"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Defect</button>
+      <button type="button" class="uniform-binder-tab" data-ut="received" onclick="switchUniformTab('received')"><i class="fa-solid fa-box-open mr-1"></i> Received</button>
+      <button type="button" class="uniform-binder-tab" data-ut="production" onclick="switchUniformTab('production')"><i class="fa-solid fa-industry mr-1"></i> Productivity</button>
       <button type="button" class="uniform-binder-tab" data-ut="inventory" onclick="switchUniformTab('inventory')"><i class="fa-solid fa-warehouse mr-1"></i> Inventory</button>
       <button type="button" class="uniform-binder-tab" data-ut="discard" onclick="switchUniformTab('discard')"><i class="fa-solid fa-trash-can mr-1"></i> Discard</button>
     </div>
@@ -624,7 +632,7 @@ html, body { pointer-events: auto !important; }
         <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-5">
           <div class="border-b border-gray-100 pb-3">
             <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-              <i class="fa-solid fa-pen-to-square text-indigo-600"></i> Report Defects
+              <i class="fa-solid fa-pen-to-square text-indigo-600"></i> Defect
             </h3>
             <p class="text-xs text-gray-500">Uniform staff entry form</p>
           </div>
@@ -776,7 +784,7 @@ html, body { pointer-events: auto !important; }
 
     <!-- SUB-PANEL 2: RECEIVED -->
     <section id="uniform-panel-received" class="uniform-binder-panel p-4 md:p-5">
-      <div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 grid place-items-center"><i class="fa-solid fa-box-open"></i></div><div><h3 class="text-lg font-bold text-slate-800">Uniform Received</h3><p class="text-xs text-slate-500">Record every supplier delivery, including partial PO delivery.</p></div></div>
+      <div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 grid place-items-center"><i class="fa-solid fa-box-open"></i></div><div><h3 class="text-lg font-bold text-slate-800">Received</h3><p class="text-xs text-slate-500">Record every supplier delivery, including partial PO delivery.</p></div></div>
       <div class="uniform-form-note mb-4"><i class="fa-solid fa-circle-info mr-1"></i> Satu PO boleh memiliki banyak transaksi karena supplier dapat melakukan partial delivery.</div>
       <form id="uniform-received-form" onsubmit="submitUniformReceived(event)">
         <div class="uniform-form-grid">
@@ -906,7 +914,7 @@ html, body { pointer-events: auto !important; }
           <i class="fa-solid fa-shirt"></i>
         </div>
         <div>
-          <h3 class="text-lg font-bold text-slate-800">Uniform Production</h3>
+          <h3 class="text-lg font-bold text-slate-800">Productivity</h3>
           <p class="text-xs text-slate-500">Record uniform production entries</p>
         </div>
       </div>
@@ -1648,7 +1656,7 @@ html, body { pointer-events: auto !important; }
 
 <script>
 let state = {
-  apiUrl: 'https://script.google.com/macros/s/AKfycbyubkb5KChqXeNGiIpotb8nS2CRp71Jg6wVGfDtSQCZttEz0RhWIl6OYbYc4IBwc9jhSg/exec',
+  apiUrl: 'https://script.google.com/macros/s/AKfycbygWThWrtaNjoYbPsBD4KibmH6SsZDlufBI_TjhZNMvY5-W1_ts2pbZq_C9x5XKMGh_/exec',
   tasks: [],
   uniformReceived: [],
   uniformProduction: [],
@@ -1751,10 +1759,7 @@ function getFilteredData(){
   const end = state.dashboardDateFilter.end;
   if(!start && !end) return { tasks: state.tasks||[], received: state.uniformReceived||[], production: state.uniformProduction||[], inventory: state.uniformInventory||[], discard: state.uniformDiscard||[] };
   
-  function getDateStr(obj){
-    // Try multiple possible date fields from Sheets
-    return obj.createdAt || obj.date || obj.timestamp || obj.Timestamp || obj.TIMESTAMP || obj.receivedAt || obj.receivedDate || obj.productionDate || obj.prodDate || obj.Date || obj['Created At'] || obj['Tanggal'] || '';
-  }
+  function getDateStr(obj){ return obj.createdAt || obj.date || obj.CompletedAt || obj.completedAt || obj.startAt || obj.timestamp || ''; }
   
   const tasks = (state.tasks||[]).filter(t => isWithinDateRange(getDateStr(t), start, end));
   const received = (state.uniformReceived||[]).filter(r => isWithinDateRange(getDateStr(r), start, end));
@@ -1999,11 +2004,11 @@ function renderDashboard() {
     });
   }
 
-  // Render Tabel 2: Uniform Received Log di Dashboard
+  // Render Tabel 2: Received Log di Dashboard
   const tbodyReceived = document.getElementById('dashboard-received-table');
   tbodyReceived.innerHTML = '';
   if(receivedList.length === 0) {
-    tbodyReceived.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-xs text-gray-400">Tidak ada data Uniform Received.</td></tr>`;
+    tbodyReceived.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-xs text-gray-400">Tidak ada data Received.</td></tr>`;
   } else {
     receivedList.slice(0, 10).forEach(r => {
       const tr = document.createElement('tr');
@@ -2023,11 +2028,11 @@ function renderDashboard() {
     });
   }
 
-  // Render Tabel 3: Uniform Production Log di Dashboard
+  // Render Tabel 3: Productivity Log di Dashboard
   const tbodyProduction = document.getElementById('dashboard-production-table');
   tbodyProduction.innerHTML = '';
   if(productionList.length === 0) {
-    tbodyProduction.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-xs text-gray-400">Tidak ada data Uniform Production.</td></tr>`;
+    tbodyProduction.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-xs text-gray-400">Tidak ada data Productivity.</td></tr>`;
   } else {
     productionList.slice(0, 10).forEach(p => {
       const tr = document.createElement('tr');
@@ -2339,11 +2344,6 @@ function filterUniformTable() {
   });
 }
 
-function switchUniformTab(tabName){
-  document.querySelectorAll('.uniform-binder-tab').forEach(b=>b.classList.toggle('active',b.dataset.ut===tabName));
-  document.querySelectorAll('.uniform-binder-panel').forEach(p=>p.classList.toggle('active',p.id==='uniform-panel-'+tabName));
-}
-
 function uniformFormData(id){
   const f = document.getElementById(id);
   const o = {};
@@ -2351,7 +2351,7 @@ function uniformFormData(id){
   return o;
 }
 
-async function postUniformTransaction(action, data, formId, btnId){
+async async function postUniformTransaction(action, data, formId, btnId){
   const btn = document.getElementById(btnId);
   if(!btn) return;
   if(btn.dataset.saving === '1') return;
@@ -2535,7 +2535,7 @@ function renderAddedAnalytics(){
 
     // Received
     const recByType={}, recByDept={}, recStack={};
-    receivedList.forEach(r=>{ const dept=r.department||'Unknown'; const type=r.uniformType||r.item||'Unknown'; const q=Number(r.quantity)||0; if(q<=0) return; recByType[type]=(recByType[type]||0)+q; recByDept[dept]=(recByDept[dept]||0)+q; if(!recStack[dept]) recStack[dept]={}; recStack[dept][type]=(recStack[dept][type]||0)+q; });
+    receivedList.forEach(r=>{ const dept=r.department||'Unknown'; const type=r.whatReceived||r.uniformType||r.item||'Unknown'; const q=Number(r.quantity)||0; if(q<=0) return; recByType[type]=(recByType[type]||0)+q; recByDept[dept]=(recByDept[dept]||0)+q; if(!recStack[dept]) recStack[dept]={}; recStack[dept][type]=(recStack[dept][type]||0)+q; });
     const recLabels=Object.keys(recByType).sort((a,b)=>recByType[b]-recByType[a]);
     const cRT=document.getElementById('chartReceivedByType'); if(cRT&&recLabels.length){ destroyAnalyticsChart('recType'); analyticsCharts['recType']=new Chart(cRT,{type:'bar', data:{labels:recLabels, datasets:[{data:recLabels.map(k=>recByType[k]), backgroundColor:'#2563eb'}]}, options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}}}); }
     const cRD=document.getElementById('chartReceivedByDept'); if(cRD&&Object.keys(recByDept).length){ destroyAnalyticsChart('recDept'); analyticsCharts['recDept']=new Chart(cRD,{type:'pie', data:{labels:Object.keys(recByDept), datasets:[{data:Object.values(recByDept), backgroundColor:['#1e3a8a','#2563eb','#60a5fa','#93c5fd']}]}, options:{responsive:true, maintainAspectRatio:false}}); }
@@ -3067,6 +3067,67 @@ document.addEventListener('DOMContentLoaded', ()=>{
   }
 })();
 </script>
+
+
+<script>
+// AGGRESSIVE UNLOCK - fix body pointer-events:none yang bikin tab tidak bisa dipencet (screenshot user)
+(function(){
+  function forceUnlock(){
+    try{
+      // 1. Paksa body pointer-events auto
+      if(document.body){
+        document.body.style.setProperty('pointer-events','auto','important');
+        // Hapus inline style pointer-events:none kalau ada
+        if(document.body.getAttribute('style') && document.body.getAttribute('style').includes('pointer-events: none')){
+          document.body.style.removeProperty('pointer-events');
+          document.body.style.setProperty('pointer-events','auto','important');
+        }
+      }
+      // 2. Hapus / sembunyikan overlay yang ngunci
+      var overlay=document.getElementById('auth-overlay');
+      if(overlay){
+        overlay.style.display='none';
+        overlay.style.pointerEvents='none';
+      }
+      // 3. Hapus radix focus guard
+      document.querySelectorAll('[data-radix-focus-guard], [data-aria-hidden="true"][style*="pointer-events: none"]').forEach(function(el){
+        try{ el.style.pointerEvents='none'; el.style.display='none'; }catch(e){}
+      });
+      // 4. Pastikan binder clickable
+      document.querySelectorAll('.uniform-binder, .uniform-binder-tab, .uniform-binder-panel').forEach(function(el){
+        el.style.setProperty('pointer-events','auto','important');
+      });
+      // 5. Pastikan body child tidak none
+      document.querySelectorAll('body > *').forEach(function(el){
+        if(window.getComputedStyle(el).pointerEvents==='none' && el.id!=='auth-overlay'){
+          // jangan override modal yang memang harus none
+        }
+      });
+    }catch(e){ console.error('unlock error',e); }
+  }
+  // Jalankan segera + interval
+  forceUnlock();
+  document.addEventListener('DOMContentLoaded', forceUnlock);
+  window.addEventListener('load', forceUnlock);
+  setInterval(forceUnlock, 300);
+  // Observer body attribute
+  try{
+    var obs=new MutationObserver(forceUnlock);
+    if(document.body) obs.observe(document.body, {attributes:true, attributeFilter:['style','class']});
+    var obs2=new MutationObserver(forceUnlock);
+    obs2.observe(document.documentElement, {childList:true, subtree:true});
+  }catch(e){}
+})();
+</script>
+<style>
+/* FINAL OVERRIDE */
+html, body{pointer-events:auto !important;}
+body[style*="pointer-events: none"]{pointer-events:auto !important;}
+#auth-overlay{display:none !important; pointer-events:none !important;}
+.uniform-binder{pointer-events:auto !important; position:relative; z-index:10;}
+.uniform-binder-tab{pointer-events:auto !important; position:relative; z-index:11; cursor:pointer !important;}
+.uniform-binder-panel{pointer-events:auto !important;}
+</style>
 
 </body>
 </html>
