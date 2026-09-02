@@ -21,12 +21,14 @@
 <!-- Apple SF Pro System Font - no external font needed -->
 
 <style>
-.uniform-binder{display:flex;gap:6px;overflow-x:auto;padding:8px 6px 0;white-space:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch;align-items:flex-end;border-bottom:1px solid #d2d2d7;}
-.uniform-binder::-webkit-scrollbar{display:none}
-.uniform-binder-tab{flex:0 0 auto;min-width:76px;min-height:38px;padding:8px 12px;border:1px solid #d2d2d7;border-bottom:none;border-radius:10px 10px 0 0;background:#f5f5f7;color:#1d1d1f;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s;position:relative;z-index:1;}
-.uniform-binder-tab.active{background:#1d1d1f;color:#fff;border-color:#1d1d1f;z-index:2;}
-.uniform-binder-panel{display:none;background:#fff;border:1px solid rgba(0,0,0,0.06);border-top:none;border-radius:0 12px 12px 12px;padding:16px;margin-top:0;}
-.uniform-binder-panel.active{display:block}
+  .uniform-binder{display:flex;gap:6px;overflow-x:auto;padding:8px 6px 0;white-space:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;align-items:flex-end;border-bottom:1px solid #d2d2d7;}
+  .uniform-binder::-webkit-scrollbar{display:none}
+  .uniform-binder-tab{flex:0 0 auto;min-width:76px;min-height:38px;padding:8px 12px;border:1px solid #d2d2d7;border-bottom:none;border-radius:10px 10px 0 0;background:#f5f5f7;color:#1d1d1f;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s ease;position:relative;z-index:1;}
+  .uniform-binder-tab:hover{background:#e8e8ed}
+  .uniform-binder-tab.active{background:#1d1d1f;color:#fff;border-color:#1d1d1f;z-index:2;}
+  .uniform-binder-panel{display:none;background:#fff;border:1px solid rgba(0,0,0,0.06);border-top:none;border-radius:0 12px 12px 12px;box-shadow:0 4px 24px rgba(0,0,0,0.04);margin-top:0;padding:16px;position:relative;}
+  .uniform-binder-panel.active{display:block}
+  @media (max-width:640px){.uniform-binder-tab{min-width:64px;padding:6px 8px;font-size:10px;min-height:34px;}}
 
   :root { 
     --ud-navy:#1d1d1f; 
@@ -117,10 +119,6 @@
   /* Uniform binder Apple style */
   
   
-  
-  
-  
-  
   .uniform-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
   .uniform-field label{display:block;margin-bottom:8px;font-size:12px;font-weight:500;color:#1d1d1f; letter-spacing:-0.01em;}
   .uniform-field input,.uniform-field select{
@@ -187,7 +185,7 @@
     .ud-table-wrap table { min-width:760px; }
     #task-modal { align-items:flex-end; }
     #task-modal > div { max-height:92vh;overflow-y:auto;border-radius:24px 24px 0 0;padding:20px; background:#fbfbfd !important; }
-    .uniform-form-grid{grid-template-columns:1fr;gap:16px}
+    .uniform-form-grid{grid-template-columns:1fr;gap:16px}.uniform-binder-panel{border-radius:18px}
   }
 
   /* === DARK / LIGHT MODE Apple === */
@@ -221,6 +219,13 @@
   @media(max-width:767px){.chart-wrap{height:280px !important;min-height:280px !important}.chart-wrap.tall{height:320px !important;min-height:320px !important}}
 
 </style>
+<script>
+  document.querySelectorAll('.uniform-binder-panel').forEach(function(p){
+    p.classList.toggle('active', p.id==='uniform-panel-'+tabName);
+  });
+  var activeBtn=document.querySelector('.uniform-binder-tab[data-ut="'+tabName+'"]');
+  if(activeBtn) activeBtn.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+}</script>
 
 <style id="fix-pointer-final">
 html, body { pointer-events: auto !important; }
@@ -271,23 +276,45 @@ html, body { pointer-events: auto !important; }
   }
 
 </style>
+<script>
+  document.querySelectorAll('.uniform-binder-panel').forEach(function(p){
+    p.classList.toggle('active', p.id==='uniform-panel-'+tabName);
+  });
+  var activeBtn=document.querySelector('.uniform-binder-tab[data-ut="'+tabName+'"]');
+  if(activeBtn) activeBtn.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+}</script>
+
 
 <script>
-function switchUniformTab(tabName){
-  document.querySelectorAll('.uniform-binder-tab').forEach(function(b){ b.classList.toggle('active', b.dataset.ut===tabName); });
-  document.querySelectorAll('.uniform-binder-panel').forEach(function(p){ p.classList.toggle('active', p.id==='uniform-panel-'+tabName); });
-}
-</script><style>body{pointer-events:auto !important;} .uniform-binder,.uniform-binder-tab{pointer-events:auto !important;}</style><script>(function(){function fix(){if(document.body&&document.body.style.pointerEvents==='none'){document.body.style.pointerEvents='auto';}} setInterval(fix,800);})();</script></head>
+(function(){
+  function fixPE(){
+    try{
+      if(document.body && document.body.style.pointerEvents==='none'){
+        document.body.style.pointerEvents='auto';
+      }
+      document.querySelectorAll('[data-radix-focus-guard]').forEach(function(el){ el.style.pointerEvents='none'; });
+    }catch(e){}
+  }
+  fixPE();
+  setInterval(fixPE, 800);
+  if(document.body){
+    var obs=new MutationObserver(fixPE);
+    obs.observe(document.body,{attributes:true, attributeFilter:['style']});
+  }
+})();
+</script>
+<style>body{pointer-events:auto !important;} .uniform-binder,.uniform-binder-tab{pointer-events:auto !important;}</style>
+</head>
 <body class="text-gray-800">
 
 <!-- AUTH OVERLAY -->
-<div id="auth-overlay" style="display:none !important; pointer-events:none !important;" class="fixed inset-0 z-[9999] bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4">
+<div id="auth-overlay" class="fixed inset-0 z-[9999] bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4">
   <div class="w-full max-w-md">
     <div class="bg-white rounded-[20px] shadow-2xl overflow-hidden">
       <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 p-6 text-white text-center">
         <div class="mx-auto w-16 h-16 bg-white/20 rounded-2xl grid place-items-center mb-3"><i class="fa-solid fa-shirt text-2xl"></i></div>
-        <h1 class="text-xl font-bold">DIGITAL UNIFORM PLATFORM</h1>
-        <p class="text-xs text-indigo-200 mt-1">Task Queue Record</p>
+        <h1 class="text-xl font-bold">DIGITAL PLATFORM</h1>
+        <p class="text-xs text-indigo-200 mt-1">Linen-Uniform-Laundry-Tailor</p>
       </div>
       <div class="p-6 md:p-7">
         <h2 class="font-bold text-slate-800 mb-1">Login Required</h2>
@@ -366,8 +393,8 @@ function switchUniformTab(tabName){
           <i class="fa-solid font-bold text-xl fa-shirt"></i>
         </div>
         <div>
-          <h1 class="font-bold text-lg leading-tight">DIGITAL UNIFORM PLATFORM</h1>
-          <p class="text-xs text-indigo-200">Task Queue Record</p>
+          <h1 class="font-bold text-lg leading-tight">DIGITAL PLATFORM</h1>
+          <p class="text-xs text-indigo-200">Linen-Uniform-Laundry-Tailor</p>
         </div>
       </div>
       <div class="flex items-center gap-2 md:hidden">
@@ -538,10 +565,10 @@ function switchUniformTab(tabName){
     <div id="received-analytics-section" class="mt-8 pt-6 border-t space-y-4">
         <h3 class="font-bold text-sm"><i class="fa-solid fa-boxes-stacked mr-2 text-blue-600"></i>Analisis Received - Per Jenis & Departemen (Sesuai Filter)</h3>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <div class="analytics-card lg:col-span-2"><div class="analytics-title">Per Jenis Uniform</div><div class="chart-wrap tall"><canvas id="chartReceivedByType"></canvas></div></div>
-          <div class="analytics-card"><div class="analytics-title">Per Departemen</div><div class="chart-wrap tall"><canvas id="chartReceivedByDept"></canvas></div></div>
+          <div class="analytics-card lg:col-span-2"><div class="analytics-title">Per Jenis Uniform</div><div class="chart-wrap compact-chart"><canvas id="chartReceivedByType"></canvas></div></div>
+          <div class="analytics-card"><div class="analytics-title">Per Departemen</div><div class="chart-wrap compact-chart"><canvas id="chartReceivedByDept"></canvas></div></div>
         </div>
-        <div class="analytics-card"><div class="analytics-title">Stacked Jenis vs Departemen</div><div class="chart-wrap tall"><canvas id="chartReceivedStacked"></canvas></div></div>
+        <div class="analytics-card"><div class="analytics-title">Stacked Jenis vs Departemen</div><div class="chart-wrap compact-chart"><canvas id="chartReceivedStacked"></canvas></div></div>
         <div id="received-kpi" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
       </div>
 
@@ -550,7 +577,7 @@ function switchUniformTab(tabName){
       <div class="flex justify-between items-center"><h3 class="font-bold text-sm"><i class="fa-solid fa-award mr-2 text-amber-600"></i>Tailor Performance + Ranking Bulanan</h3><div class="flex gap-2 items-center"><label class="flex items-center gap-1 text-[11px] bg-white border px-2 py-1 rounded"><input type="checkbox" id="auto-refresh-toggle" onchange="toggleAutoRefresh(this.checked)"> Auto 30s <span id="auto-refresh-countdown" class="text-[10px] text-gray-400"></span></label></div></div>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
         
-          <div class="analytics-card lg:col-span-2"><div class="analytics-title">Credit per Bulan</div><div class="chart-wrap tall"><canvas id="chartMonthlyCredit"></canvas></div></div>
+          <div class="analytics-card lg:col-span-2"><div class="analytics-title">Credit per Hari</div><div class="chart-wrap big"><canvas id="chartMonthlyCredit"></canvas></div></div>
         </div>
         
       </div>
@@ -559,7 +586,7 @@ function switchUniformTab(tabName){
     
     <!-- ADDED: UNIFORM PRODUCTION ANALYTICS DI DASHBOARD BAWAH TAILOR PERFORMANCE -->
     <div id="dashboard-production-analytics" class="space-y-5 mt-6">
-      <h3 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-industry mr-2 text-emerald-600"></i>Analisis Productivity - Semua Product (Dashboard View)</h3>
+      <h3 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-industry mr-2 text-emerald-600"></i>Analisis Uniform Production - Semua Product (Dashboard View)</h3>
       <div class="bg-white rounded-xl border border-emerald-200 shadow-sm p-4 mt-3 mb-4" id="matrix-filter-section">
         <div class="flex flex-col md:flex-row md:items-end gap-3">
           <div class="flex-1">
@@ -570,26 +597,23 @@ function switchUniformTab(tabName){
             <p class="text-[10px] text-gray-500 mt-1" id="matrix-info">Klik Refresh Data jika daftar department masih kosong</p>
           </div>
           <div>
-            <button type="button" id="btnMatrixDownload" onclick="downloadProductionMatrixExcel()" class="inline-flex items-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-lg">
-              <i class="fa-solid fa-file-excel mr-2"></i> Excel Production
-            </button>
-            <button type="button" id="btnInventoryMatrixDownload" onclick="downloadInventoryMatrixExcel()" class="inline-flex items-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg"><i class="fa-solid fa-file-excel mr-2"></i> Excel Inventory</button>
+            <div class="flex gap-2"><button type="button" id="btnMatrixDownload" onclick="downloadProductionMatrixExcel()" class="inline-flex items-center px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-lg"><i class="fa-solid fa-file-excel mr-2"></i> Excel Production</button><button type="button" id="btnInventoryMatrixDownload" onclick="downloadInventoryMatrixExcel()" class="inline-flex items-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg"><i class="fa-solid fa-file-excel mr-2"></i> Excel Inventory</button></div>
           </div>
         </div>
       </div>
 
-      <!-- FILTER DEPARTEMEN KHUSUS MATRIX - TARUH DIBAWAH JUDUL Analisis Productivity - Semua Product (Dashboard View) - TIDAK UBAH LAINNYA -->
+      <!-- FILTER DEPARTEMEN KHUSUS MATRIX - TARUH DIBAWAH JUDUL Analisis Uniform Production - Semua Product (Dashboard View) - TIDAK UBAH LAINNYA -->
       
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <div class="analytics-card">
           <div class="analytics-title">Total Production per Jenis (Bar)</div>
-          <div class="chart-wrap tall"><canvas id="chartDashProdByType"></canvas></div>
+          <div class="chart-wrap big"><canvas id="chartDashProdByType"></canvas></div>
           <div class="text-[10px] text-gray-400 mt-2">Jenis uniform paling banyak diproduksi</div>
         </div>
         <div class="analytics-card lg:col-span-2">
-          <div class="analytics-title">Trend Production per Bulan (Line Area)</div>
-          <div class="chart-wrap tall"><canvas id="chartDashProdTrend"></canvas></div>
+          <div class="analytics-title">Trend Production per Hari (Line Area)</div>
+          <div class="chart-wrap big"><canvas id="chartDashProdTrend"></canvas></div>
           <div class="text-[10px] text-gray-400 mt-2">Tren kenaikan/penurunan produksi bulanan</div>
         </div>
       </div>
@@ -632,7 +656,7 @@ function switchUniformTab(tabName){
         <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-5">
           <div class="border-b border-gray-100 pb-3">
             <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-              <i class="fa-solid fa-pen-to-square text-indigo-600"></i> Defect
+              <i class="fa-solid fa-pen-to-square text-indigo-600"></i> Report Defects
             </h3>
             <p class="text-xs text-gray-500">Uniform staff entry form</p>
           </div>
@@ -784,7 +808,7 @@ function switchUniformTab(tabName){
 
     <!-- SUB-PANEL 2: RECEIVED -->
     <section id="uniform-panel-received" class="uniform-binder-panel p-4 md:p-5">
-      <div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 grid place-items-center"><i class="fa-solid fa-box-open"></i></div><div><h3 class="text-lg font-bold text-slate-800">Received</h3><p class="text-xs text-slate-500">Record every supplier delivery, including partial PO delivery.</p></div></div>
+      <div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 grid place-items-center"><i class="fa-solid fa-box-open"></i></div><div><h3 class="text-lg font-bold text-slate-800">Uniform Received</h3><p class="text-xs text-slate-500">Record every supplier delivery, including partial PO delivery.</p></div></div>
       <div class="uniform-form-note mb-4"><i class="fa-solid fa-circle-info mr-1"></i> Satu PO boleh memiliki banyak transaksi karena supplier dapat melakukan partial delivery.</div>
       <form id="uniform-received-form" onsubmit="submitUniformReceived(event)">
         <div class="uniform-form-grid">
@@ -914,7 +938,7 @@ function switchUniformTab(tabName){
           <i class="fa-solid fa-shirt"></i>
         </div>
         <div>
-          <h3 class="text-lg font-bold text-slate-800">Productivity</h3>
+          <h3 class="text-lg font-bold text-slate-800">Uniform Production</h3>
           <p class="text-xs text-slate-500">Record uniform production entries</p>
         </div>
       </div>
@@ -1429,6 +1453,19 @@ function switchUniformTab(tabName){
           <button type="submit" id="btn-save-inventory" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg"><i class="fa-solid fa-floppy-disk mr-2"></i> Save Inventory</button>
         </div>
       </form>
+
+      <div class="mt-8">
+        <h4 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><i class="fa-solid fa-list"></i> Recent Inventory (50) - Newest First</h4>
+        <div class="ud-table-wrap overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-left">
+            <thead class="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wide">
+              <tr><th class="py-2.5 px-3">ID</th><th class="py-2.5 px-3">Date</th><th class="py-2.5 px-3">Input By</th><th class="py-2.5 px-3">Owner</th><th class="py-2.5 px-3">Item</th><th class="py-2.5 px-3">Dept</th></tr>
+            </thead>
+            <tbody id="uniform-inventory-table-body" class="text-xs"></tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
 
 
@@ -1559,6 +1596,18 @@ function switchUniformTab(tabName){
           <button type="submit" id="btn-save-discard" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold rounded-lg"><i class="fa-solid fa-floppy-disk mr-2"></i> Save Discard</button>
         </div>
       </form>
+      <div class="mt-8">
+        <h4 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><i class="fa-solid fa-list"></i> Recent Discard (50) - Newest First</h4>
+        <div class="ud-table-wrap overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-left">
+            <thead class="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wide">
+              <tr><th class="py-2.5 px-3">ID</th><th class="py-2.5 px-3">Date</th><th class="py-2.5 px-3">Input By</th><th class="py-2.5 px-3">Owner</th><th class="py-2.5 px-3">Item</th><th class="py-2.5 px-3">Dept</th><th class="py-2.5 px-3">Reason</th></tr>
+            </thead>
+            <tbody id="uniform-discard-table-body" class="text-xs"></tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
 
 
@@ -1656,7 +1705,7 @@ function switchUniformTab(tabName){
 
 <script>
 let state = {
-  apiUrl: 'https://script.google.com/macros/s/AKfycbygWThWrtaNjoYbPsBD4KibmH6SsZDlufBI_TjhZNMvY5-W1_ts2pbZq_C9x5XKMGh_/exec',
+  apiUrl: 'https://script.google.com/macros/s/AKfycbwTjQ2QWTFjGlk69X1CR53w1SHbAq1DHIUV83Bk82tlnG-4_K79wu4jNCQpxTxEr2AU/exec',
   tasks: [],
   uniformReceived: [],
   uniformProduction: [],
@@ -1691,56 +1740,66 @@ function toggleTheme(){
   applyTheme(isDark ? 'light' : 'dark');
 }
 
-/* === DATE FILTER LOGIC === */
+/* === DATE FILTER LOGIC - FIXED: konsisten dd/MM/yyyy dari Apps Script === */
 function parseDateValue(val){
   if(!val) return null;
-  // val is already YYYY-MM-DD from input date, but data might be various formats
-  // return Date object from input string
-  const d = new Date(val);
-  d.setHours(0,0,0,0);
-  return isNaN(d) ? null : d;
+  const s = String(val).trim().slice(0,10);
+  const m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if(m){
+    const y = parseInt(m[1],10), mo = parseInt(m[2],10)-1, da = parseInt(m[3],10);
+    const d = new Date(y, mo, da);
+    d.setHours(0,0,0,0);
+    return isNaN(d) ? null : d;
+  }
+  return null;
 }
 function parseDataDate(str){
   if(!str) return null;
-  // If already Date
-  if(str instanceof Date){ 
-    const d = new Date(str); d.setHours(0,0,0,0); return isNaN(d)?null:d; 
+  if(str instanceof Date){
+    const d = new Date(str); d.setHours(0,0,0,0); return isNaN(d)?null:d;
   }
-  // Try direct parse first (ISO, MM/DD/YYYY, etc)
-  let d = new Date(str);
-  if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
-  
-  // Clean string
   const s = String(str).trim();
-  
-  // Try DD/MM/YYYY or DD-MM-YYYY or MM/DD/YYYY - detect by checking if first part >12
-  const m = s.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
+  if(!s) return null;
+  let d;
+  let m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?)?$/);
   if(m){
-    let p1 = parseInt(m[1],10), p2 = parseInt(m[2],10), y = parseInt(m[3],10);
+    let da = parseInt(m[1],10), mo = parseInt(m[2],10)-1, y = parseInt(m[3],10);
     if(y<100) y+=2000;
-    // If p1 >12, assume DD/MM, else try MM/DD first then DD/MM
-    let day, month;
-    if(p1>12){ day=p1; month=p2-1; }
-    else if(p2>12){ day=p2; month=p1-1; }
-    else { // ambiguous, try DD/MM as common in ID
-      day=p1; month=p2-1;
-    }
-    d = new Date(y, month, day);
-    if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
-    // Try alternative
-    d = new Date(y, p1-1, p2);
-    if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
-  }
-  
-  // Try YYYY-MM-DD
-  const m2 = s.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
-  if(m2){
-    let y=parseInt(m2[1],10), mo=parseInt(m2[2],10)-1, da=parseInt(m2[3],10);
     d = new Date(y, mo, da);
     if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
   }
-  
+  m = s.match(/^(\d{1,2})-(\d{1,2})-(\d{2,4})(?:\s+.*)?$/);
+  if(m){
+    let da = parseInt(m[1],10), mo = parseInt(m[2],10)-1, y = parseInt(m[3],10);
+    if(y<100) y+=2000;
+    if(mo>=0 && mo<=11){
+      d = new Date(y, mo, da);
+      if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
+    }
+  }
+  m = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})(?:[T\s].*)?$/);
+  if(m){
+    let y=parseInt(m[1],10), mo=parseInt(m[2],10)-1, da=parseInt(m[3],10);
+    d = new Date(y, mo, da);
+    if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
+  }
+  d = new Date(s);
+  if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
   return null;
+}
+function getMonthKey(str){
+  const d = parseDataDate(str);
+  if(!d) return '';
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+}
+function getDayKey(str){
+  const d = parseDataDate(str);
+  if(!d) return '';
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function getMonthKeyFromDateObj(d){
+  if(!(d instanceof Date) || isNaN(d)) return '';
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
 }
 function isWithinDateRange(dataDateStr, start, end){
   if(!start && !end) return true;
@@ -1759,7 +1818,9 @@ function getFilteredData(){
   const end = state.dashboardDateFilter.end;
   if(!start && !end) return { tasks: state.tasks||[], received: state.uniformReceived||[], production: state.uniformProduction||[], inventory: state.uniformInventory||[], discard: state.uniformDiscard||[] };
   
-  function getDateStr(obj){ return obj.createdAt || obj.date || obj.CompletedAt || obj.completedAt || obj.startAt || obj.timestamp || ''; }
+  function getDateStr(obj){
+    return obj.createdAt || obj.date || obj.Date || obj.CompletedAt || obj.completedAt || obj.completedAt || obj.startAt || obj.StartAt || obj.timestamp || obj.Timestamp || obj.TIMESTAMP || obj.receivedAt || obj.receivedDate || obj.productionDate || obj.prodDate || obj['Created At'] || obj['Tanggal'] || '';
+  }
   
   const tasks = (state.tasks||[]).filter(t => isWithinDateRange(getDateStr(t), start, end));
   const received = (state.uniformReceived||[]).filter(r => isWithinDateRange(getDateStr(r), start, end));
@@ -1886,7 +1947,7 @@ function renderUniformReceivedTable(){
   const tbody = document.getElementById('uniform-received-table-body');
   if(!tbody) return;
   tbody.innerHTML = '';
-  const list = state.uniformReceived || [];
+  const list = [...(state.uniformReceived || [])].reverse();
   if(list.length===0){
     tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-xs text-slate-400">Belum ada data Received</td></tr>`;
     return;
@@ -1911,7 +1972,7 @@ function renderUniformProductionTable(){
   const tbody = document.getElementById('uniform-production-table-body');
   if(!tbody) return;
   tbody.innerHTML = '';
-  const list = state.uniformProduction || [];
+  const list = [...(state.uniformProduction || [])].reverse();
   if(list.length===0){
     tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-xs text-slate-400">Belum ada data Production</td></tr>`;
     return;
@@ -1932,12 +1993,47 @@ function renderUniformProductionTable(){
 
 function showToast(msg){ const t=document.getElementById("toast"); if(!t) return; t.textContent=msg; t.classList.remove("hidden"); t.classList.add("flex"); clearTimeout(window._toastTimer); window._toastTimer=setTimeout(()=>{t.classList.add("hidden");}, 2500); }
 
+function renderUniformInventoryTable(){ const tbody=document.getElementById("uniform-inventory-table-body"); if(!tbody) return; tbody.innerHTML=""; const list=[...(state.uniformInventory||[])].reverse(); if(!list.length){ tbody.innerHTML=`<tr><td colspan="6" class="py-6 text-center text-xs text-slate-400">Belum ada data Inventory</td></tr>`; return;} list.slice(0,50).forEach(function(r){ var tr=document.createElement("tr"); tr.className="border-b border-slate-100"; var d=r.createdAt||r.date||"-"; var it=r.item||r.uniformType||"-"; tr.innerHTML=`<td class="py-2.5 px-3 font-mono text-xs">${r.uniqueID||"-"}</td><td class="py-2.5 px-3 text-xs">${d}</td><td class="py-2.5 px-3 text-xs">${r.inputBy||"-"}</td><td class="py-2.5 px-3 text-xs">${r.uniformOwner||"-"}</td><td class="py-2.5 px-3 text-xs">${it} G:${r.good||0} F:${r.fair||0} B:${r.bad||0} (${r.quantity||0})</td><td class="py-2.5 px-3 text-xs">${r.department||"-"}</td>`; tbody.appendChild(tr); }); }
+
+
+function renderUniformDiscardTable(){ 
+  const tbody=document.getElementById("uniform-discard-table-body"); 
+  if(!tbody) return; 
+  tbody.innerHTML=""; 
+  const list=[...(state.uniformDiscard||[])].reverse(); 
+  if(!list.length){ tbody.innerHTML=`<tr><td colspan="7" class="py-6 text-center text-xs text-slate-400">Belum ada data Discard</td></tr>`; return;} 
+  list.slice(0,50).forEach(function(r){ 
+    var tr=document.createElement("tr"); 
+    tr.className="border-b border-slate-100 hover:bg-slate-50"; 
+    var d=r.createdAt||r.date||"-"; 
+    var it=r.item||r.uniformType||r.uniform||"-"; 
+    tr.innerHTML=`<td class="py-2.5 px-3 font-mono text-xs font-bold text-rose-600">${r.uniqueID||"-"}</td><td class="py-2.5 px-3 text-xs text-slate-500">${d}</td><td class="py-2.5 px-3 text-xs">${r.inputBy||"-"}</td><td class="py-2.5 px-3 text-xs font-medium">${r.uniformOwner||r.owner||"-"}</td><td class="py-2.5 px-3 text-xs">${it} x ${r.quantity||0}</td><td class="py-2.5 px-3 text-xs">${r.department||"-"}</td><td class="py-2.5 px-3 text-xs">${r.reason||r.remarks||"-"}</td>`; 
+    tbody.appendChild(tr); 
+  }); 
+}
+
+
+function switchUniformTab(tabName){
+  try{
+    document.querySelectorAll('.uniform-binder-tab').forEach(function(b){
+      b.classList.toggle('active', b.dataset.ut===tabName);
+    });
+    document.querySelectorAll('.uniform-binder-panel').forEach(function(p){
+      p.classList.toggle('active', p.id==='uniform-panel-'+tabName);
+    });
+    var activeBtn=document.querySelector('.uniform-binder-tab[data-ut="'+tabName+'"]');
+    if(activeBtn) activeBtn.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+  }catch(e){ console.error(e); }
+}
+
 function renderAllViews() {
   renderDashboard();
   renderUniformTable();
   renderTailorQueue();
   renderUniformReceivedTable();
   renderUniformProductionTable();
+  renderUniformInventoryTable();
+  renderUniformDiscardTable();
 }
 
 /* FUNGSI DASHBOARD UTAMA DENGAN TAMBAHAN DATA RECEIVED DAN PRODUCTION + FILTER TANGGAL + IN_PROGRESS */
@@ -1978,17 +2074,18 @@ function renderDashboard() {
   const elDisc=document.getElementById('stat-discard-items'); if(elDisc) elDisc.innerText=totalDiscardItems;
   const inventoryList=filtered.inventory||[]; const discardList=filtered.discard||[];
 
-  // Render Tabel 1: Defect Activity Log
+  // Render Tabel 1: Defect Activity Log - newest first
   const tbodyDefect = document.getElementById('dashboard-recent-table');
   tbodyDefect.innerHTML = '';
-  if(tasks.length === 0) {
+  const sortedTasks = [...(tasks||[])].reverse();
+  if(sortedTasks.length === 0) {
     tbodyDefect.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-xs text-gray-400">Tidak ada data Defect.</td></tr>`;
   } else {
-    tasks.slice(0, 10).forEach(t => {
+    sortedTasks.slice(0, 10).forEach(t => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td class="py-3 px-4 font-mono font-bold text-indigo-600">${t.uniqueID || '-'}</td>
-        <td class="py-3 px-4 text-xs text-gray-500">${t.createdAt || '-'}</td>
+        <td class="py-3 px-4 text-xs text-gray-500">${t.date || t.createdAt || t.CompletedAt || '-'}</td>
         <td class="py-3 px-4 font-medium text-gray-700">${t.reportingStaff || t.inputBy || '-'}</td>
         <td class="py-3 px-4 text-xs">
           <div class="font-bold text-gray-800">${t.staffName || t.staff || '-'}</div>
@@ -2004,13 +2101,13 @@ function renderDashboard() {
     });
   }
 
-  // Render Tabel 2: Received Log di Dashboard
+  // Render Tabel 2: Uniform Received Log di Dashboard
   const tbodyReceived = document.getElementById('dashboard-received-table');
   tbodyReceived.innerHTML = '';
   if(receivedList.length === 0) {
-    tbodyReceived.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-xs text-gray-400">Tidak ada data Received.</td></tr>`;
+    tbodyReceived.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-xs text-gray-400">Tidak ada data Uniform Received.</td></tr>`;
   } else {
-    receivedList.slice(0, 10).forEach(r => {
+    [...(receivedList||[])].reverse().slice(0, 10).forEach(r => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td class="py-3 px-4 font-mono font-bold text-blue-600">${r.uniqueID || '-'}</td>
@@ -2020,7 +2117,7 @@ function renderDashboard() {
           <div class="font-bold text-gray-800">${r.uniformOwner || '-'}</div>
           <div class="text-gray-500">${r.department || '-'}</div>
         </td>
-        <td class="py-3 px-4 text-xs"><span class="font-semibold">${r.uniformType || '-'}</span> (${r.quantity || 0} Pcs)</td>
+        <td class="py-3 px-4 text-xs"><span class="font-semibold">${r.whatReceived || r.uniformType || '-'}</span> (${r.quantity || 0} Pcs)</td>
         <td class="py-3 px-4 text-xs font-mono">${r.poNumber || '-'}</td>
         <td class="py-3 px-4 text-xs text-gray-600">${r.supplierName || '-'}</td>
       `;
@@ -2028,13 +2125,13 @@ function renderDashboard() {
     });
   }
 
-  // Render Tabel 3: Productivity Log di Dashboard
+  // Render Tabel 3: Uniform Production Log di Dashboard
   const tbodyProduction = document.getElementById('dashboard-production-table');
   tbodyProduction.innerHTML = '';
   if(productionList.length === 0) {
-    tbodyProduction.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-xs text-gray-400">Tidak ada data Productivity.</td></tr>`;
+    tbodyProduction.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-xs text-gray-400">Tidak ada data Uniform Production.</td></tr>`;
   } else {
-    productionList.slice(0, 10).forEach(p => {
+    [...(productionList||[])].reverse().slice(0, 10).forEach(p => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td class="py-3 px-4 font-mono font-bold text-teal-600">${p.uniqueID || '-'}</td>
@@ -2078,8 +2175,10 @@ function renderDashboard() {
 
 function renderUniformTable() {
   const tbody = document.getElementById('uniform-submissions-table');
+  if(!tbody) return;
   tbody.innerHTML = '';
-  state.tasks.forEach(t => {
+  const sorted = [...(state.tasks||[])].reverse();
+  sorted.forEach(t => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="py-2.5 px-3 font-mono font-bold text-indigo-600 text-xs">${t.uniqueID || '-'}</td>
@@ -2148,9 +2247,10 @@ function renderTailorQueue() {
   const grid = document.getElementById('tailor-task-grid');
   grid.innerHTML = '';
 
+  const base = [...(state.tasks||[])].reverse();
   const filtered = state.currentTailorFilter === 'ALL'
-    ? state.tasks
-    : state.tasks.filter(t => t.status === state.currentTailorFilter);
+    ? base
+    : base.filter(t => t.status === state.currentTailorFilter);
 
   if (filtered.length === 0) {
     grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400 text-sm bg-white rounded-xl border">No tasks in this status.</div>`;
@@ -2344,6 +2444,8 @@ function filterUniformTable() {
   });
 }
 
+
+
 function uniformFormData(id){
   const f = document.getElementById(id);
   const o = {};
@@ -2351,7 +2453,7 @@ function uniformFormData(id){
   return o;
 }
 
-async async function postUniformTransaction(action, data, formId, btnId){
+async function postUniformTransaction(action, data, formId, btnId){
   const btn = document.getElementById(btnId);
   if(!btn) return;
   if(btn.dataset.saving === '1') return;
@@ -2533,18 +2635,18 @@ function renderAddedAnalytics(){
     const itLabel=document.getElementById('inputter-total-label'); if(itLabel) itLabel.textContent=inputVals.reduce((a,b)=>a+b,0)+' total';
     const defLabel=document.getElementById('defect-total-label'); if(defLabel) defLabel.textContent=Object.values(byDefect).reduce((a,b)=>a+b,0)+' total';
 
-    // Received
+    // Received - FIX: support whatReceived (new header)
     const recByType={}, recByDept={}, recStack={};
-    receivedList.forEach(r=>{ const dept=r.department||'Unknown'; const type=r.whatReceived||r.uniformType||r.item||'Unknown'; const q=Number(r.quantity)||0; if(q<=0) return; recByType[type]=(recByType[type]||0)+q; recByDept[dept]=(recByDept[dept]||0)+q; if(!recStack[dept]) recStack[dept]={}; recStack[dept][type]=(recStack[dept][type]||0)+q; });
+    receivedList.forEach(r=>{ const dept=r.department||'Unknown'; const type=r.whatReceived||r.uniformType||r.item||r.uniformType||'Unknown'; const q=Number(r.quantity)||0; if(q<=0) return; recByType[type]=(recByType[type]||0)+q; recByDept[dept]=(recByDept[dept]||0)+q; if(!recStack[dept]) recStack[dept]={}; recStack[dept][type]=(recStack[dept][type]||0)+q; });
     const recLabels=Object.keys(recByType).sort((a,b)=>recByType[b]-recByType[a]);
     const cRT=document.getElementById('chartReceivedByType'); if(cRT&&recLabels.length){ destroyAnalyticsChart('recType'); analyticsCharts['recType']=new Chart(cRT,{type:'bar', data:{labels:recLabels, datasets:[{data:recLabels.map(k=>recByType[k]), backgroundColor:'#2563eb'}]}, options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}}}); }
     const cRD=document.getElementById('chartReceivedByDept'); if(cRD&&Object.keys(recByDept).length){ destroyAnalyticsChart('recDept'); analyticsCharts['recDept']=new Chart(cRD,{type:'pie', data:{labels:Object.keys(recByDept), datasets:[{data:Object.values(recByDept), backgroundColor:['#1e3a8a','#2563eb','#60a5fa','#93c5fd']}]}, options:{responsive:true, maintainAspectRatio:false}}); }
     const cRS=document.getElementById('chartReceivedStacked'); if(cRS){ const depts=Object.keys(recStack); const datasets=recLabels.map((it,i)=>({label:it, data:depts.map(d=>recStack[d][it]||0), backgroundColor:`hsl(${i*30} 70% 55%)`})); destroyAnalyticsChart('recStack'); if(depts.length) analyticsCharts['recStack']=new Chart(cRS,{type:'bar', data:{labels:depts, datasets}, options:{responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true}, y:{stacked:true}}}}); }
     const recKpi=document.getElementById('received-kpi'); if(recKpi){ const total=Object.values(recByType).reduce((a,b)=>a+b,0); recKpi.innerHTML=Object.entries(recByDept).map(([d,v])=>`<div class="kpi-mini"><div class="text-[10px] font-bold text-blue-600">${d}</div><div class="font-bold">${v}</div></div>`).join('')+`<div class="bg-indigo-500 text-white rounded-xl p-3 shadow-sm border border-indigo-400"><div class="text-[10px] font-bold uppercase tracking-wide">TOTAL RECEIVED</div><div class="font-bold text-lg mt-1">${total}</div></div>`; }
 
-    // Production
-    const prodByType={}, prodByDept={}, prodByMonth={};
-    productionList.forEach(p=>{ const dept=p.department||'General'; const type=p.uniformType||p.item||'Unknown'; const q=Number(p.quantity)||0; if(q<=0) return; prodByType[type]=(prodByType[type]||0)+q; prodByDept[dept]=(prodByDept[dept]||0)+q; const m=(p.createdAt||p.date||'').slice(0,7); if(m){ prodByMonth[m]=(prodByMonth[m]||0)+q; } });
+    // Production - FIX
+    const prodByType={}, prodByDept={}, prodByMonth={}; // now daily key YYYY-MM-DD
+    productionList.forEach(p=>{ const dept=p.department||'General'; const type=p.uniformType||p.whatReceived||p.item||'Unknown'; const q=Number(p.quantity)||0; if(q<=0) return; prodByType[type]=(prodByType[type]||0)+q; prodByDept[dept]=(prodByDept[dept]||0)+q; const m=getMonthKey(p.createdAt||p.date||p.CompletedAt||p.completedAt||''); if(m){ prodByMonth[m]=(prodByMonth[m]||0)+q; } });
     const prodLabels=Object.keys(prodByType).sort((a,b)=>prodByType[b]-prodByType[a]);
     const cPT=document.getElementById('chartProdByType'); if(cPT&&prodLabels.length){ destroyAnalyticsChart('prodType'); analyticsCharts['prodType']=new Chart(cPT,{type:'bar', data:{labels:prodLabels, datasets:[{data:prodLabels.map(k=>prodByType[k]), backgroundColor:'#059669'}]}, options:{responsive:true, maintainAspectRatio:false}}); }
     const cPTr=document.getElementById('chartProdTrend'); if(cPTr){ const months=Object.keys(prodByMonth).sort(); destroyAnalyticsChart('prodTrend'); if(months.length) analyticsCharts['prodTrend']=new Chart(cPTr,{type:'line', data:{labels:months, datasets:[{label:'Production', data:months.map(m=>prodByMonth[m]), borderColor:'#059669', backgroundColor:'rgba(5,150,105,.15)', fill:true, tension:.4}]}, options:{responsive:true, maintainAspectRatio:false}}); }
@@ -2552,9 +2654,9 @@ function renderAddedAnalytics(){
     const cPDo=document.getElementById('chartProdDonut'); if(cPDo&&prodLabels.length){ destroyAnalyticsChart('prodDonut'); analyticsCharts['prodDonut']=new Chart(cPDo,{type:'polarArea', data:{labels:prodLabels, datasets:[{data:prodLabels.map(k=>prodByType[k]), backgroundColor:prodLabels.map((_,i)=>`hsl(${140+i*20} 65% 55%)`)}]}, options:{responsive:true, maintainAspectRatio:false}}); }
     const prodKpi=document.getElementById('production-kpi'); if(prodKpi){ const total=Object.values(prodByType).reduce((a,b)=>a+b,0); prodKpi.innerHTML=prodLabels.slice(0,4).map(k=>`<div class="kpi-mini"><div class="text-[10px] font-bold text-emerald-700">${k}</div><div class="font-bold">${prodByType[k]}</div></div>`).join('')+`<div class="bg-emerald-900 text-white rounded-xl p-3"><div class="text-[10px]">TOTAL</div><div class="font-bold">${total}</div></div>`; }
 
-    // Tailor Performance
+    // Tailor Performance - FIX for new headers date/CompletedAt
     const byTailor={};
-    tasks.forEach(t=>{ const name=(t.tailor||'Unassigned').trim()||'Unassigned'; if(!byTailor[name]) byTailor[name]={open:0,inprog:0,completed:0,credit:0,months:{}}; if(t.status==='OPEN') byTailor[name].open++; else if(t.status==='IN_PROGRESS') byTailor[name].inprog++; else if(t.status==='COMPLETED') byTailor[name].completed++; const cred=t.totalCredit!=null?Number(t.totalCredit):(Number(t.credit)||1)*(Number(t.quantity)||1); byTailor[name].credit+=cred; const m=(t.completedAt||t.createdAt||'').slice(0,7); if(m){ if(!byTailor[name].months[m]) byTailor[name].months[m]=0; if(t.status==='COMPLETED') byTailor[name].months[m]++; } });
+    tasks.forEach(t=>{ const name=(t.tailor||'Unassigned').trim()||'Unassigned'; if(!byTailor[name]) byTailor[name]={open:0,inprog:0,completed:0,credit:0,months:{}}; if(t.status==='OPEN') byTailor[name].open++; else if(t.status==='IN_PROGRESS') byTailor[name].inprog++; else if(t.status==='COMPLETED') byTailor[name].completed++; const cred=t.totalCredit!=null?Number(t.totalCredit):(Number(t.credit)||1)*(Number(t.quantity)||1); byTailor[name].credit+=isNaN(cred)?0:cred; const m=getDayKey(t.CompletedAt||t.completedAt||t.date||t.createdAt||''); if(m){ if(!byTailor[name].months[m]) byTailor[name].months[m]=0; if(t.status==='COMPLETED') byTailor[name].months[m]++; } });
     const tailorNames=Object.keys(byTailor).filter(n=>n!=='Unassigned').sort((a,b)=>byTailor[b].completed - byTailor[a].completed);
     const ctxTC=document.getElementById('chartTailorCompleted'); if(ctxTC&&tailorNames.length){ destroyAnalyticsChart('tailorCompleted'); analyticsCharts['tailorCompleted']=new Chart(ctxTC,{type:'bar', data:{labels:tailorNames, datasets:[{label:'Completed', data:tailorNames.map(n=>byTailor[n].completed), backgroundColor:'#f59e0b'},{label:'In Prog', data:tailorNames.map(n=>byTailor[n].inprog), backgroundColor:'#3b82f6'},{label:'Open', data:tailorNames.map(n=>byTailor[n].open), backgroundColor:'#e5e7eb'}]}, options:{responsive:true, maintainAspectRatio:false}}); }
     const ctxCr=document.getElementById('chartTailorCredit'); if(ctxCr&&tailorNames.length){ destroyAnalyticsChart('tailorCredit'); analyticsCharts['tailorCredit']=new Chart(ctxCr,{type:'bar', data:{labels:tailorNames, datasets:[{data:tailorNames.map(n=>byTailor[n].credit), backgroundColor:'#4f46e5'}]}, options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}}}); }
@@ -2563,8 +2665,8 @@ function renderAddedAnalytics(){
     const ctxTr=document.getElementById('chartTailorTrend'); if(ctxTr){ const allMonths=[...new Set(tailorNames.flatMap(n=>Object.keys(byTailor[n].months)))].sort(); if(allMonths.length){ destroyAnalyticsChart('tailorTrend'); const datasets=tailorNames.slice(0,5).map((name,i)=>({label:name, data:allMonths.map(m=>byTailor[name].months[m]||0), borderColor:`hsl(${i*60} 70% 50%)`, tension:.3})); analyticsCharts['tailorTrend']=new Chart(ctxTr,{type:'line', data:{labels:allMonths, datasets}, options:{responsive:true, maintainAspectRatio:false}}); } }
     const tbody=document.getElementById('tailor-perf-table'); if(tbody){ tbody.innerHTML=tailorNames.map(n=>{ const b=byTailor[n]; const total=b.open+b.inprog+b.completed; const rate=total?Math.round(b.completed/total*100):0; return `<tr class="border-b"><td class="py-1">${n}</td><td class="text-center">${b.open}</td><td class="text-center text-blue-600">${b.inprog}</td><td class="text-center text-emerald-600 font-bold">${b.completed}</td><td class="text-center font-bold">${b.credit}</td><td class="text-center"><span class="px-1.5 py-0.5 rounded-full text-[10px] ${rate>=80?'bg-emerald-100':''}">${rate}%</span></td></tr>`; }).join(''); }
 
-    // Monthly ranking
-    const byMonthTailor={}; tasks.filter(t=>t.status==='COMPLETED').forEach(t=>{ const month=(t.completedAt||t.createdAt||'').slice(0,7); if(!month) return; const tailor=(t.tailor||'Unknown').trim(); if(!byMonthTailor[month]) byMonthTailor[month]={}; if(!byMonthTailor[month][tailor]) byMonthTailor[month][tailor]={completed:0,credit:0}; byMonthTailor[month][tailor].completed++; const cred=t.totalCredit!=null?Number(t.totalCredit):(Number(t.credit)||1)*(Number(t.quantity)||1); byMonthTailor[month][tailor].credit+=cred; });
+    // Monthly ranking - FIX
+    const byMonthTailor={}; tasks.filter(t=>t.status==='COMPLETED').forEach(t=>{ const month=getDayKey(t.CompletedAt||t.completedAt||t.date||t.createdAt||''); if(!month) return; const tailor=(t.tailor||'Unknown').trim(); if(!byMonthTailor[month]) byMonthTailor[month]={}; if(!byMonthTailor[month][tailor]) byMonthTailor[month][tailor]={completed:0,credit:0}; byMonthTailor[month][tailor].completed++; const cred=t.totalCredit!=null?Number(t.totalCredit):(Number(t.credit)||1)*(Number(t.quantity)||1); byMonthTailor[month][tailor].credit+=isNaN(cred)?0:cred; });
     const months=Object.keys(byMonthTailor).sort(); const sel=document.getElementById('ranking-month-filter'); if(sel&&sel.options.length<=1){ months.forEach(m=>{ const o=document.createElement('option'); o.value=m; o.textContent=m; sel.appendChild(o); }); }
     const selectedMonth=sel?.value||''; const latestMonth=months[months.length-1];
     const top3Div=document.getElementById('monthly-top3'); if(top3Div&&latestMonth){ const tailors=Object.entries(byMonthTailor[latestMonth]||{}).sort((a,b)=>b[1].credit-a[1].credit).slice(0,3); top3Div.innerHTML=tailors.map(([name,data],i)=>{ const medal=['🥇','🥈','🥉'][i]; return `<div class="flex justify-between bg-yellow-50 border rounded px-2 py-1 text-[11px]"><span>${medal} ${name}</span><span><b>${data.completed}</b> • ${data.credit} cr</span></div>`; }).join(''); }
@@ -2629,8 +2731,8 @@ function renderDashboardProduction(){
   try{
     const filtered = typeof getFilteredData==='function' ? getFilteredData() : {production: state.uniformProduction||[]};
     const productionList=filtered.production||[];
-    const prodByType={}, prodByDept={}, prodByMonth={};
-    productionList.forEach(p=>{ const dept=p.department||'General'; const type=p.uniformType||p.item||'Unknown'; const q=Number(p.quantity)||0; if(q<=0) return; prodByType[type]=(prodByType[type]||0)+q; prodByDept[dept]=(prodByDept[dept]||0)+q; const m=(p.createdAt||p.date||'').slice(0,7); if(m) prodByMonth[m]=(prodByMonth[m]||0)+q; });
+    const prodByType={}, prodByDept={}, prodByMonth={}; // now daily key YYYY-MM-DD
+    productionList.forEach(p=>{ const dept=p.department||'General'; const type=p.uniformType||p.whatReceived||p.item||'Unknown'; const q=Number(p.quantity)||0; if(q<=0) return; prodByType[type]=(prodByType[type]||0)+q; prodByDept[dept]=(prodByDept[dept]||0)+q; const m=getDayKey(p.createdAt||p.date||p.CompletedAt||''); if(m) prodByMonth[m]=(prodByMonth[m]||0)+q; });
     const prodLabels=Object.keys(prodByType).sort((a,b)=>prodByType[b]-prodByType[a]);
     const c1=document.getElementById('chartDashProdByType'); if(c1&&prodLabels.length){ destroyAnalyticsChart('dashProdType'); analyticsCharts['dashProdType']=new Chart(c1,{type:'bar', data:{labels:prodLabels, datasets:[{label:'Produced', data:prodLabels.map(k=>prodByType[k]), backgroundColor:prodLabels.map((_,i)=>`hsl(${150+i*18} 70% 50%)`), borderRadius:8, borderSkipped:false}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true, grid:{color:'#f1f5f9'}}, x:{grid:{display:false}}}}}); }
     const c2=document.getElementById('chartDashProdTrend'); if(c2){ const months=Object.keys(prodByMonth).sort(); if(months.length){ destroyAnalyticsChart('dashProdTrend'); analyticsCharts['dashProdTrend']=new Chart(c2,{type:'line', data:{labels:months, datasets:[{label:'Production', data:months.map(m=>prodByMonth[m]), borderColor:'#059669', backgroundColor:'rgba(16,185,129,0.18)', fill:true, tension:0.45, pointRadius:5, pointBackgroundColor:'#059669'}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}}); } }
@@ -2839,6 +2941,86 @@ function downloadProductionMatrixExcel(){
     alert('Error: '+e.message);
   }
 }
+
+
+function downloadInventoryMatrixExcel(){
+  try{
+    let invData = [];
+    try{
+      if(typeof getFilteredData==='function'){
+        const f=getFilteredData();
+        if(f && f.inventory) invData=f.inventory;
+      }
+    }catch(e){}
+    if(!invData.length && typeof state!=='undefined' && state.uniformInventory) invData=state.uniformInventory;
+    if(!invData.length){ alert('Data Inventory kosong. Klik Refresh Data dulu.'); return; }
+
+    const deptEl=document.getElementById('filter-matrix-department');
+    const deptMatrix=deptEl?deptEl.value.trim():'';
+    const order=["Trousers","Shirt","Skirt","Blouse","Jacket","Dress","Vest","Polo Shirt","Cook Jacket","Napkin","Kitchen Cloth","Apron","Table Cloth"];
+
+    function parseDate(s){
+      if(!s) return null;
+      s=s.toString().trim().slice(0,10);
+      if(!s) return null;
+      var isoPat=/^\d{4}-\d{2}-\d{2}$/;
+      if(isoPat.test(s)){ var d=new Date(s); return isNaN(d)?null:d; }
+      var m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+      if(m){ var day=parseInt(m[1],10), mo=parseInt(m[2],10)-1, yr=parseInt(m[3],10); if(yr<100) yr+=2000; var dd=new Date(yr,mo,day); return isNaN(dd)?null:dd; }
+      var dd=new Date(s); return isNaN(dd)?null:dd;
+    }
+    function toISO(d){ if(!d||isNaN(d)) return null; return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+    function fmt(d){ if(!d||isNaN(d)) return ''; try{ return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'}).replace(/ /g,'-'); }catch(e){ return toISO(d)||''; } }
+
+    // Build inventory matrix by owner/item
+    var filtered = deptMatrix ? invData.filter(function(p){ return (p.department||'').toLowerCase()===deptMatrix.toLowerCase(); }) : invData;
+    
+    // Group by owner
+    var owners={};
+    filtered.forEach(function(r){
+      var owner=(r.uniformOwner||r.owner||'Unknown').trim();
+      if(!owners[owner]) owners[owner]={ department:r.department||'', items:{} };
+      var item=r.uniformType||r.item||'Unknown';
+      if(!owners[owner].items[item]) owners[owner].items[item]={good:0,fair:0,bad:0, qty:0};
+      owners[owner].items[item].good+=(Number(r.good)||0);
+      owners[owner].items[item].fair+=(Number(r.fair)||0);
+      owners[owner].items[item].bad+=(Number(r.bad)||0);
+      owners[owner].items[item].qty+=(Number(r.quantity)||0);
+    });
+
+    var allItems=[...new Set(filtered.map(function(r){ return r.uniformType||r.item||'Unknown'; }))].sort(function(a,b){ var ai=order.indexOf(a), bi=order.indexOf(b); if(ai!==-1 && bi!==-1) return ai-bi; if(ai!==-1) return -1; if(bi!==-1) return 1; return a.localeCompare(b); });
+
+    var header=["Owner","Department"];
+    allItems.forEach(function(it){ header.push(it+" Good"); header.push(it+" Fair"); header.push(it+" Bad"); header.push(it+" Total"); });
+    header.push("Grand Total");
+
+    var rows=[];
+    Object.keys(owners).sort().forEach(function(owner){
+      var row=[owner, owners[owner].department];
+      var grand=0;
+      allItems.forEach(function(it){
+        var d=owners[owner].items[it];
+        if(d){ row.push(d.good); row.push(d.fair); row.push(d.bad); row.push(d.qty); grand+=d.qty; }
+        else { row.push(0); row.push(0); row.push(0); row.push(0); }
+      });
+      row.push(grand);
+      rows.push(row);
+    });
+
+    var wsData=[header].concat(rows);
+    var ws=XLSX.utils.aoa_to_sheet(wsData);
+    var wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Inventory Matrix');
+    // Also add raw data sheet
+    var rawHeader=["ID","Date","InputBy","Owner","Department","Item","Good","Fair","Bad","Quantity","Remarks"];
+    var rawRows=filtered.map(function(r){ return [r.uniqueID||'', r.createdAt||r.date||'', r.inputBy||'', r.uniformOwner||r.owner||'', r.department||'', r.uniformType||r.item||'', r.good||0, r.fair||0, r.bad||0, r.quantity||0, r.remarks||'']; });
+    var ws2=XLSX.utils.aoa_to_sheet([rawHeader].concat(rawRows));
+    XLSX.utils.book_append_sheet(wb, ws2, 'Raw Inventory');
+    XLSX.writeFile(wb, 'Inventory-Matrix-'+(deptMatrix||'All')+'-'+new Date().toISOString().slice(0,10)+'.xlsx');
+  }catch(e){ console.error(e); alert('Gagal download Inventory: '+e.message); }
+}
+
+
 
 function populateMatrixDeptFilter(){
   try{
@@ -3067,67 +3249,5 @@ document.addEventListener('DOMContentLoaded', ()=>{
   }
 })();
 </script>
-
-
-<script>
-// AGGRESSIVE UNLOCK - fix body pointer-events:none yang bikin tab tidak bisa dipencet (screenshot user)
-(function(){
-  function forceUnlock(){
-    try{
-      // 1. Paksa body pointer-events auto
-      if(document.body){
-        document.body.style.setProperty('pointer-events','auto','important');
-        // Hapus inline style pointer-events:none kalau ada
-        if(document.body.getAttribute('style') && document.body.getAttribute('style').includes('pointer-events: none')){
-          document.body.style.removeProperty('pointer-events');
-          document.body.style.setProperty('pointer-events','auto','important');
-        }
-      }
-      // 2. Hapus / sembunyikan overlay yang ngunci
-      var overlay=document.getElementById('auth-overlay');
-      if(overlay){
-        overlay.style.display='none';
-        overlay.style.pointerEvents='none';
-      }
-      // 3. Hapus radix focus guard
-      document.querySelectorAll('[data-radix-focus-guard], [data-aria-hidden="true"][style*="pointer-events: none"]').forEach(function(el){
-        try{ el.style.pointerEvents='none'; el.style.display='none'; }catch(e){}
-      });
-      // 4. Pastikan binder clickable
-      document.querySelectorAll('.uniform-binder, .uniform-binder-tab, .uniform-binder-panel').forEach(function(el){
-        el.style.setProperty('pointer-events','auto','important');
-      });
-      // 5. Pastikan body child tidak none
-      document.querySelectorAll('body > *').forEach(function(el){
-        if(window.getComputedStyle(el).pointerEvents==='none' && el.id!=='auth-overlay'){
-          // jangan override modal yang memang harus none
-        }
-      });
-    }catch(e){ console.error('unlock error',e); }
-  }
-  // Jalankan segera + interval
-  forceUnlock();
-  document.addEventListener('DOMContentLoaded', forceUnlock);
-  window.addEventListener('load', forceUnlock);
-  setInterval(forceUnlock, 300);
-  // Observer body attribute
-  try{
-    var obs=new MutationObserver(forceUnlock);
-    if(document.body) obs.observe(document.body, {attributes:true, attributeFilter:['style','class']});
-    var obs2=new MutationObserver(forceUnlock);
-    obs2.observe(document.documentElement, {childList:true, subtree:true});
-  }catch(e){}
-})();
-</script>
-<style>
-/* FINAL OVERRIDE */
-html, body{pointer-events:auto !important;}
-body[style*="pointer-events: none"]{pointer-events:auto !important;}
-#auth-overlay{display:none !important; pointer-events:none !important;}
-.uniform-binder{pointer-events:auto !important; position:relative; z-index:10;}
-.uniform-binder-tab{pointer-events:auto !important; position:relative; z-index:11; cursor:pointer !important;}
-.uniform-binder-panel{pointer-events:auto !important;}
-</style>
-
 </body>
 </html>
