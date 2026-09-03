@@ -555,20 +555,26 @@ html, body { pointer-events: auto !important; }
     <div id="dashboard-analytics-section" class="space-y-5">
       <div class="flex justify-between items-center"><h3 class="font-bold text-sm"><i class="fa-solid fa-chart-line text-indigo-600 mr-2"></i>Graphic Analysis (Sesuai Filter Tanggal)</h3></div>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <div class="analytics-card" id="card-inputter"><div class="analytics-title"><span>a. Jumlah Penginput per Nama</span><span id="inputter-total-label" class="text-[10px] text-gray-400"></span></div><div class="chart-wrap"><canvas id="chartInputter"></canvas></div><div id="inputter-summary" class="mt-2 text-[11px] text-gray-500 bg-slate-50 p-2 rounded"></div></div>
-        <div class="analytics-card" id="card-defect"><div class="analytics-title"><span>b. Defect Paling Banyak</span><span id="defect-total-label" class="text-[10px] text-gray-400"></span></div><div class="chart-wrap"><canvas id="chartDefect"></canvas></div><div id="defect-summary" class="mt-2 text-[11px] text-gray-500 bg-slate-50 p-2 rounded"></div></div>
+        <div class="analytics-card" id="card-inputter"><div class="analytics-title"><span>Checker Productivity</span><span id="inputter-total-label" class="text-[10px] text-gray-400"></span></div><div class="chart-wrap"><canvas id="chartInputter"></canvas></div><div id="inputter-summary" class="mt-2 text-[11px] text-gray-500 bg-slate-50 p-2 rounded"></div></div>
+        <div class="analytics-card" id="card-defect"><div class="analytics-title"><span>Defect Summary</span><span id="defect-total-label" class="text-[10px] text-gray-400"></span></div><div class="chart-wrap"><canvas id="chartDefect"></canvas></div><div id="defect-summary" class="mt-2 text-[11px] text-gray-500 bg-slate-50 p-2 rounded"></div></div>
       </div>
     </div>
 
 
-    <!-- MOVED: TAILOR PERFORMANCE + RANKING BULANAN KE DASHBOARD ATAS RECENT LOG -->
+    <!-- MODIFIED: Hapus Per Jenis Uniform, tambah Defect Summary by Department & by Item -->
     <div id="received-analytics-section" class="mt-8 pt-6 border-t space-y-4">
-        <h3 class="font-bold text-sm"><i class="fa-solid fa-boxes-stacked mr-2 text-blue-600"></i>Analisis Received - Per Jenis & Departemen (Sesuai Filter)</h3>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <div class="analytics-card lg:col-span-2"><div class="analytics-title">Per Jenis Uniform</div><div class="chart-wrap compact-chart"><canvas id="chartReceivedByType"></canvas></div></div>
-          <div class="analytics-card"><div class="analytics-title">Per Departemen</div><div class="chart-wrap compact-chart"><canvas id="chartReceivedByDept"></canvas></div></div>
+        <h3 class="font-bold text-sm"><i class="fa-solid fa-bug mr-2 text-rose-600"></i>Defect Summary Analysis (Sesuai Filter)</h3>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div class="analytics-card"><div class="analytics-title flex justify-between items-center gap-2"><span>Defect per Departemen</span><div class="flex gap-1 bg-slate-100 p-1 rounded-full"><button id="btn-stack-item" onclick="switchDefectDeptView('item')" class="px-3 py-1 text-[10px] font-semibold rounded-full bg-slate-900 text-white transition">By Item</button><button id="btn-stack-defect" onclick="switchDefectDeptView('defect')" class="px-3 py-1 text-[10px] font-semibold rounded-full bg-white text-slate-600 transition">By Defect Type</button></div></div><div class="chart-wrap compact-chart"><canvas id="chartDefectByDept"></canvas></div><div id="defect-by-dept-summary" class="mt-2 text-[11px] text-gray-500 bg-slate-50 p-2 rounded"></div></div>
+          <div class="analytics-card"><div class="analytics-title">Defect per Item</div><div class="chart-wrap compact-chart"><canvas id="chartDefectByItem"></canvas></div><div id="defect-by-item-summary" class="mt-2 text-[11px] text-gray-500 bg-slate-50 p-2 rounded"></div></div>
         </div>
-        <div class="analytics-card"><div class="analytics-title">Stacked Jenis vs Departemen</div><div class="chart-wrap compact-chart"><canvas id="chartReceivedStacked"></canvas></div></div>
+        <div class="mt-8 pt-6 border-t">
+        <h3 class="font-bold text-sm mb-4"><i class="fa-solid fa-box-archive mr-2 text-indigo-600"></i>Uniform Received</h3>
+      </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-4">
+          <div class="analytics-card"><div class="analytics-title">Per Departemen (Received)</div><div class="chart-wrap compact-chart"><canvas id="chartReceivedByDept"></canvas></div></div>
+          <div class="analytics-card"><div class="analytics-title">Stacked Jenis vs Departemen</div><div class="chart-wrap compact-chart"><canvas id="chartReceivedStacked"></canvas></div></div>
+        </div>
         <div id="received-kpi" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
       </div>
 
@@ -706,7 +712,7 @@ html, body { pointer-events: auto !important; }
                 <option value="P&C">P&C</option>
                 <option value="Wellness">Wellness</option>
                 <option value="Sales & Executive">Sales & Executive</option>
-                <option value="Other">Other</option>
+                
               </select>
             </div>
 
@@ -728,7 +734,7 @@ html, body { pointer-events: auto !important; }
                 <option value="Hat">Hat</option>
                 <option value="Duvet Cover">Duvet Cover</option>
                 <option value="Curtain">Curtain</option>
-                <option value="Others">Others</option>
+                
               </select>
             </div>
 
@@ -745,7 +751,7 @@ html, body { pointer-events: auto !important; }
                 <option value="Torn Fabric">Torn Fabric/Sobek Kain</option>
                 <option value="Alteration">Alteration/Vermak</option>
                 <option value="Cut /Length">Potong/Panjang</option>
-                <option value="Others">Others</option>
+               
               </select>
             </div>
 
@@ -838,7 +844,7 @@ html, body { pointer-events: auto !important; }
               <option value="P&C">P&C</option>
               <option value="Wellness">Wellness</option>
               <option value="Sales & Executive">Sales & Executive</option>
-              <option value="Other">Other</option></select></div>
+              
           <div class="uniform-field"><label>PO Number</label><input name="poNumber" required placeholder="PO Number"></div>
           <div class="uniform-field"><label>Supplier Name</label><input name="supplierName" required placeholder="Supplier"></div>
         </div>
@@ -977,7 +983,7 @@ html, body { pointer-events: auto !important; }
               <option value="P&C">P&C</option>
               <option value="Wellness">Wellness</option>
               <option value="Sales & Executive">Sales & Executive</option>
-              <option value="Other">Other</option>
+              
             </select>
           </div>
         </div>
@@ -1117,7 +1123,7 @@ html, body { pointer-events: auto !important; }
                 <option value="P&C">P&C</option>
                 <option value="Wellness">Wellness</option>
                 <option value="Sales & Executive">Sales & Executive</option>
-                <option value="Other">Other</option>
+                
             </select>
           </div>
           <div class="uniform-field">
@@ -1518,7 +1524,7 @@ html, body { pointer-events: auto !important; }
                 <option value="P&C">P&C</option>
                 <option value="Wellness">Wellness</option>
                 <option value="Sales & Executive">Sales & Executive</option>
-                <option value="Other">Other</option>
+               
             </select>
           </div>
         </div>
@@ -2617,6 +2623,72 @@ if ('serviceWorker' in navigator) {
 /* ===== ADDED ANALYTICS - SAFE HOOK, NO ORIGINAL CODE CHANGED ===== */
 let analyticsCharts={};
 function destroyAnalyticsChart(id){ if(analyticsCharts[id]){ try{analyticsCharts[id].destroy();}catch(e){} delete analyticsCharts[id]; } }
+
+function renderDefectDeptStacked(mode){
+  try{
+    const data = window._defectDeptData;
+    if(!data) return;
+    const { byDefectDept, deptItemMap, byDefectItem, deptDefectMap, byDefectType } = data;
+    const deptLabels=Object.keys(byDefectDept).sort((a,b)=>byDefectDept[b]-byDefectDept[a]);
+    if(!deptLabels.length){ const s=document.getElementById('defect-by-dept-summary'); if(s) s.innerHTML='Tidak ada data'; return; }
+    let itemLabels, mapToUse, palette;
+    if(mode==='defect'){
+      itemLabels=Object.keys(byDefectType).sort((a,b)=>byDefectType[b]-byDefectType[a]);
+      mapToUse=deptDefectMap;
+      palette=['#dc2626','#ea580c','#d97706','#ca8a04','#65a30d','#16a34a','#059669','#0891b2','#2563eb','#7c3aed','#c026d3','#e11d48'];
+    }else{
+      itemLabels=Object.keys(byDefectItem).sort((a,b)=>byDefectItem[b]-byDefectItem[a]);
+      mapToUse=deptItemMap;
+      palette=['#e11d48','#2563eb','#0ea5e9','#10b981','#f59e0b','#8b5cf6','#ec4899','#06b6d4','#f97316','#84cc16','#6366f1','#14b8a6'];
+    }
+    const colorMap={}; itemLabels.forEach((it,i)=>{ colorMap[it]=palette[i%palette.length]; });
+    const stackedDatasets=itemLabels.map(it=>({
+      label: it,
+      data: deptLabels.map(d=> (mapToUse[d]&&mapToUse[d][it])||0 ),
+      backgroundColor: colorMap[it],
+      borderRadius: 3,
+      borderSkipped: false
+    }));
+    const el=document.getElementById('chartDefectByDept');
+    if(!el) return;
+    destroyAnalyticsChart('defectByDept');
+    analyticsCharts['defectByDept']=new Chart(el,{
+      type:'bar',
+      data:{labels:deptLabels, datasets:stackedDatasets},
+      options:{
+        responsive:true, maintainAspectRatio:false, indexAxis:'y',
+        interaction:{mode:'index', intersect:false},
+        plugins:{
+          legend:{position:'bottom', labels:{boxWidth:12, font:{size:10}}},
+          tooltip:{ callbacks:{ footer:(items)=>{ const total=items.reduce((a,c)=>a+c.parsed.x,0); return 'Total: '+total; } } }
+        },
+        scales:{x:{beginAtZero:true, stacked:true}, y:{stacked:true, grid:{display:false}}}
+      }
+    });
+    const s=document.getElementById('defect-by-dept-summary');
+    if(s){
+      let html=`Tertinggi: <b>${deptLabels[0]}</b> (${byDefectDept[deptLabels[0]]}) - Mode: <b>${mode==='defect'?'Defect Type':'Item'}</b><br>`;
+      deptLabels.slice(0,5).forEach(d=>{
+        const breakdown=mapToUse[d]||{};
+        const sorted=Object.keys(breakdown).sort((a,b)=>breakdown[b]-breakdown[a]);
+        const detail=sorted.map(it=>`${it} (${breakdown[it]})`).join(', ');
+        html+=`<div class="mt-1"><b>${d}</b> [${byDefectDept[d]}]: <span class="text-gray-600">${detail}</span></div>`;
+      });
+      s.innerHTML=html;
+    }
+    const bItem=document.getElementById('btn-stack-item');
+    const bDef=document.getElementById('btn-stack-defect');
+    if(bItem&&bDef){
+      if(mode==='defect'){ bDef.className='px-3 py-1 text-[10px] font-semibold rounded-full bg-slate-900 text-white transition'; bItem.className='px-3 py-1 text-[10px] font-semibold rounded-full bg-white text-slate-600 transition'; }
+      else { bItem.className='px-3 py-1 text-[10px] font-semibold rounded-full bg-slate-900 text-white transition'; bDef.className='px-3 py-1 text-[10px] font-semibold rounded-full bg-white text-slate-600 transition'; }
+    }
+    window._defectDeptCurrentMode=mode;
+  }catch(e){ console.error('renderDefectDeptStacked error', e); }
+}
+function switchDefectDeptView(mode){
+  renderDefectDeptStacked(mode);
+}
+
 let _analyticsRunning=false;
 function renderAddedAnalytics(){
   if(_analyticsRunning) return; _analyticsRunning=true;
@@ -2631,6 +2703,34 @@ function renderAddedAnalytics(){
     const inputVals=inputLabels.map(k=>byInputter[k]);
     const elI=document.getElementById('chartInputter'); if(elI){ destroyAnalyticsChart('inputter'); analyticsCharts['inputter']=new Chart(elI,{type:'bar', data:{labels:inputLabels, datasets:[{label:'Input', data:inputVals, backgroundColor:'#4f46e5', borderRadius:6}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}}); }
     const elD=document.getElementById('chartDefect'); if(elD){ const dLabels=Object.keys(byDefect).sort((a,b)=>byDefect[b]-byDefect[a]).slice(0,8); destroyAnalyticsChart('defect'); analyticsCharts['defect']=new Chart(elD,{type:'doughnut', data:{labels:dLabels, datasets:[{data:dLabels.map(k=>byDefect[k]), backgroundColor:['#ef4444','#f59e0b','#10b981','#3b82f6','#8b5cf6','#ec4899','#06b6d4','#f97316']}]}, options:{responsive:true, maintainAspectRatio:false, cutout:'60%', plugins:{legend:{position:'bottom'}}}}); document.getElementById('defect-summary').innerHTML = dLabels.length? `Terbanyak: <b>${dLabels[0]}</b> (${byDefect[dLabels[0]]}x)` : ''; }
+
+    // NEW: Defect by Department STACKED by Item / Defect Type - FINAL (toggle By Item / By Defect Type tetap ada, tidak dihilangkan)
+    const byDefectDept={}, byDefectItem={}, deptItemMap={}, deptDefectMap={}, byDefectType={};
+    tasks.forEach(t=>{ 
+      const dept=(t.department||'Unknown').trim(); 
+      const item=(t.item||'Unknown').trim(); 
+      const defect=(t.defect||'Unknown').trim();
+      byDefectDept[dept]=(byDefectDept[dept]||0)+1; 
+      byDefectItem[item]=(byDefectItem[item]||0)+1; 
+      byDefectType[defect]=(byDefectType[defect]||0)+1;
+      if(!deptItemMap[dept]) deptItemMap[dept]={};
+      deptItemMap[dept][item]=(deptItemMap[dept][item]||0)+1;
+      if(!deptDefectMap[dept]) deptDefectMap[dept]={};
+      deptDefectMap[dept][defect]=(deptDefectMap[dept][defect]||0)+1;
+    });
+    window._defectDeptData = { byDefectDept, deptItemMap, byDefectItem, deptDefectMap, byDefectType };
+    const elDefDept=document.getElementById('chartDefectByDept');
+    if(elDefDept){
+      window._defectDeptCurrentMode = window._defectDeptCurrentMode || 'item';
+      renderDefectDeptStacked(window._defectDeptCurrentMode);
+    }
+    const elDefItem=document.getElementById('chartDefectByItem'); 
+    if(elDefItem){ 
+      const labels=Object.keys(byDefectItem).sort((a,b)=>byDefectItem[b]-byDefectItem[a]).slice(0,10); 
+      destroyAnalyticsChart('defectByItem'); 
+      analyticsCharts['defectByItem']=new Chart(elDefItem,{type:'bar', data:{labels, datasets:[{label:'Defect', data:labels.map(k=>byDefectItem[k]), backgroundColor:'#2563eb', borderRadius:6}]}, options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}, scales:{x:{beginAtZero:true}, y:{grid:{display:false}}}}}); 
+      const s=document.getElementById('defect-by-item-summary'); if(s) s.innerHTML = labels.length? `Tertinggi: <b>${labels[0]}</b> (${byDefectItem[labels[0]]})` : 'Tidak ada data';
+    }
     document.getElementById('inputter-summary').innerHTML = inputLabels.length? `Top: <b>${inputLabels[0]}</b> (${inputVals[0]}) dari ${inputVals.reduce((a,b)=>a+b,0)}` : '';
     const itLabel=document.getElementById('inputter-total-label'); if(itLabel) itLabel.textContent=inputVals.reduce((a,b)=>a+b,0)+' total';
     const defLabel=document.getElementById('defect-total-label'); if(defLabel) defLabel.textContent=Object.values(byDefect).reduce((a,b)=>a+b,0)+' total';
@@ -2639,7 +2739,7 @@ function renderAddedAnalytics(){
     const recByType={}, recByDept={}, recStack={};
     receivedList.forEach(r=>{ const dept=r.department||'Unknown'; const type=r.whatReceived||r.uniformType||r.item||r.uniformType||'Unknown'; const q=Number(r.quantity)||0; if(q<=0) return; recByType[type]=(recByType[type]||0)+q; recByDept[dept]=(recByDept[dept]||0)+q; if(!recStack[dept]) recStack[dept]={}; recStack[dept][type]=(recStack[dept][type]||0)+q; });
     const recLabels=Object.keys(recByType).sort((a,b)=>recByType[b]-recByType[a]);
-    const cRT=document.getElementById('chartReceivedByType'); if(cRT&&recLabels.length){ destroyAnalyticsChart('recType'); analyticsCharts['recType']=new Chart(cRT,{type:'bar', data:{labels:recLabels, datasets:[{data:recLabels.map(k=>recByType[k]), backgroundColor:'#2563eb'}]}, options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}}}); }
+    // chartReceivedByType removed as requested - Per Jenis Uniform dihilangkan
     const cRD=document.getElementById('chartReceivedByDept'); if(cRD&&Object.keys(recByDept).length){ destroyAnalyticsChart('recDept'); analyticsCharts['recDept']=new Chart(cRD,{type:'pie', data:{labels:Object.keys(recByDept), datasets:[{data:Object.values(recByDept), backgroundColor:['#1e3a8a','#2563eb','#60a5fa','#93c5fd']}]}, options:{responsive:true, maintainAspectRatio:false}}); }
     const cRS=document.getElementById('chartReceivedStacked'); if(cRS){ const depts=Object.keys(recStack); const datasets=recLabels.map((it,i)=>({label:it, data:depts.map(d=>recStack[d][it]||0), backgroundColor:`hsl(${i*30} 70% 55%)`})); destroyAnalyticsChart('recStack'); if(depts.length) analyticsCharts['recStack']=new Chart(cRS,{type:'bar', data:{labels:depts, datasets}, options:{responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true}, y:{stacked:true}}}}); }
     const recKpi=document.getElementById('received-kpi'); if(recKpi){ const total=Object.values(recByType).reduce((a,b)=>a+b,0); recKpi.innerHTML=Object.entries(recByDept).map(([d,v])=>`<div class="kpi-mini"><div class="text-[10px] font-bold text-blue-600">${d}</div><div class="font-bold">${v}</div></div>`).join('')+`<div class="bg-indigo-500 text-white rounded-xl p-3 shadow-sm border border-indigo-400"><div class="text-[10px] font-bold uppercase tracking-wide">TOTAL RECEIVED</div><div class="font-bold text-lg mt-1">${total}</div></div>`; }
