@@ -3775,5 +3775,196 @@ document.addEventListener('DOMContentLoaded', ()=>{
   }
 })();
 </script>
+
+<script>
+// FINAL FIX - Uniform Inventory Dashboard Data Loader & Renderer
+(function(){
+  // Ensure global
+  window.invCharts = window.invCharts || {};
+  function destroyInvChart(id){ if(window.invCharts[id]){ try{window.invCharts[id].destroy();}catch(e){} delete window.invCharts[id]; } }
+  function parseInvNumber(v){ if(v===undefined||v===null||v==='') return 0; let n=Number(String(v).replace(/[^0-9.-]/g,'')); return isNaN(n)?0:n; }
+  function getInvField(obj, keys, def=''){
+    for(let k of keys){ if(obj[k]!==undefined && obj[k]!==null && obj[k]!=='') return obj[k]; let lk=k.toLowerCase(); for(let ok of Object.keys(obj)){ if(ok.toLowerCase()===lk) return obj[ok]; } }
+    return def;
+  }
+
+  window.renderInventoryDashboard = function(filtered){
+    const list = (filtered && filtered.inventory) ? filtered.inventory : (window.state && state.uniformInventory) || [];
+    console.log('[InvDash] renderInventoryDashboard called, rows:', list.length, 'filtered:', !!filtered);
+    const elSync = document.getElementById('inv-last-sync');
+    // If list empty but state has data, show warning
+    if(!list.length){
+      const totalState = (state.uniformInventory||[]).length;
+      if(elSync) elSync.textContent = 'Sync: '+new Date().toLocaleString('id-ID')+' | Rows filtered: 0 / Total: '+totalState+' | Cek filter tanggal / API';
+      // still set KPIs 0
+      ['inv-total','inv-good','inv-fair','inv-bad','inv-unique-types','inv-dept-count'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent='0'; });
+      const healthEl=document.getElementById('inv-health'); if(healthEl) healthEl.textContent='0%';
+      // show tables empty
+      const critBody=document.getElementById('inv-critical-table'); if(critBody) critBody.innerHTML='<tr><td colspan=3 class="p-3 text-center text-amber-600 text-[11px]">Data inventory kosong. Cek API getUniformInventory di Apps Script / filter tanggal. Total di state: '+totalState+'</td></tr>';
+      return;
+    }
+
+    let good=0,fair=0,bad=0, totalQty=0;
+    list.forEach(r=>{
+      let g=parseInvNumber(getInvField(r,['good','Good','GOOD']));
+      let f=parseInvNumber(getInvField(r,['fair','Fair']));
+      let b=parseInvNumber(getInvField(r,['bad','Bad','BAD']));
+      let q=parseInvNumber(getInvField(r,['quantity','qty','jumlah','total','Quantity']));
+      let cond=String(getInvField(r,['condition','kondisi','status','Status'],'')).toLowerCase();
+      if(g||f||b){
+        good+=g; fair+=f; bad+=b; totalQty+=g+f+b;
+      } else if(q){
+        totalQty+=q;
+        if(cond.includes('good')) good+=q;
+        else if(cond.includes('fair')) fair+=q;
+        else if(cond.includes('bad')||cond.includes('replace')||cond.includes('rusak')) bad+=q;
+        else { // if no condition column, assume good
+          good+=q;
+        }
+      } else {
+        // row count fallback
+        totalQty+=1;
+        good+=1;
+      }
+    });
+    const totalCond = good+fair+bad || totalQty || 1;
+    const uniqTypes = new Set(list.map(r=> String(getInvField(r,['uniformType','item','whatReceived','Uniform Type','type','Item'])).trim()).filter(Boolean)).size;
+    const uniqDepts = new Set(list.map(r=> String(getInvField(r,['department','dept','Department'])).trim()).filter(Boolean)).size;
+    const health = (good/totalCond*100);
+
+    const setTxt=(id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val; };
+    setTxt('inv-total', totalQty);
+    setTxt('inv-good', good);
+    setTxt('inv-fair', fair);
+    setTxt('inv-bad', bad);
+    setTxt('inv-good-pct', (good/totalCond*100).toFixed(1)+'%');
+    setTxt('inv-fair-pct', (fair/totalCond*100).toFixed(1)+'%');
+    setTxt('inv-bad-pct', (bad/totalCond*100).toFixed(1)+'%');
+    setTxt('inv-unique-types', uniqTypes);
+    setTxt('inv-dept-count', uniqDepts);
+    const healthEl=document.getElementById('inv-health');
+    if(healthEl){ healthEl.textContent=health.toFixed(1)+'%'; healthEl.className='text-xl font-bold mt-1 '+(health>75?'text-emerald-600':health>50?'text-amber-600':'text-rose-600'); }
+    setTxt('inv-health-label', health>75?'Healthy':health>50?'Moderate':'Needs Action');
+    if(elSync) elSync.textContent='Sync: '+new Date().toLocaleString('id-ID')+' | Rows: '+list.length;
+
+    // Aggregations
+    const byType={};
+    list.forEach(r=>{
+      const t=String(getInvField(r,['uniformType','item','Uniform Type','type','Item'],'Unknown')).trim()||'Unknown';
+      if(!byType[t]) byType[t]={good:0,fair:0,bad:0,total:0};
+      let g=parseInvNumber(getInvField(r,['good'])); let f=parseInvNumber(getInvField(r,['fair'])); let b=parseInvNumber(getInvField(r,['bad'])); let q=parseInvNumber(getInvField(r,['quantity','qty']));
+      let cond=String(getInvField(r,['condition'],'')).toLowerCase();
+      if(g||f||b){ byType[t].good+=g; byType[t].fair+=f; byType[t].bad+=b; byType[t].total+=g+f+b; }
+      else if(cond){ if(cond.includes('good')){ byType[t].good+=q; byType[t].total+=q; } else if(cond.includes('fair')){ byType[t].fair+=q; byType[t].total+=q; } else if(cond.includes('bad')){ byType[t].bad+=q; byType[t].total+=q; } else { byType[t].good+=q; byType[t].total+=q; } }
+      else { byType[t].good+= (q||1); byType[t].total+= (q||1); }
+    });
+    const byDept={};
+    list.forEach(r=>{ const d=String(getInvField(r,['department','dept'],'Unknown')).trim()||'Unknown'; if(!byDept[d]) byDept[d]=0; byDept[d]+= parseInvNumber(getInvField(r,['quantity'])) || (parseInvNumber(r.good)+parseInvNumber(r.fair)+parseInvNumber(r.bad)) || 1; });
+    const byDate={};
+    list.forEach(r=>{ let dateStr=String(getInvField(r,['createdAt','date','timestamp','Created At'],'')).slice(0,10); if(!dateStr || dateStr==='-') return; if(!byDate[dateStr]) byDate[dateStr]=0; byDate[dateStr]+= parseInvNumber(getInvField(r,['quantity'])) || 1; });
+    const sortedDates=Object.keys(byDate).sort();
+    const byOwner={};
+    list.forEach(r=>{ const o=String(getInvField(r,['uniformOwner','owner','Owner'],'-')).trim()||'Unknown'; if(!byOwner[o]) byOwner[o]=0; byOwner[o]+= parseInvNumber(getInvField(r,['quantity'])) || 1; });
+    const topOwners=Object.entries(byOwner).sort((a,b)=>b[1]-a[1]).slice(0,8);
+
+    // Charts with destroy
+    const chartIds=['chartInvByTypeStacked','chartInvConditionDonut','chartInvByDept','chartInvTrend','chartInvByOwner','chartInvBadRate'];
+    chartIds.forEach(id=>{ const c=Chart.getChart(id); if(c) c.destroy(); });
+
+    const ctx1=document.getElementById('chartInvByTypeStacked');
+    if(ctx1){
+      const labels=Object.keys(byType).slice(0,15);
+      new Chart(ctx1,{type:'bar', data:{labels, datasets:[{label:'Good', data:labels.map(l=>byType[l].good), backgroundColor:'#10b981'},{label:'Fair', data:labels.map(l=>byType[l].fair), backgroundColor:'#f59e0b'},{label:'Bad', data:labels.map(l=>byType[l].bad), backgroundColor:'#ef4444'}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom'}}, scales:{x:{stacked:true}, y:{stacked:true, beginAtZero:true}}}});
+    }
+    const ctx2=document.getElementById('chartInvConditionDonut');
+    if(ctx2){ new Chart(ctx2,{type:'doughnut', data:{labels:['Good','Fair','Bad'], datasets:[{data:[good,fair,bad], backgroundColor:['#10b981','#f59e0b','#ef4444']}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom'}}}}); }
+    const ctx3=document.getElementById('chartInvByDept');
+    if(ctx3){ const dLabels=Object.keys(byDept).slice(0,12); new Chart(ctx3,{type:'bar', data:{labels:dLabels, datasets:[{label:'Qty', data:dLabels.map(l=>byDept[l]), backgroundColor:'#6366f1'}]}, options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}}}); }
+    const ctx4=document.getElementById('chartInvTrend');
+    if(ctx4){ new Chart(ctx4,{type:'line', data:{labels:sortedDates, datasets:[{label:'Inventory In', data:sortedDates.map(d=>byDate[d]), borderColor:'#6366f1', backgroundColor:'rgba(99,102,241,0.2)', fill:true, tension:0.3}]}, options:{responsive:true, maintainAspectRatio:false}}); }
+    const ctx5=document.getElementById('chartInvByOwner');
+    if(ctx5){ new Chart(ctx5,{type:'bar', data:{labels:topOwners.map(o=>o[0]), datasets:[{label:'Qty', data:topOwners.map(o=>o[1]), backgroundColor:'#0ea5e9'}]}, options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}}}); }
+    const ctx6=document.getElementById('chartInvBadRate');
+    if(ctx6){
+      const badRates=Object.entries(byType).map(([k,v])=>({type:k, rate: v.total? (v.bad/v.total*100):0, bad:v.bad, total:v.total})).sort((a,b)=>b.rate-a.rate).slice(0,10);
+      new Chart(ctx6,{type:'bar', data:{labels:badRates.map(b=>b.type), datasets:[{label:'Bad %', data:badRates.map(b=>b.rate), backgroundColor:'#ef4444'}]}, options:{responsive:true, maintainAspectRatio:false, scales:{y:{max:100}}, plugins:{legend:{display:false}}}});
+      const critBody=document.getElementById('inv-critical-table');
+      if(critBody){ critBody.innerHTML=''; badRates.filter(b=>b.rate>15).forEach(b=>{ const tr=document.createElement('tr'); tr.className='border-b'; tr.innerHTML=`<td class="p-2 font-medium">${b.type}</td><td class="p-2 text-right font-bold text-rose-600">${b.rate.toFixed(1)}%</td><td class="p-2 text-right">${b.total}</td>`; critBody.appendChild(tr); }); if(!critBody.children.length) critBody.innerHTML='<tr><td colspan=3 class="p-3 text-center text-gray-400 text-[11px]">Tidak ada critical >15% - bagus!</td></tr>'; }
+      const lowBody=document.getElementById('inv-low-table');
+      if(lowBody){ lowBody.innerHTML=''; Object.entries(byType).sort((a,b)=>a[1].total-b[1].total).slice(0,8).forEach(([k,v])=>{ const tr=document.createElement('tr'); tr.className='border-b'; tr.innerHTML=`<td class="p-2 font-medium">${k}</td><td class="p-2 text-right">${v.total}</td>`; lowBody.appendChild(tr); }); }
+      const typeInsight=document.getElementById('inv-type-insight');
+      if(typeInsight){ const topType=Object.entries(byType).sort((a,b)=>b[1].total-a[1].total)[0]; typeInsight.innerHTML=topType?`Top stock: <b>${topType[0]}</b> (${topType[1].total} pcs) Good ${topType[1].good} Fair ${topType[1].fair} Bad ${topType[1].bad}.`:'Belum ada data'; }
+      const condSummary=document.getElementById('inv-condition-summary');
+      if(condSummary){ condSummary.innerHTML=`Good <b>${(good/totalCond*100).toFixed(1)}%</b> dari total. ${bad>good*0.3?'<span class="text-rose-600 font-bold">Bad tinggi, perlu discard/retire.</span>':'Stok sehat.'}`; }
+      const badInsight=document.getElementById('inv-bad-insight');
+      if(badInsight){ const worst=badRates[0]; badInsight.innerHTML=worst?`Priority replace: <b>${worst.type}</b> Bad Rate ${worst.rate.toFixed(1)}% (${worst.bad}/${worst.total}).`:'Tidak ada bad rate tinggi.'; }
+      const auto=document.getElementById('inv-auto-insight');
+      if(auto){
+        let insights=[];
+        insights.push(`Total <b>${totalQty}</b> pcs dari <b>${list.length}</b> record Inventory (tab UniformInventory).`);
+        insights.push(`Health Score <b>${health.toFixed(1)}%</b> (Good/Total). ${health<50?'⚠️ Perlu audit & replacement':'✅ Relatif sehat'}.`);
+        if(bad/totalCond>0.25) insights.push(`Bad condition <b>${(bad/totalCond*100).toFixed(1)}%</b> melebihi 25% - rekomendasikan proses discard atau tailor repair.`);
+        const lowStock=Object.entries(byType).filter(([k,v])=>v.total<5);
+        if(lowStock.length) insights.push(`Low stock: ${lowStock.map(([k])=>k).join(', ')} (<5 pcs) - pertimbangkan replenishment.`);
+        if(uniqDepts>0) insights.push(`Distribusi ke <b>${uniqDepts}</b> departemen, rata-rata ${(totalQty/uniqDepts).toFixed(1)} pcs/dept.`);
+        if(sortedDates.length) insights.push(`Input terbaru: ${sortedDates.slice(-3).join(', ')}.`);
+        insights.push(`Data source: GoogleSheet Daily Uniform Defect report > tab UniformInventory via action getUniformInventory.`);
+        auto.innerHTML=insights.map(i=>`<div>• ${i}</div>`).join('');
+      }
+    }
+  };
+
+  // Patch renderDashboard at the very end to ensure it runs
+  function patchDashboard(){
+    if(typeof window.renderDashboard==='function' && !window.renderDashboard._invPatched){
+      const orig=window.renderDashboard;
+      window.renderDashboard=function(){
+        const res=orig.apply(this, arguments);
+        try{
+          const filtered = (typeof getFilteredData==='function')? getFilteredData() : {inventory: (window.state&&state.uniformInventory)||[]};
+          // Debug log
+          console.log('[InvDash] state.uniformInventory length:', (window.state&&state.uniformInventory||[]).length, 'filtered inventory:', (filtered.inventory||[]).length);
+          window.renderInventoryDashboard(filtered);
+        }catch(e){ console.error('InvDash error', e); }
+        return res;
+      };
+      window.renderDashboard._invPatched=true;
+      console.log('[InvDash] renderDashboard patched');
+    }
+  }
+  patchDashboard();
+  // Try again after load
+  setTimeout(patchDashboard, 1000);
+  setTimeout(patchDashboard, 3000);
+  // Also expose manual refresh
+  window.refreshInvDash = function(){ try{ const f=(typeof getFilteredData==='function')? getFilteredData():{inventory:state.uniformInventory}; window.renderInventoryDashboard(f);}catch(e){} };
+
+  // If API getUniformInventory fails, show hint to check Apps Script
+  const origRefresh = window.refreshData;
+  if(typeof origRefresh==='function' && !origRefresh._invLogged){
+    window.refreshData = async function(){
+      const r = await origRefresh.apply(this, arguments);
+      console.log('[InvDash] after refreshData, inventory count:', (state.uniformInventory||[]).length);
+      // if empty, try fetch raw for debug
+      if(!(state.uniformInventory||[]).length){
+        try{
+          const url = state.apiUrl + '?action=getUniformInventory';
+          console.log('[InvDash] trying fetch', url);
+          const resp = await fetch(url).then(r=>r.json());
+          console.log('[InvDash] raw fetch result', resp);
+          if(resp && resp.data && resp.data.length){
+            state.uniformInventory = resp.data;
+            const f = (typeof getFilteredData==='function')? getFilteredData() : {inventory: resp.data};
+            window.renderInventoryDashboard(f);
+          }
+        }catch(e){ console.error('[InvDash] fetch debug failed', e); }
+      }
+      return r;
+    };
+    window.refreshData._invLogged=true;
+  }
+})();
+</script>
+
 </body>
 </html>
