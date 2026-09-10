@@ -638,7 +638,110 @@ html, body { pointer-events: auto !important; }
     </div>
 
     
+    
+    <!-- ========== UNIFORM DISCARD DASHBOARD - BY DEPARTMENT & BY ITEM ========== -->
+    <div id="discard-dashboard-section" class="space-y-5 mt-8 pt-6 border-t border-rose-200">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <h3 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-trash-can mr-2 text-rose-600"></i>Uniform Discard Dashboard - By Department & By Item (dari tab UniformDiscard)</h3>
+        <div class="flex gap-2 items-center">
+          <div class="flex bg-slate-100 p-1 rounded-full" id="discard-toggle-group">
+            <button id="btn-discard-dept" onclick="switchDiscardView('dept')" class="px-3 py-1.5 text-[11px] font-bold rounded-full bg-slate-900 text-white transition">By Department</button>
+            <button id="btn-discard-item" onclick="switchDiscardView('item')" class="px-3 py-1.5 text-[11px] font-bold rounded-full bg-white text-slate-600 transition">By Item</button>
+            <button id="btn-discard-reason" onclick="switchDiscardView('reason')" class="px-3 py-1.5 text-[11px] font-bold rounded-full bg-white text-slate-600 transition">By Reason</button>
+          </div>
+          <button onclick="downloadDiscardExcel()" class="inline-flex items-center px-3 py-2 bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-bold rounded-full"><i class="fa-solid fa-file-excel mr-1.5"></i> Export</button>
+          <span id="discard-last-sync" class="text-[10px] text-gray-400 px-2">-</span>
+        </div>
+      </div>
+
+      <!-- KPI GRID DISCARD -->
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3" id="discard-kpi-grid">
+        <div class="bg-white p-4 rounded-xl border border-rose-100 shadow-sm">
+          <div class="text-[10px] font-bold uppercase text-rose-600">Total Discard</div>
+          <div class="text-xl font-bold text-slate-900 mt-1" id="discard-total">0</div>
+          <div class="text-[10px] text-gray-400 mt-1">pcs</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+          <div class="text-[10px] font-bold uppercase text-slate-500">Unique Dept</div>
+          <div class="text-xl font-bold text-indigo-600 mt-1" id="discard-dept-count">0</div>
+          <div class="text-[10px] text-gray-400 mt-1">departemen</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+          <div class="text-[10px] font-bold uppercase text-slate-500">Unique Item</div>
+          <div class="text-xl font-bold text-amber-600 mt-1" id="discard-item-count">0</div>
+          <div class="text-[10px] text-gray-400 mt-1">jenis</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+          <div class="text-[10px] font-bold uppercase text-slate-500">Top Dept</div>
+          <div class="text-sm font-bold text-slate-800 mt-1 truncate" id="discard-top-dept">-</div>
+          <div class="text-[10px] text-gray-400 mt-1" id="discard-top-dept-qty">-</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+          <div class="text-[10px] font-bold uppercase text-slate-500">Top Item</div>
+          <div class="text-sm font-bold text-slate-800 mt-1 truncate" id="discard-top-item">-</div>
+          <div class="text-[10px] text-gray-400 mt-1" id="discard-top-item-qty">-</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+          <div class="text-[10px] font-bold uppercase text-slate-500">Top Reason</div>
+          <div class="text-sm font-bold text-slate-800 mt-1 truncate" id="discard-top-reason">-</div>
+          <div class="text-[10px] text-gray-400 mt-1" id="discard-top-reason-qty">-</div>
+        </div>
+      </div>
+
+      <!-- MAIN CHARTS ROW -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div class="analytics-card lg:col-span-2" id="card-discard-main">
+          <div class="analytics-title flex justify-between items-center">
+            <span id="discard-main-title">Discard by Department (Bar)</span>
+            <div class="flex gap-1 bg-slate-100 p-1 rounded-full">
+              <button id="btn-discard-count" onclick="switchDiscardMetric('count')" class="px-2.5 py-1 text-[10px] font-semibold rounded-full bg-slate-900 text-white">Count</button>
+              <button id="btn-discard-pct" onclick="switchDiscardMetric('pct')" class="px-2.5 py-1 text-[10px] font-semibold rounded-full bg-white text-slate-600">%</button>
+            </div>
+          </div>
+          <div class="chart-wrap tall"><canvas id="chartDiscardMain"></canvas></div>
+          <div id="discard-main-insight" class="mt-2 text-[11px] bg-rose-50 border border-rose-100 p-2 rounded"></div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-title"><span id="discard-secondary-title">Distribution</span></div>
+          <div class="chart-wrap"><canvas id="chartDiscardSecondary"></canvas></div>
+          <div id="discard-secondary-summary" class="mt-2 text-[11px] bg-slate-50 p-2 rounded"></div>
+        </div>
+      </div>
+
+      <!-- SECOND ROW: Stacked Dept x Item + Trend -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div class="analytics-card">
+          <div class="analytics-title"><span>Stacked: Department x Item Type (Top 5 Item)</span></div>
+          <div class="chart-wrap tall"><canvas id="chartDiscardStacked"></canvas></div>
+          <div class="text-[10px] text-gray-400 mt-1">Top 5 item paling banyak dibuang per departemen</div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-title"><span>Trend Discard per Hari / Bulan</span></div>
+          <div class="chart-wrap"><canvas id="chartDiscardTrend"></canvas></div>
+          <div id="discard-trend-insight" class="mt-2 text-[11px] bg-slate-50 p-2 rounded"></div>
+        </div>
+      </div>
+
+      <!-- TABLES -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+          <h4 class="text-xs font-bold uppercase text-rose-600 mb-2"><i class="fa-solid fa-ranking-star mr-1"></i> Top Discard by Department</h4>
+          <div class="overflow-x-auto"><table class="w-full text-xs"><thead class="bg-slate-50 text-[10px] uppercase text-slate-500"><tr><th class="text-left p-2">Department</th><th class="text-right p-2">Qty</th><th class="text-right p-2">%</th></tr></thead><tbody id="discard-by-dept-table"></tbody></table></div>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+          <h4 class="text-xs font-bold uppercase text-amber-600 mb-2"><i class="fa-solid fa-shirt mr-1"></i> Top Discard by Item</h4>
+          <div class="overflow-x-auto"><table class="w-full text-xs"><thead class="bg-slate-50 text-[10px] uppercase text-slate-500"><tr><th class="text-left p-2">Item Type</th><th class="text-right p-2">Qty</th><th class="text-right p-2">%</th><th class="text-left p-2">Top Dept</th></tr></thead><tbody id="discard-by-item-table"></tbody></table></div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-indigo-200 shadow-sm p-4">
+        <h4 class="text-xs font-bold uppercase text-indigo-700 mb-2"><i class="fa-solid fa-lightbulb mr-1"></i> Insight Otomatis Discard</h4>
+        <div id="discard-auto-insight" class="text-[11px] leading-relaxed text-slate-700 space-y-1.5"></div>
+      </div>
+    </div>
+
     <!-- ========== UNIFORM INVENTORY DASHBOARD - RICH INSIGHT ========== -->
+
     <div id="inventory-dashboard-section" class="space-y-5 mt-8 pt-6 border-t border-slate-200">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
         <h3 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-warehouse mr-2 text-indigo-600"></i>Uniform Inventory Dashboard - Deep Insights (dari GoogleSheet Daily Uniform Defect report / tab UniformInventory)</h3>
@@ -3985,6 +4088,345 @@ document.addEventListener('DOMContentLoaded', ()=>{
     };
     window.refreshData._invLogged=true;
   }
+})();
+</script>
+
+
+<script>
+// ===== UNIFORM DISCARD DASHBOARD - BY DEPARTMENT & BY ITEM =====
+let discardCharts = {};
+let discardViewMode = 'dept'; // dept | item | reason
+let discardMetricMode = 'count'; // count | pct
+function destroyDiscardChart(id){ if(discardCharts[id]){ try{discardCharts[id].destroy();}catch(e){} delete discardCharts[id]; } }
+
+function getDiscardField(obj, keys, def=''){
+  for(let k of keys){ if(obj[k]!==undefined && obj[k]!==null && obj[k]!=='') return obj[k];
+    let lk=k.toLowerCase();
+    for(let ok of Object.keys(obj)){ if(ok.toLowerCase()===lk) return obj[ok]; }
+  }
+  return def;
+}
+function parseDiscardQty(v){ if(v===undefined||v===null||v==='') return 1; let n=Number(String(v).replace(/[^0-9.-]/g,'')); return isNaN(n)||n<=0?1:n; }
+
+function switchDiscardView(mode){
+  discardViewMode=mode;
+  document.querySelectorAll('#discard-toggle-group button').forEach(b=>{ b.className='px-3 py-1.5 text-[11px] font-bold rounded-full bg-white text-slate-600 transition'; });
+  const active=document.getElementById('btn-discard-'+mode);
+  if(active) active.className='px-3 py-1.5 text-[11px] font-bold rounded-full bg-slate-900 text-white transition';
+  renderDiscardDashboard(window._lastDiscardFiltered||{discard: (window.state&&state.uniformDiscard)||[]});
+}
+function switchDiscardMetric(mode){
+  discardMetricMode=mode;
+  document.getElementById('btn-discard-count').className = mode==='count' ? 'px-2.5 py-1 text-[10px] font-semibold rounded-full bg-slate-900 text-white' : 'px-2.5 py-1 text-[10px] font-semibold rounded-full bg-white text-slate-600';
+  document.getElementById('btn-discard-pct').className = mode==='pct' ? 'px-2.5 py-1 text-[10px] font-semibold rounded-full bg-slate-900 text-white' : 'px-2.5 py-1 text-[10px] font-semibold rounded-full bg-white text-slate-600';
+  renderDiscardDashboard(window._lastDiscardFiltered||{discard: (window.state&&state.uniformDiscard)||[]});
+}
+
+function renderDiscardDashboard(filtered){
+  try{
+    window._lastDiscardFiltered = filtered;
+    const list = (filtered && filtered.discard) || (window.state && state.uniformDiscard) || [];
+    const syncEl=document.getElementById('discard-last-sync');
+    if(syncEl) syncEl.textContent='Rows: '+list.length+' | Sync: '+new Date().toLocaleTimeString('id-ID');
+
+    // Aggregations
+    const byDept={}, byItem={}, byReason={}, byDeptItem={}, byDate={};
+    let totalQty=0;
+    list.forEach(r=>{
+      let dept = String(getDiscardField(r,['department','dept','Department','UniformOwnerDept'], 'Unknown')).trim()||'Unknown';
+      let item = String(getDiscardField(r,['uniformType','itemType','Item Type','type','WhatReceived','whatReceived','Uniform Type','item'], 'Unknown')).trim()||'Unknown';
+      let reason = String(getDiscardField(r,['reason','Reason','remarks','Remarks','kondisi','condition'], 'Unknown')).trim()||'Unknown';
+      let qty = parseDiscardQty(getDiscardField(r,['quantity','qty','Quantity','jumlah'],1));
+      totalQty+=qty;
+      byDept[dept]=(byDept[dept]||0)+qty;
+      byItem[item]=(byItem[item]||0)+qty;
+      byReason[reason]=(byReason[reason]||0)+qty;
+      let key = dept+'||'+item;
+      if(!byDeptItem[key]) byDeptItem[key]={dept,item,qty:0};
+      byDeptItem[key].qty+=qty;
+      let dateStr = String(getDiscardField(r,['createdAt','date','Date','discardDate','timestamp'], '')).slice(0,10);
+      if(dateStr){ byDate[dateStr]=(byDate[dateStr]||0)+qty; }
+    });
+
+    // KPI
+    const setTxt=(id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val; };
+    setTxt('discard-total', totalQty);
+    setTxt('discard-dept-count', Object.keys(byDept).length);
+    setTxt('discard-item-count', Object.keys(byItem).length);
+    const topDept = Object.entries(byDept).sort((a,b)=>b[1]-a[1])[0];
+    const topItem = Object.entries(byItem).sort((a,b)=>b[1]-a[1])[0];
+    const topReason = Object.entries(byReason).sort((a,b)=>b[1]-a[1])[0];
+    setTxt('discard-top-dept', topDept?topDept[0]:'-');
+    setTxt('discard-top-dept-qty', topDept? topDept[1]+' pcs ('+(totalQty? (topDept[1]/totalQty*100).toFixed(1):0)+'%)' : '-');
+    setTxt('discard-top-item', topItem?topItem[0]:'-');
+    setTxt('discard-top-item-qty', topItem? topItem[1]+' pcs ('+(totalQty? (topItem[1]/totalQty*100).toFixed(1):0)+'%)' : '-');
+    setTxt('discard-top-reason', topReason?topReason[0]:'-');
+    setTxt('discard-top-reason-qty', topReason? topReason[1]+' pcs' : '-');
+
+    // Prepare data based on view mode
+    let mainLabels=[], mainData=[], mainTitle='', secondaryLabels=[], secondaryData=[];
+    let secondaryTitle='Distribution';
+    if(discardViewMode==='dept'){
+      const sorted = Object.entries(byDept).sort((a,b)=>b[1]-a[1]);
+      mainLabels = sorted.map(x=>x[0]);
+      mainData = sorted.map(x=>x[1]);
+      mainTitle='Discard by Department';
+      secondaryLabels = mainLabels.slice(0,8);
+      secondaryData = mainData.slice(0,8);
+      secondaryTitle='Dept Distribution (Donut)';
+    }else if(discardViewMode==='item'){
+      const sorted = Object.entries(byItem).sort((a,b)=>b[1]-a[1]);
+      mainLabels = sorted.map(x=>x[0]);
+      mainData = sorted.map(x=>x[1]);
+      mainTitle='Discard by Item Type';
+      secondaryLabels = mainLabels.slice(0,8);
+      secondaryData = mainData.slice(0,8);
+      secondaryTitle='Item Distribution (Donut)';
+    }else{
+      const sorted = Object.entries(byReason).sort((a,b)=>b[1]-a[1]);
+      mainLabels = sorted.map(x=>x[0]);
+      mainData = sorted.map(x=>x[1]);
+      mainTitle='Discard by Reason';
+      secondaryLabels = mainLabels.slice(0,8);
+      secondaryData = mainData.slice(0,8);
+      secondaryTitle='Reason Distribution';
+    }
+
+    // Metric mode pct conversion
+    let displayData = mainData;
+    if(discardMetricMode==='pct' && totalQty){
+      displayData = mainData.map(v=> +(v/totalQty*100).toFixed(1));
+    }
+
+    // MAIN CHART - Bar / Horizontal
+    const ctxMain=document.getElementById('chartDiscardMain');
+    if(ctxMain){
+      destroyDiscardChart('main');
+      const isItem = discardViewMode==='item';
+      discardCharts['main']=new Chart(ctxMain,{
+        type:'bar',
+        data:{
+          labels: mainLabels,
+          datasets:[{
+            label: discardMetricMode==='pct' ? '%' : 'Qty',
+            data: displayData,
+            backgroundColor: mainLabels.map((_,i)=> discardViewMode==='dept' ? `hsl(${0+i*18} 72% 58%)` : discardViewMode==='item' ? `hsl(${35+i*14} 85% 58%)` : `hsl(${280+i*12} 65% 60%)`),
+            borderRadius:8,
+            borderSkipped:false
+          }]
+        },
+        options:{
+          indexAxis: isItem ? 'y' : 'x',
+          responsive:true,
+          maintainAspectRatio:false,
+          plugins:{
+            legend:{display:false},
+            tooltip:{callbacks:{label:(c)=> `${c.label}: ${c.parsed.x||c.parsed.y}${discardMetricMode==='pct'?'%':' pcs'}`}}
+          },
+          scales:{
+            y:{beginAtZero:true, grid:{color:'#f1f5f9'}, ticks:{font:{size:11}}},
+            x:{beginAtZero:true, grid:{color:'#f1f5f9'}, ticks:{font:{size:11}}}
+          }
+        }
+      });
+    }
+
+    // SECONDARY - Doughnut
+    const ctxSec=document.getElementById('chartDiscardSecondary');
+    if(ctxSec && secondaryLabels.length){
+      destroyDiscardChart('secondary');
+      discardCharts['secondary']=new Chart(ctxSec,{
+        type:'doughnut',
+        data:{
+          labels: secondaryLabels,
+          datasets:[{data: secondaryData, backgroundColor: secondaryLabels.map((_,i)=> `hsl(${(discardViewMode==='dept'?0:discardViewMode==='item'?35:280)+i*28} 75% ${60+i%2*5}%)`), borderWidth:0}]
+        },
+        options:{responsive:true, maintainAspectRatio:false, cutout:'60%', plugins:{legend:{position:'bottom', labels:{boxWidth:12, font:{size:10}}}}}
+      });
+    }
+
+    // STACKED: Dept x Item (Top 5 items)
+    const top5Items = Object.entries(byItem).sort((a,b)=>b[1]-a[1]).slice(0,5).map(x=>x[0]);
+    const depts = Object.entries(byDept).sort((a,b)=>b[1]-a[1]).slice(0,10).map(x=>x[0]);
+    const stackedDatasets = top5Items.map((it, idx)=>({
+      label: it,
+      data: depts.map(dp=>{ let k=dp+'||'+it; return (byDeptItem[k]?byDeptItem[k].qty:0); }),
+      backgroundColor: `hsl(${35+idx*32} 80% 60%)`,
+      stack: 'stack'
+    }));
+    const ctxStack=document.getElementById('chartDiscardStacked');
+    if(ctxStack){
+      destroyDiscardChart('stacked');
+      discardCharts['stacked']=new Chart(ctxStack,{
+        type:'bar',
+        data:{labels:depts, datasets:stackedDatasets},
+        options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:12, font:{size:10}}}}, scales:{x:{stacked:true, grid:{display:false}}, y:{stacked:true, beginAtZero:true, grid:{color:'#f1f5f9'}}}}
+      });
+    }
+
+    // TREND
+    const ctxTrend=document.getElementById('chartDiscardTrend');
+    if(ctxTrend){
+      const datesSorted = Object.keys(byDate).sort();
+      destroyDiscardChart('trend');
+      if(datesSorted.length){
+        discardCharts['trend']=new Chart(ctxTrend,{
+          type:'line',
+          data:{labels:datesSorted, datasets:[{label:'Discard Qty', data:datesSorted.map(d=>byDate[d]), borderColor:'#e11d48', backgroundColor:'rgba(225,29,72,0.12)', fill:true, tension:0.4, pointRadius:3}]},
+          options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true, grid:{color:'#f1f5f9'}}, x:{grid:{display:false}, ticks:{font:{size:10}, maxRotation:45}}}}
+        });
+      }
+    }
+
+    // TABLES
+    const deptTable=document.getElementById('discard-by-dept-table');
+    if(deptTable){
+      deptTable.innerHTML='';
+      Object.entries(byDept).sort((a,b)=>b[1]-a[1]).slice(0,15).forEach(([k,v])=>{
+        const tr=document.createElement('tr'); tr.className='border-b last:border-0 hover:bg-rose-50/50';
+        tr.innerHTML=`<td class="p-2 font-medium text-slate-800">${k}</td><td class="p-2 text-right font-bold">${v}</td><td class="p-2 text-right text-slate-500">${totalQty? (v/totalQty*100).toFixed(1):0}%</td>`;
+        deptTable.appendChild(tr);
+      });
+    }
+    const itemTable=document.getElementById('discard-by-item-table');
+    if(itemTable){
+      itemTable.innerHTML='';
+      Object.entries(byItem).sort((a,b)=>b[1]-a[1]).slice(0,15).forEach(([item,qty])=>{
+        // find top dept for this item
+        let topDeptForItem='-';
+        let max=0;
+        Object.entries(byDeptItem).forEach(([key,val])=>{
+          let [d,it]=key.split('||');
+          if(it===item && val.qty>max){ max=val.qty; topDeptForItem=d; }
+        });
+        const tr=document.createElement('tr'); tr.className='border-b last:border-0 hover:bg-amber-50/50';
+        tr.innerHTML=`<td class="p-2 font-medium text-slate-800">${item}</td><td class="p-2 text-right font-bold">${qty}</td><td class="p-2 text-right text-slate-500">${totalQty? (qty/totalQty*100).toFixed(1):0}%</td><td class="p-2 text-[11px] text-slate-600">${topDeptForItem}</td>`;
+        itemTable.appendChild(tr);
+      });
+    }
+
+    // Insights
+    const mainInsight=document.getElementById('discard-main-insight');
+    if(mainInsight){
+      if(discardViewMode==='dept'){
+        mainInsight.innerHTML = topDept ? `Top discard <b>${topDept[0]}</b> ${topDept[1]} pcs (${(topDept[1]/totalQty*100).toFixed(1)}%). Fokus audit uniform di dept ini.` : 'Belum ada data';
+      }else if(discardViewMode==='item'){
+        mainInsight.innerHTML = topItem ? `Top item discard <b>${topItem[0]}</b> ${topItem[1]} pcs. Pertimbangkan upgrade kualitas atau stok buffer.` : 'Belum ada data';
+      }else{
+        mainInsight.innerHTML = topReason ? `Top reason <b>${topReason[0]}</b> ${topReason[1]} pcs. Analisis root cause diperlukan.` : 'Belum ada data';
+      }
+    }
+    const secSum=document.getElementById('discard-secondary-summary');
+    if(secSum){
+      secSum.innerHTML = `Total ${totalQty} pcs dari ${list.length} record discard. ${Object.keys(byDept).length} dept, ${Object.keys(byItem).length} jenis item.`;
+    }
+    const trendInsight=document.getElementById('discard-trend-insight');
+    if(trendInsight){
+      const datesSorted = Object.keys(byDate).sort();
+      if(datesSorted.length>1){
+        let last=byDate[datesSorted[datesSorted.length-1]], prev=byDate[datesSorted[datesSorted.length-2]];
+        let diff = prev? ((last-prev)/prev*100).toFixed(1) : 0;
+        trendInsight.innerHTML = `Trend terbaru ${datesSorted[datesSorted.length-1]}: ${last} pcs. ${diff>0?`Naik ${diff}% vs sebelumnya <span class='text-rose-600 font-bold'>↑</span>`:`Turun ${Math.abs(diff)}% <span class='text-emerald-600 font-bold'>↓</span>`}.`;
+      }else{
+        trendInsight.innerHTML = datesSorted.length? `Hanya 1 tanggal: ${datesSorted[0]} - ${byDate[datesSorted[0]]} pcs` : 'Belum ada trend tanggal';
+      }
+    }
+    const auto=document.getElementById('discard-auto-insight');
+    if(auto){
+      let insights=[];
+      insights.push(`Total <b>${totalQty}</b> pcs discard dari <b>${list.length}</b> record (tab UniformDiscard).`);
+      if(topDept) insights.push(`Dept tertinggi discard: <b>${topDept[0]}</b> (${topDept[1]} pcs, ${(topDept[1]/totalQty*100).toFixed(1)}%). Prioritas audit.`);
+      if(topItem) insights.push(`Item tertinggi discard: <b>${topItem[0]}</b> (${topItem[1]} pcs). Cek kualitas bahan & usage cycle.`);
+      if(topReason) insights.push(`Alasan utama: <b>${topReason[0]}</b> (${topReason[1]} pcs).`);
+      const lowDepts = Object.entries(byDept).filter(([k,v])=>v>=totalQty*0.15).map(([k])=>k);
+      if(lowDepts.length) insights.push(`Dept dengan kontribusi >15%: ${lowDepts.join(', ')} - perlu review SOP uniform.`);
+      insights.push(`Data source: GoogleSheet Daily Uniform Defect report > tab UniformDiscard via action getUniformDiscard. Filter tanggal dashboard berlaku.`);
+      auto.innerHTML=insights.map(i=>`<div>• ${i}</div>`).join('');
+    }
+
+    // Update titles
+    const mt=document.getElementById('discard-main-title');
+    if(mt) mt.textContent = mainTitle + (discardMetricMode==='pct'?' (%)':' (Qty)');
+    const st=document.getElementById('discard-secondary-title');
+    if(st) st.textContent = secondaryTitle;
+
+  }catch(e){ console.error('renderDiscardDashboard error', e); }
+}
+
+function downloadDiscardExcel(){
+  try{
+    const list = window._lastDiscardFiltered?.discard || (window.state&&state.uniformDiscard)||[];
+    if(!list.length){ alert('Data discard kosong'); return; }
+    const byDept={}, byItem={}, byReason={};
+    list.forEach(r=>{
+      let dept = String(getDiscardField(r,['department','dept','Department'],'Unknown')).trim();
+      let item = String(getDiscardField(r,['uniformType','itemType','Item Type','type'],'Unknown')).trim();
+      let reason = String(getDiscardField(r,['reason','Reason','remarks'],'Unknown')).trim();
+      let qty = parseDiscardQty(getDiscardField(r,['quantity','qty'],1));
+      byDept[dept]=(byDept[dept]||0)+qty;
+      byItem[item]=(byItem[item]||0)+qty;
+      byReason[reason]=(byReason[reason]||0)+qty;
+    });
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(Object.entries(byDept).map(([k,v])=>({Department:k, Qty:v})).sort((a,b)=>b.Qty-a.Qty)), 'By Department');
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(Object.entries(byItem).map(([k,v])=>({Item:k, Qty:v})).sort((a,b)=>b.Qty-a.Qty)), 'By Item');
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(Object.entries(byReason).map(([k,v])=>({Reason:k, Qty:v})).sort((a,b)=>b.Qty-a.Qty)), 'By Reason');
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(list), 'Raw Discard');
+    XLSX.writeFile(wb, 'Discard-Analytics-'+new Date().toISOString().slice(0,10)+'.xlsx');
+  }catch(e){ alert('Export gagal: '+e.message); }
+}
+
+// Hook renderDiscard into main dashboard render flow
+(function(){
+  // Patch getFilteredData to ensure discard is included with date filter
+  const origGetFiltered = window.getFilteredData;
+  if(typeof origGetFiltered==='function' && !origGetFiltered._discardPatched){
+    window.getFilteredData = function(){
+      const data = origGetFiltered.apply(this, arguments);
+      try{
+        if(!data.discard && window.state){
+          const all = state.uniformDiscard||[];
+          const sEl=document.getElementById('filter-start-date');
+          const eEl=document.getElementById('filter-end-date');
+          const s=sEl?.value, e=eEl?.value;
+          if(s||e){
+            data.discard = all.filter(r=>{
+              const d = String(r.createdAt||r.date||r.Date||'').slice(0,10);
+              if(!d) return true;
+              if(s && d < s) return false;
+              if(e && d > e) return false;
+              return true;
+            });
+          } else {
+            data.discard = all;
+          }
+        }
+      }catch(err){}
+      return data;
+    };
+    window.getFilteredData._discardPatched=true;
+  }
+
+  // Patch renderDashboard to also render discard
+  function patchDiscard(){
+    if(typeof window.renderDashboard==='function' && !window.renderDashboard._discardPatched){
+      const orig=window.renderDashboard;
+      window.renderDashboard=function(){
+        const res=orig.apply(this, arguments);
+        try{
+          const filtered = (typeof getFilteredData==='function')? getFilteredData() : {discard: (window.state&&state.uniformDiscard)||[]};
+          renderDiscardDashboard(filtered);
+        }catch(e){ console.error('discard patch error', e); }
+        return res;
+      };
+      window.renderDashboard._discardPatched=true;
+      console.log('[DiscardDash] patched');
+    }
+  }
+  patchDiscard();
+  setTimeout(patchDiscard, 1000);
+  setTimeout(patchDiscard, 3000);
+  window.refreshDiscardDash = function(){ try{ const f=(typeof getFilteredData==='function')? getFilteredData():{discard:state.uniformDiscard}; renderDiscardDashboard(f);}catch(e){} };
 })();
 </script>
 
