@@ -2199,9 +2199,10 @@ function renderUniformReceivedTable(){
   list.slice(0,50).forEach(r=>{
     const tr = document.createElement('tr');
     tr.className = 'border-b border-slate-100 hover:bg-slate-50';
+    const tgl = formatTanggalUmum(r.createdAt||r.date);
     tr.innerHTML = `
       <td class="py-2.5 px-3 font-mono text-xs font-bold text-blue-600">${r.uniqueID||'-'}</td>
-      <td class="py-2.5 px-3 text-xs text-slate-500">${r.createdAt||'-'}</td>
+      <td class="py-2.5 px-3 text-xs text-slate-600" title="${r.createdAt||''}">${tgl}</td>
       <td class="py-2.5 px-3 text-xs">${r.inputBy||'-'}</td>
       <td class="py-2.5 px-3 text-xs font-medium">${r.uniformOwner||'-'}<div class="text-[11px] text-slate-500">${r.department||''}</div></td>
       <td class="py-2.5 px-3 text-xs"><span class="font-medium">${r.uniformType||'-'}</span> x ${r.quantity||0}</td>
@@ -2224,15 +2225,52 @@ function renderUniformProductionTable(){
   list.slice(0,50).forEach(r=>{
     const tr = document.createElement('tr');
     tr.className = 'border-b border-slate-100 hover:bg-slate-50';
+    const tgl = formatTanggalUmum(r.createdAt||r.date);
     tr.innerHTML = `
       <td class="py-2.5 px-3 font-mono text-xs font-bold text-indigo-600">${r.uniqueID||'-'}</td>
-      <td class="py-2.5 px-3 text-xs text-slate-500">${r.createdAt||'-'}</td>
+      <td class="py-2.5 px-3 text-xs text-slate-600" title="${r.createdAt||''}">${tgl}</td>
       <td class="py-2.5 px-3 text-xs">${r.inputBy||'-'}</td>
       <td class="py-2.5 px-3 text-xs"><span class="font-medium">${r.uniformType||'-'}</span> x ${r.quantity||0}</td>
       <td class="py-2.5 px-3 text-xs">${r.department||'-'}</td>
     `;
     tbody.appendChild(tr);
   });
+}
+
+
+function formatTanggalUmum(dateStr){
+  if(!dateStr) return '-';
+  try{
+    const d = new Date(dateStr);
+    if(isNaN(d)) return dateStr;
+    // Format ke WIB (Asia/Jakarta)
+    return d.toLocaleString('id-ID', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZone: 'Asia/Jakarta',
+      hour12: false
+    }) + ' WIB';
+  }catch(e){ return dateStr; }
+}
+function formatTanggalPendek(dateStr){
+  if(!dateStr) return '-';
+  try{
+    const d = new Date(dateStr);
+    if(isNaN(d)) return dateStr;
+    return d.toLocaleString('id-ID', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'Asia/Jakarta',
+      hour12: false
+    });
+  }catch(e){ return dateStr; }
 }
 
 function showToast(msg){ const t=document.getElementById("toast"); if(!t) return; t.textContent=msg; t.classList.remove("hidden"); t.classList.add("flex"); clearTimeout(window._toastTimer); window._toastTimer=setTimeout(()=>{t.classList.add("hidden");}, 2500); }
